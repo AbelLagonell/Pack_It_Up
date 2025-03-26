@@ -31,7 +31,7 @@ public class ClassName : NetworkComponent {
 ```
 ## Dependencies of Components
 For the component dependencies something like the RigidBody network component needing a RigidBody, the dependency of the component should be clearly stated.
-```
+```c#
 [RequireComponent(typeof(Rigidbody))]
 public class NetRigidbody : NetworkComponent {}
 ```
