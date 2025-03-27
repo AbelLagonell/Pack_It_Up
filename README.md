@@ -20,7 +20,7 @@
 
 ## Flags
 For Flags I would like them to be stored in a struct of that class so something like this:
-``` c#
+```c#
 public struct ClassNameFlags {
   public const string FLAG1 = "FLAG1"
 } 
@@ -34,5 +34,18 @@ For the component dependencies something like the RigidBody network component ne
 ```c#
 [RequireComponent(typeof(Rigidbody))]
 public class NetRigidbody : NetworkComponent {}
+```
+## Handle Messages
+For checking for flags use switch cases so that its a lil bit more readable
+```c#
+public override void HandleMessage(string flag, string value) {
+    switch (flag) {
+        case ClassNameFlags.FLAG1:
+            if (IsServer) {}
+            if (IsClient) {}
+            ...
+            break;    
+    }
+}
 ```
 
