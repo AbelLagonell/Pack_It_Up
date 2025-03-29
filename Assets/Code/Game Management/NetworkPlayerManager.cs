@@ -21,7 +21,7 @@ public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private GameObject scoreScreen;
     [SerializeField] private GameObject robberRoleScreen;
     [SerializeField] private GameObject informantRoleScreen;
-    [SerializeField] private TMP_Text robberScoreText; //positive
+    [SerializeField] private TMP_Text robberScoreText;    //positive
     [SerializeField] private TMP_Text informantScoreText; //negative
     [SerializeField] private TMP_Text winnerText;
     [SerializeField] private int robberScore;
@@ -43,6 +43,7 @@ public class NetworkPlayerManager : NetworkComponent {
         if (informantRoleScreen == null) {
             Debug.LogError("No Informant Role Screen chosen");
         }
+
         if (robberRoleScreen == null) {
             Debug.LogError("No Robber Role Screen chosen");
         }
@@ -92,10 +93,8 @@ public class NetworkPlayerManager : NetworkComponent {
                 break;
             case NetworkPlayerManagerFlags.ROLE:
                 //Should only ever be run on clients
-                if (IsLocalPlayer) {
+                if (IsLocalPlayer)
                     isInformant = bool.Parse(value);
-                    Debug.Log("Informant");
-                }
                 break;
             case NetworkPlayerManagerFlags.SHOWROLE:
                 showRole = bool.Parse(value);
@@ -148,12 +147,13 @@ public class NetworkPlayerManager : NetworkComponent {
         if (IsServer) {
             SendUpdate(NetworkPlayerManagerFlags.SHOWROLE, value.ToString());
         }
+
         if (isInformant)
             informantRoleScreen.SetActive(value);
-        else     
+        else
             robberRoleScreen.SetActive(value);
     }
-    
+
     public void OnCheckBoxClick(bool value) {
         if (IsLocalPlayer) {
             SendCommand(NetworkPlayerManagerFlags.READY, value.ToString());
