@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using NETWORK_ENGINE;
-using UnityEditor;
 
 struct GameManagerFlags {
     public const string GAMESTART = "GAMESTART";
@@ -62,12 +60,23 @@ public class GameManager : NetworkComponent {
 
             npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
             foreach (var player in npms) {
-                //TODO create player and set up for informant
+                //TODO create player
             }
+            
+            //Setting informant
+            //TODO Make this a random gen from 1 to the amount of players that there are and then have that be the informant
+            npms[0].SetInformant();
+            yield return new WaitForSeconds(0.5f);
             
             SendUpdate(GameManagerFlags.GAMESTART, "1");
             MyCore.StopListening();
-
+            
+            //So that the players can read their roles
+            yield return new WaitForSeconds(2f);
+            foreach (var player in npms) {
+                player.ToggleRoleScreen(false);
+            }
+            
             /*while (!_gameOver) {
                 //TODO do game logic here
                 yield return new WaitForSeconds(.1f);

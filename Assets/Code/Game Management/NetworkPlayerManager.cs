@@ -12,16 +12,21 @@ struct NetworkPlayerManagerFlags {
     public const string RSCORE = "SCORE-ROBBER";
     public const string ISCORE = "SCORE-INFORMANT";
     public const string WINNER = "WINNER";
+    public const string ROLE = "ROLE";
+    public const string SHOWROLE = "SHOWROLE";
 }
 
 public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private GameObject startScreen;
     [SerializeField] private GameObject scoreScreen;
-    [SerializeField] private TMP_Text robberScore;    //positive
-    [SerializeField] private TMP_Text informantScore; //negative
+    [SerializeField] private GameObject robberRoleScreen;
+    [SerializeField] private GameObject informantRoleScreen;
+    [SerializeField] private TMP_Text robberScoreText; //positive
+    [SerializeField] private TMP_Text informantScoreText; //negative
     [SerializeField] private TMP_Text winnerText;
-    [SerializeField] private int robbers, informants;
-    [SerializeField] private bool overrideWinner = false;
+    [SerializeField] private int robberScore;
+    [SerializeField] private int informantScore;
+    [SerializeField] private bool overrideWinner, isInformant, showRole;
 
     public bool ready;
 
@@ -35,7 +40,16 @@ public class NetworkPlayerManager : NetworkComponent {
             Debug.LogError("No Score Screen chosen");
         }
 
+        if (informantRoleScreen == null) {
+            Debug.LogError("No Informant Role Screen chosen");
+        }
+        if (robberRoleScreen == null) {
+            Debug.LogError("No Robber Role Screen chosen");
+        }
+
         scoreScreen.SetActive(false);
+        informantRoleScreen.SetActive(false);
+        robberRoleScreen.SetActive(false);
     }
 
     public override IEnumerator SlowUpdate() {
@@ -43,8 +57,8 @@ public class NetworkPlayerManager : NetworkComponent {
             if (IsServer)
                 if (IsDirty) {
                     SendUpdate(NetworkPlayerManagerFlags.READY, ready.ToString());
-                    SendUpdate(NetworkPlayerManagerFlags.RSCORE, robbers.ToString());
-                    SendUpdate(NetworkPlayerManagerFlags.ISCORE, informants.ToString());
+                    SendUpdate(NetworkPlayerManagerFlags.RSCORE, robberScore.ToString());
+                    SendUpdate(NetworkPlayerManagerFlags.ISCORE, informantScore.ToString());
                     SendUpdate(NetworkPlayerManagerFlags.WINNER, overrideWinner.ToString());
                     IsDirty = false;
                 }
@@ -62,19 +76,30 @@ public class NetworkPlayerManager : NetworkComponent {
                 if (IsServer) SendUpdate(NetworkPlayerManagerFlags.READY, ready.ToString());
                 break;
             case NetworkPlayerManagerFlags.RSCORE:
-                Debug.Log("Recieved" + value);
-                robbers = int.Parse(value);
-                robberScore.text = "Score: " + robbers;
+                //Should only ever be run on clients
+                robberScore = int.Parse(value);
+                robberScoreText.text = "Score: " + robberScore;
                 break;
             case NetworkPlayerManagerFlags.ISCORE:
-                Debug.Log("Recieved" + value);
-                informants = int.Parse(value);
-                informantScore.text = "Score: " + informants;
+                //Should only ever be run on clients
+                informantScore = int.Parse(value);
+                informantScoreText.text = "Score: " + informantScore;
                 break;
             case NetworkPlayerManagerFlags.WINNER:
                 //Should only ever be run on clients
                 overrideWinner = bool.Parse(value);
-                winnerText.text = "Winner is Informants\nEveryone got Arrested";
+                winnerText.text = "Winner are Informants\nEveryone got Arrested";
+                break;
+            case NetworkPlayerManagerFlags.ROLE:
+                //Should only ever be run on clients
+                if (IsLocalPlayer) {
+                    isInformant = bool.Parse(value);
+                    Debug.Log("Informant");
+                }
+                break;
+            case NetworkPlayerManagerFlags.SHOWROLE:
+                showRole = bool.Parse(value);
+                ToggleRoleScreen(showRole);
                 break;
         }
     }
@@ -87,13 +112,14 @@ public class NetworkPlayerManager : NetworkComponent {
 
     public void GameStart() {
         startScreen.SetActive(false);
+        ToggleRoleScreen(true);
     }
 
     public void GameEnd() {
         if (overrideWinner) {
-            winnerText.text = "Winner is Informants\nEveryone got Arrested";
+            winnerText.text = "Winner are Informants\nEveryone got Arrested";
         } else {
-            winnerText.text = "Winner is " + (((robbers - informants) < 0) ? "Informants" : "Robbers");
+            winnerText.text = "Winner are " + (((robberScore - informantScore) < 0) ? "Informants" : "Robbers");
         }
 
         if (IsLocalPlayer) scoreScreen.SetActive(true);
@@ -103,14 +129,31 @@ public class NetworkPlayerManager : NetworkComponent {
     public void UpdateIScore(int score) {
         SendUpdate(NetworkPlayerManagerFlags.ISCORE, score.ToString());
     }
+
     public void UpdateRScore(int score) {
         SendUpdate(NetworkPlayerManagerFlags.RSCORE, score.ToString());
     }
+
     public void OverrideWinner() {
         overrideWinner = true;
         SendUpdate(NetworkPlayerManagerFlags.WINNER, overrideWinner.ToString());
     }
 
+    public void SetInformant() {
+        isInformant = true;
+        SendUpdate(NetworkPlayerManagerFlags.ROLE, isInformant.ToString());
+    }
+
+    public void ToggleRoleScreen(bool value) {
+        if (IsServer) {
+            SendUpdate(NetworkPlayerManagerFlags.SHOWROLE, value.ToString());
+        }
+        if (isInformant)
+            informantRoleScreen.SetActive(value);
+        else     
+            robberRoleScreen.SetActive(value);
+    }
+    
     public void OnCheckBoxClick(bool value) {
         if (IsLocalPlayer) {
             SendCommand(NetworkPlayerManagerFlags.READY, value.ToString());
