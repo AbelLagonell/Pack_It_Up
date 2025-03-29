@@ -15,17 +15,24 @@ public class GameManager : NetworkComponent {
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case GameManagerFlags.GAMESTART:
+                Debug.Log("Started Game");
                 if (IsClient) {
                     _gameStart = true;
                     foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
                                  FindObjectsSortMode.None)) {
                         //TODO Hide Choosing color visuals
+                        npm.GameStart();
                     }
                 }
-                
+
                 break;
             case GameManagerFlags.GAMEOVER:
                 if (IsClient) {
+                    _gameOver = true;
+                    foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
+                                 FindObjectsSortMode.None)) {
+                        npm.GameEnd();
+                    }
                     //TODO do client stuff
                 }
 
@@ -36,49 +43,28 @@ public class GameManager : NetworkComponent {
     public override void NetworkedStart() { }
 
     public override IEnumerator SlowUpdate() {
-        if (IsServer) {
-            //Wait for players to get ready
-            NetworkPlayerManager[] players;
-            bool tempGameStart = true;
-            do {
-                players = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
-                foreach (NetworkPlayerManager player in players) {
-                    if (!player.Ready) { tempGameStart = false; }
-                }
-
-                yield return new WaitForSeconds(1f);
-            } while (!tempGameStart || players.Length < 2);
-
-
-            //Start Game
-            SendUpdate(GameManagerFlags.GAMESTART, "1");
-            MyCore.StopListening();
-
-
-            //Go to each NetworkPlayerManager and look at their options
-            //Create the appropriate character for their options
-            //GameObject temp = MyCore.NetCreateObject(1,Owner,new Vector3);
-            //temp.GetComponent<MyCharacterScript>().team = //set the team;
-            players = GameObject.FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
-            foreach (NetworkPlayerManager player in players) {
-                //TODO Set player state 
+        while (IsServer && !_gameStart) {
+            bool allReady = true;
+            var players = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
+            allReady = players.Length >= 2;
+            foreach (var player in players) {
+                if (!player.ready) allReady = false;
             }
-            
-            
-            
-            while (!_gameOver) {
-                //Game states that can be handled by game manager
-                //TODO Decrement timer
-            }
-            
-            SendUpdate(GameManagerFlags.GAMEOVER, "1");
-            yield return new WaitForSeconds(30f);
 
-            MyId.NotifyDirty();
-            StartCoroutine(MyCore.DisconnectServer());
+            _gameStart = allReady;
+            SendUpdate(GameManagerFlags.GAMESTART, _gameStart.ToString());
+
+            yield return new WaitForSeconds(1f);
         }
 
-        yield return new WaitForSeconds(MyCore.MasterTimer);
+        while (IsServer) {
+            if (IsDirty) {
+                SendUpdate(GameManagerFlags.GAMESTART, _gameStart.ToString());
+                IsDirty = false;
+            }
+
+            yield return new WaitForSeconds(MyCore.MasterTimer);
+        }
     }
 
     // Start is called before the first frame update
