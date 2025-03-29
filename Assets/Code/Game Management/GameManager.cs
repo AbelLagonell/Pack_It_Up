@@ -1,7 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NETWORK_ENGINE;
+using UnityEditor;
 
 struct GameManagerFlags {
     public const string GAMESTART = "GAMESTART";
@@ -19,7 +20,7 @@ public class GameManager : NetworkComponent {
                 if (IsClient) {
                     _gameStart = true;
                     foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
-                                 FindObjectsSortMode.None)) {
+                                  FindObjectsSortMode.None)) {
                         //TODO Hide Choosing color visuals
                         npm.GameStart();
                     }
@@ -28,9 +29,10 @@ public class GameManager : NetworkComponent {
                 break;
             case GameManagerFlags.GAMEOVER:
                 if (IsClient) {
+                    Debug.Log("Game Over");
                     _gameOver = true;
                     foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
-                                 FindObjectsSortMode.None)) {
+                                  FindObjectsSortMode.None)) {
                         npm.GameEnd();
                     }
                     //TODO do client stuff
@@ -43,27 +45,39 @@ public class GameManager : NetworkComponent {
     public override void NetworkedStart() { }
 
     public override IEnumerator SlowUpdate() {
-        while (IsServer && !_gameStart) {
+        if (IsServer) {
+            NetworkPlayerManager[] npms;
             bool allReady = true;
-            var players = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
-            allReady = players.Length >= 2;
-            foreach (var player in players) {
-                if (!player.ready) allReady = false;
+            do {
+                npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
+                allReady = true;
+                foreach (var player in npms) {
+                    if (!player.ready) allReady = false;
+                }
+
+                yield return new WaitForSeconds(1f);
+            } while (!allReady || npms.Length < 2);
+
+            npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
+            foreach (var player in npms) {
+                //TODO create player and set up for informant
             }
+            
+            SendUpdate(GameManagerFlags.GAMESTART, "1");
+            MyCore.StopListening();
 
-            _gameStart = allReady;
-            SendUpdate(GameManagerFlags.GAMESTART, _gameStart.ToString());
-
-            yield return new WaitForSeconds(1f);
-        }
-
-        while (IsServer) {
-            if (IsDirty) {
-                SendUpdate(GameManagerFlags.GAMESTART, _gameStart.ToString());
-                IsDirty = false;
-            }
-
-            yield return new WaitForSeconds(MyCore.MasterTimer);
+            /*while (!_gameOver) {
+                //TODO do game logic here
+                yield return new WaitForSeconds(.1f);
+            }*/
+            
+            yield return new WaitForSeconds(5f);
+            
+            SendUpdate(GameManagerFlags.GAMEOVER, "1");
+            yield return new WaitForSeconds(15f);
+            
+            MyId.NotifyDirty();
+            StartCoroutine(MyCore.DisconnectServer());
         }
     }
 

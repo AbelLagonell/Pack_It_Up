@@ -44,7 +44,6 @@ public class NetworkPlayerManager : NetworkComponent {
             case NetworkPlayerManagerFlags.READY:
                 ready = bool.Parse(value);
                 if (IsServer) SendUpdate(NetworkPlayerManagerFlags.READY, ready.ToString());
-                if (IsClient) Debug.Log("Ready is " + ready);
                 break;
         }
     }
@@ -57,11 +56,12 @@ public class NetworkPlayerManager : NetworkComponent {
 
     public void GameStart() {
         startScreen.SetActive(false);
-        Debug.Log(MyId.Owner);
+        if (IsLocalPlayer) Debug.Log("Game Start: " + MyId.Owner);
     }
 
     public void GameEnd() {
         if (IsLocalPlayer) scoreScreen.SetActive(true);
+        if (IsLocalPlayer) Debug.Log("Game End: " + MyId.Owner);
     }
 
     public void OnCheckBoxClick(bool value) {
