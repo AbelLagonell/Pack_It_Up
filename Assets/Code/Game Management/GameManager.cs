@@ -12,6 +12,8 @@ struct GameManagerFlags {
 public class GameManager : NetworkComponent {
     private bool _gameStart = false;
     private bool _gameOver = false;
+    private int _robberScore = 10;
+    private int _informantScore = 0;
 
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
@@ -71,7 +73,14 @@ public class GameManager : NetworkComponent {
                 yield return new WaitForSeconds(.1f);
             }*/
             
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(1f);
+            
+            //After Game ends but before score screen
+            foreach (var player in npms) {
+                player.UpdateRScore(_robberScore);
+                player.UpdateIScore(_informantScore);
+                player.OverrideWinner();
+            }
             
             SendUpdate(GameManagerFlags.GAMEOVER, "1");
             yield return new WaitForSeconds(15f);
