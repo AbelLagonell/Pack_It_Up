@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : Actor {
@@ -31,12 +28,6 @@ public class Player : Actor {
         }
     }
 
-=======
-using System.Collections;
-using UnityEngine;
-
-public class Player : Actor {
->>>>>>> origin/main
     public override IEnumerator SlowUpdate() {
         yield return new WaitForSeconds(MyCore.MasterTimer);
     }
@@ -46,7 +37,6 @@ public class Player : Actor {
     }
 
     public override void NetworkedStart() {
-<<<<<<< HEAD
         if (!IsLocalPlayer) {
             transform.GetChild(0).gameObject.SetActive(false);
         }
@@ -57,8 +47,6 @@ public class Player : Actor {
                 //Get Whatever you need from it
             }
         }
-=======
->>>>>>> origin/main
         //TODO Make what happens when they connect to the server
     }
 
