@@ -14,7 +14,10 @@ struct NetworkPlayerManagerFlags {
     public const string WINNER = "WINNER";
     public const string ROLE = "ROLE";
     public const string SHOWROLE = "SHOWROLE";
+<<<<<<< HEAD
     public const string PAUSE = "PAUSE";
+=======
+>>>>>>> origin/main
 }
 
 public class NetworkPlayerManager : NetworkComponent {
@@ -125,6 +128,10 @@ public class NetworkPlayerManager : NetworkComponent {
         if (IsLocalPlayer) scoreScreen.SetActive(true);
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
     public void UpdateIScore(int score) {
         SendUpdate(NetworkPlayerManagerFlags.ISCORE, score.ToString());
     }
