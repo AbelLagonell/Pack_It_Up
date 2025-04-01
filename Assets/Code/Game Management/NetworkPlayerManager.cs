@@ -14,10 +14,14 @@ struct NetworkPlayerManagerFlags {
     public const string WINNER = "WINNER";
     public const string ROLE = "ROLE";
     public const string SHOWROLE = "SHOWROLE";
+    public const string PAUSE = "PAUSE";
+    public const string NAME = "NAME";
+    public const string CHAR = "CHAR";
 }
 
 public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private GameObject startScreen;
+    [SerializeField] private GameObject startScreenBG;
     [SerializeField] private GameObject scoreScreen;
     [SerializeField] private GameObject robberRoleScreen;
     [SerializeField] private GameObject informantRoleScreen;
@@ -27,6 +31,8 @@ public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private int robberScore;
     [SerializeField] private int informantScore;
     [SerializeField] private bool overrideWinner, isInformant, showRole;
+    [SerializeField] private string playerName;
+    [SerializeField] private int playerChar;
 
     public bool ready;
 
@@ -100,6 +106,20 @@ public class NetworkPlayerManager : NetworkComponent {
                 showRole = bool.Parse(value);
                 ToggleRoleScreen(showRole);
                 break;
+            case NetworkPlayerManagerFlags.NAME:
+                playerName = value;
+                if(IsServer)
+                {
+                    SendUpdate("NAME", value);
+                }
+                break;
+            case NetworkPlayerManagerFlags.CHAR:
+                playerChar = int.Parse(value);
+                if(IsServer)
+                {
+                    SendUpdate("CHAR", value);
+                }
+                break;
         }
     }
 
@@ -109,8 +129,18 @@ public class NetworkPlayerManager : NetworkComponent {
         }
     }
 
+    public void CharSelect()
+    {
+        //Update Char Selected Variable
+        //Send Command char selected
+        //Update char selected on server side so no one picks the same character
+        startScreenBG.SetActive(false);
+
+    }
+
     public void GameStart() {
         startScreen.SetActive(false);
+        //lobby.SetActive(false);
         ToggleRoleScreen(true);
     }
 
@@ -123,7 +153,6 @@ public class NetworkPlayerManager : NetworkComponent {
 
         if (IsLocalPlayer) scoreScreen.SetActive(true);
     }
-
 
     public void UpdateIScore(int score) {
         SendUpdate(NetworkPlayerManagerFlags.ISCORE, score.ToString());
