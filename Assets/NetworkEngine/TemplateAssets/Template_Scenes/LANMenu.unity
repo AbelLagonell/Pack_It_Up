@@ -480,10 +480,7 @@ MonoBehaviour:
   DisconnectScreen: {fileID: 0}
   ObjectCounter: 0
   SpawnPrefab:
-<<<<<<< HEAD
   - {fileID: 2629583441204168721, guid: 6fb722e54ad2bdfc294a02f7c77aa38f, type: 3}
-=======
->>>>>>> origin/main
   - {fileID: 2724458702127739752, guid: 40118b0c032702998bf7bd574dd39120, type: 3}
   NetworkPlayerManager: {fileID: 4460439341775647641, guid: 7d28657f2ffe9171cacd8bab6b46b18e, type: 3}
   DefaultReturnScene: 0
@@ -1139,8 +1136,6 @@ CanvasRenderer:
   m_CullTransparentMesh: 0
 --- !u!1001 &1398883765
 PrefabInstance:
-<<<<<<< HEAD
-=======
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
@@ -1199,7 +1194,6 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 40118b0c032702998bf7bd574dd39120, type: 3}
 --- !u!1 &1413792235
 GameObject:
->>>>>>> origin/main
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
@@ -2323,11 +2317,8 @@ SceneRoots:
   - {fileID: 1979602085}
   - {fileID: 408156394}
   - {fileID: 1657534314}
-<<<<<<< HEAD
-=======
   - {fileID: 1413792236}
   - {fileID: 648093772}
   - {fileID: 346729501}
   - {fileID: 1188256010}
->>>>>>> origin/main
   - {fileID: 1398883765}
