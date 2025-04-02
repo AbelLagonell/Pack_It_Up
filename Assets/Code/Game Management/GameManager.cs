@@ -10,12 +10,22 @@ struct GameManagerFlags {
 public class GameManager : NetworkComponent {
     [SerializeField] private float globalTimer = 70; //in seconds
 
+    public static bool[] CharsTaken;
+    
     private bool _gameStart;
     private bool _gameOver;
     private bool _gamePaused;
     private int _robberScore = 10;
     private int _informantScore = 0;
 
+    void Start()
+    {
+        CharsTaken = new bool[8];
+        for (int i = 0; i < 8; i++)
+        {
+            CharsTaken[i] = false;
+        }
+    }
 
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
@@ -57,16 +67,16 @@ public class GameManager : NetworkComponent {
                 allReady = true;
                 foreach (var player in npms) {
                     if (!player.ready) allReady = false;
+                    if(player.playerChar != 0 && !player.isSpawned)
+                    {
+                        player.SpawnChar();
+                    }
                 }
 
                 yield return new WaitForSeconds(1f);
             } while (!allReady || npms.Length < 2);
 
             npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
-            foreach (var player in npms) {
-                GameObject temp = MyCore.NetCreateObject(0, player.Owner, Vector3.zero, Quaternion.identity);
-                //TODO create player
-            }
 
             //Setting informant
             //TODO Make this a random gen from 1 to the amount of players that there are and then have that be the informant
@@ -81,6 +91,7 @@ public class GameManager : NetworkComponent {
             //So that the players can read their roles
             yield return new WaitForSeconds(2f);
             foreach (var player in npms) {
+                player.transform.GetChild(0).gameObject.SetActive(true);
                 player.ToggleRoleScreen(false);
                 
             }

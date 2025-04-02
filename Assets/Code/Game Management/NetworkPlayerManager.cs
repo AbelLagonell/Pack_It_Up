@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using NETWORK_ENGINE;
 using TMPro;
 using Unity.Services.Relay.Models;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -17,6 +19,7 @@ struct NetworkPlayerManagerFlags {
     public const string PAUSE = "PAUSE";
     public const string NAME = "NAME";
     public const string CHAR = "CHAR";
+    public const string CHARCHANGE = "CHARCHANGE";
 }
 
 public class NetworkPlayerManager : NetworkComponent {
@@ -32,7 +35,9 @@ public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private int informantScore;
     [SerializeField] private bool overrideWinner, isInformant, showRole;
     [SerializeField] private string playerName;
-    [SerializeField] private int playerChar;
+    [SerializeField] public int playerChar = 0;
+    [SerializeField] private GameObject lobby;
+    public bool isSpawned = false;
 
     public bool ready;
 
@@ -63,6 +68,8 @@ public class NetworkPlayerManager : NetworkComponent {
         while (IsConnected) {
             if (IsServer)
                 if (IsDirty) {
+                    SendUpdate(NetworkPlayerManagerFlags.NAME, playerName);
+                    SendUpdate(NetworkPlayerManagerFlags.CHAR, playerChar.ToString());
                     SendUpdate(NetworkPlayerManagerFlags.READY, ready.ToString());
                     SendUpdate(NetworkPlayerManagerFlags.RSCORE, robberScore.ToString());
                     SendUpdate(NetworkPlayerManagerFlags.ISCORE, informantScore.ToString());
@@ -110,16 +117,21 @@ public class NetworkPlayerManager : NetworkComponent {
                 playerName = value;
                 if(IsServer)
                 {
-                    SendUpdate("NAME", value);
+                    SendUpdate(NetworkPlayerManagerFlags.NAME, value);
                 }
                 break;
             case NetworkPlayerManagerFlags.CHAR:
                 playerChar = int.Parse(value);
+                GameManager.CharsTaken[int.Parse(value) - 2] = true;
                 if(IsServer)
                 {
-                    SendUpdate("CHAR", value);
+                    SendUpdate(NetworkPlayerManagerFlags.CHAR, value);
                 }
                 break;
+            case NetworkPlayerManagerFlags.CHARCHANGE:
+                //Set previous character selected to false
+                //Set current character to true
+            break;
         }
     }
 
@@ -129,13 +141,40 @@ public class NetworkPlayerManager : NetworkComponent {
         }
     }
 
-    public void CharSelect()
+    public void CharSelect(int c)
     {
         //Update Char Selected Variable
         //Send Command char selected
         //Update char selected on server side so no one picks the same character
-        startScreenBG.SetActive(false);
+        //Red = 2, Orange = 3, Yellow = 4, Green = 5, Blue = 6, Purple = 7, Pink = 8, Black = 9
+        if(!GameManager.CharsTaken[c-2]) {
+            startScreenBG.SetActive(false);
+            if(IsLocalPlayer)
+            {
+                SendCommand(NetworkPlayerManagerFlags.CHAR, c.ToString());
+            }
+        }
+    }
 
+    public void UpdateName()
+    {
+
+    }
+
+    public void NameSelect(string s)
+    {
+        if(IsLocalPlayer)
+        {
+            SendCommand(NetworkPlayerManagerFlags.NAME, s);
+        }
+
+    }
+
+    public void SpawnChar()
+    {
+        //lobby.SetActive(true);
+        GameObject temp = MyCore.NetCreateObject(playerChar - 2, Owner, Vector3.zero, Quaternion.identity);
+        isSpawned = true;
     }
 
     public void GameStart() {
@@ -184,7 +223,8 @@ public class NetworkPlayerManager : NetworkComponent {
     }
 
     public void OnCheckBoxClick(bool value) {
-        if (IsLocalPlayer) {
+        //Blank out box if character hasn't been picked. Functions properly but visually confuses user.
+        if (IsLocalPlayer && playerChar != 0) {
             SendCommand(NetworkPlayerManagerFlags.READY, value.ToString());
         }
     }
