@@ -1,13 +1,21 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : Actor {
     [SerializeField] private TMPro.TMP_Text timerText;
+    [SerializeField] private Text PlayerName;
+    [SerializeField] private string PName = "<Default>";
     private float localTimer = 61; //Find a way to sync this initially with the game manager
     private NetworkPlayerManager myNPM;
     
+    struct PlayerFlags {
+        public const string NAME = "NAME";
+        public const string CHAR = "CHAR";
+    }
     
     private void Start() {
+        transform.GetChild(0).gameObject.SetActive(false);
         if (timerText == null) {
             Debug.LogError("Timer Text is not set");
         }
@@ -33,6 +41,19 @@ public class Player : Actor {
     }
 
     public override void HandleMessage(string flag, string value) {
+        switch (flag)
+        {
+            case PlayerFlags.NAME:
+                if(IsServer)
+                {
+                    SendUpdate(PlayerFlags.NAME, value);
+                }
+                if(IsClient)
+                {
+                    PlayerName.text = value;
+                }
+            break;
+        }
         //TODO make necessary flags
     }
 
