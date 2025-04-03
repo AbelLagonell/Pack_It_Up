@@ -51,7 +51,7 @@ public class NetControls : NetworkComponent {
             case NetControlFlag.LOOKINPUT:
                 if (IsServer) {
                     _lastLookInput = Vector2FromString(value);
-                    _lastLookInput.y = -_lastLookInput.y;
+                    Debug.Log(_lastLookInput);
                 }
 
                 break;
@@ -73,9 +73,11 @@ public class NetControls : NetworkComponent {
 
 
     public void OnLookAction(InputAction.CallbackContext lk) {
+        Debug.Log(lk.control.device.);
         if (IsServer) return;
         if (lk.performed || lk.started) {
-            SendCommand(NetControlFlag.LOOKINPUT, lk.ReadValue<Vector2>().ToString());
+            
+            SendCommand(NetControlFlag.LOOKINPUT, new Vector2(_lastLookInput.x, _lastLookInput.y).normalized.ToString());
         }
 
         if (lk.canceled) {
