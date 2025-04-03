@@ -122,7 +122,7 @@ public class NetworkPlayerManager : NetworkComponent {
                 break;
             case NetworkPlayerManagerFlags.CHAR:
                 playerChar = int.Parse(value);
-                GameManager.CharsTaken[int.Parse(value) - 2] = true;
+                GameManager.CharsTaken[int.Parse(value)] = true;
                 if(IsServer)
                 {
                     SendUpdate(NetworkPlayerManagerFlags.CHAR, value);
@@ -146,8 +146,8 @@ public class NetworkPlayerManager : NetworkComponent {
         //Update Char Selected Variable
         //Send Command char selected
         //Update char selected on server side so no one picks the same character
-        //Red = 2, Orange = 3, Yellow = 4, Green = 5, Blue = 6, Purple = 7, Pink = 8, Black = 9
-        if(!GameManager.CharsTaken[c-2]) {
+        //Red = 0, Orange = 1, Yellow = 2, Green = 3, Blue = 4, Purple = 5, Pink = 6, Black = 7
+        if(!GameManager.CharsTaken[c]) {
             startScreenBG.SetActive(false);
             if(IsLocalPlayer)
             {
