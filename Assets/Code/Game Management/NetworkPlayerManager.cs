@@ -20,6 +20,7 @@ struct NetworkPlayerManagerFlags {
     public const string NAME = "NAME";
     public const string CHAR = "CHAR";
     public const string CHARCHANGE = "CHARCHANGE";
+    public const string TIMERSTART = "TIMERSTART";
 }
 
 public class NetworkPlayerManager : NetworkComponent {
@@ -28,18 +29,23 @@ public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private GameObject scoreScreen;
     [SerializeField] private GameObject robberRoleScreen;
     [SerializeField] private GameObject informantRoleScreen;
-    [SerializeField] private TMP_Text robberScoreText;    //positive
-    [SerializeField] private TMP_Text informantScoreText; //negative
+    [SerializeField] private GameObject GameUI;
+    [SerializeField] private TMP_Text robberScoreText;
+    [SerializeField] private TMP_Text informantScoreText;
     [SerializeField] private TMP_Text winnerText;
+    [SerializeField] private TMP_Text timerText;
     [SerializeField] private int robberScore;
     [SerializeField] private int informantScore;
     [SerializeField] private bool overrideWinner, isInformant, showRole;
     [SerializeField] private string playerName;
-    [SerializeField] public int playerChar = 0;
+    [SerializeField] public int playerChar = -1;
     [SerializeField] private GameObject lobby;
+    
     public bool isSpawned = false;
-
     public bool ready;
+
+    public float localTimer;
+    public bool timerStart;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -62,6 +68,27 @@ public class NetworkPlayerManager : NetworkComponent {
         scoreScreen.SetActive(false);
         informantRoleScreen.SetActive(false);
         robberRoleScreen.SetActive(false);
+    }
+
+    private void Update() {
+        if (IsLocalPlayer) {
+            if (timerStart) {
+                GameUI.SetActive(true);
+            }
+
+            localTimer = GameManager.GlobalTimer;
+            if (localTimer > 0) {
+                if (localTimer > 60) {
+                    var min = (int)localTimer / 60;
+                    var seconds = localTimer % 60;
+                    timerText.text = $"{min}:{seconds:F2}";
+                } else {
+                    timerText.text = $"{localTimer:F2}";
+                }
+            } else {
+                timerText.text = "GET OUT";
+            }
+        }
     }
 
     public override IEnumerator SlowUpdate() {
@@ -115,23 +142,26 @@ public class NetworkPlayerManager : NetworkComponent {
                 break;
             case NetworkPlayerManagerFlags.NAME:
                 playerName = value;
-                if(IsServer)
-                {
+                if (IsServer) {
                     SendUpdate(NetworkPlayerManagerFlags.NAME, value);
                 }
+
                 break;
             case NetworkPlayerManagerFlags.CHAR:
                 playerChar = int.Parse(value);
                 GameManager.CharsTaken[int.Parse(value)] = true;
-                if(IsServer)
-                {
+                if (IsServer) {
                     SendUpdate(NetworkPlayerManagerFlags.CHAR, value);
                 }
+
                 break;
             case NetworkPlayerManagerFlags.CHARCHANGE:
                 //Set previous character selected to false
                 //Set current character to true
-            break;
+                break;
+            case NetworkPlayerManagerFlags.TIMERSTART:
+                timerStart = bool.Parse(value);
+                break;
         }
     }
 
@@ -141,39 +171,30 @@ public class NetworkPlayerManager : NetworkComponent {
         }
     }
 
-    public void CharSelect(int c)
-    {
+    public void CharSelect(int c) {
         //Update Char Selected Variable
         //Send Command char selected
         //Update char selected on server side so no one picks the same character
         //Red = 0, Orange = 1, Yellow = 2, Green = 3, Blue = 4, Purple = 5, Pink = 6, Black = 7
-        if(!GameManager.CharsTaken[c]) {
+        if (!GameManager.CharsTaken[c]) {
             startScreenBG.SetActive(false);
-            if(IsLocalPlayer)
-            {
+            if (IsLocalPlayer) {
                 SendCommand(NetworkPlayerManagerFlags.CHAR, c.ToString());
             }
         }
     }
 
-    public void UpdateName()
-    {
+    public void UpdateName() { }
 
-    }
-
-    public void NameSelect(string s)
-    {
-        if(IsLocalPlayer)
-        {
+    public void NameSelect(string s) {
+        if (IsLocalPlayer) {
             SendCommand(NetworkPlayerManagerFlags.NAME, s);
         }
-
     }
 
-    public void SpawnChar()
-    {
+    public void SpawnChar() {
         //lobby.SetActive(true);
-        GameObject temp = MyCore.NetCreateObject(playerChar - 2, Owner, Vector3.zero, Quaternion.identity);
+        GameObject temp = MyCore.NetCreateObject(playerChar, Owner, Vector3.zero, Quaternion.identity);
         isSpawned = true;
     }
 
