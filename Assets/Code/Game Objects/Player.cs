@@ -3,18 +3,23 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+struct PlayerFlags {
+    public const string NAME = "NAME";
+    public const string CHAR = "CHAR";
+    public const string BAG = "BAG";
+}
+
+
 public class Player : Actor {
     [SerializeField] private TMPro.TMP_Text timerText;
     [SerializeField] private Text PlayerName;
     [SerializeField] private string PName = "<Default>";
     private float localTimer = 61; //Find a way to sync this initially with the game manager
     private NetworkPlayerManager myNPM;
-    
-    struct PlayerFlags {
-        public const string NAME = "NAME";
-        public const string CHAR = "CHAR";
-    }
-    
+
+    public bool hasBag = false;
+    private Bag _currentBag;
+
     private void Start() {
         transform.GetChild(0).gameObject.SetActive(false);
         if (timerText == null) {
@@ -42,37 +47,50 @@ public class Player : Actor {
     }
 
     public override void HandleMessage(string flag, string value) {
-        switch (flag)
-        {
+        switch (flag) {
             case PlayerFlags.NAME:
-                if(IsServer)
-                {
+                if (IsServer) {
                     SendUpdate(PlayerFlags.NAME, value);
                 }
-                if(IsClient)
-                {
+
+                if (IsClient) {
                     PlayerName.text = value;
                 }
-            break;
+
+                break;
         }
         //TODO make necessary flags
     }
 
     public override void NetworkedStart() {
-        if (!IsLocalPlayer) {
-            transform.GetChild(0).gameObject.SetActive(false);
-        }
-
         foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None)) {
             if (npm.Owner == Owner) {
                 myNPM = npm;
                 //Get Whatever you need from it
             }
         }
+
+        if (!IsLocalPlayer) {
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
         //TODO Make what happens when they connect to the server
     }
 
     protected override void OnDeath() {
         //TODO Make do a death thing
+    }
+
+    public void AssignBag(Bag bag) {
+        _currentBag = bag;
+        hasBag = true;
+    }
+
+    public void AddItem(Item item) {
+        _currentBag.AddItem(item);
+    }
+
+    public void ReleaseBag() {
+        //To be called on release
+        hasBag = false;
     }
 }

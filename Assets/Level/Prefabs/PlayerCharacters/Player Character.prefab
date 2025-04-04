@@ -133,6 +133,7 @@ MonoBehaviour:
   timerText: {fileID: 6379587441249947791}
   PlayerName: {fileID: 0}
   PName: <Default>
+  _currentBag: {fileID: 0}
 --- !u!54 &2066719836494758276
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -274,6 +275,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 306a85f0-fb02-4f2b-aa78-f3ac1f09ce61
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4793425777954185950}
+        m_TargetAssemblyTypeName: NetControls, Assembly-CSharp
+        m_MethodName: OnPrimaryAction
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f0460ee1-c083-4d90-a923-87a51bd97e8e
+    m_ActionName: 'Player/PrimaryAction[/Mouse/press,/Pen/press,/XInputControllerWindows/buttonSouth]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -294,8 +311,9 @@ MonoBehaviour:
   MyCore: {fileID: 0}
   MyId: {fileID: 0}
   IsDirty: 0
-  angularSpeed: 5
+  rayCastDistance: 2.5
   linearSpeed: 5
+  _item: {fileID: 0}
 --- !u!1 &5370832061557994575
 GameObject:
   m_ObjectHideFlags: 0
