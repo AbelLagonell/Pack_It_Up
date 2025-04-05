@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8749745603026247257}
   - component: {fileID: 5605319201923852152}
   - component: {fileID: 4043196866712132588}
+  - component: {fileID: 4540039310838172058}
   m_Layer: 0
   m_Name: Bag
   m_TagString: Bag
@@ -148,5 +149,22 @@ MonoBehaviour:
   IsDirty: 0
   money: 0
   weight: 0
+  _owner: {fileID: 0}
   isTampered: 0
   maxWeight: 50
+--- !u!114 &4540039310838172058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8667201861155872803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86a2460ca570c9646ab9514a62e03a85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MyCore: {fileID: 0}
+  MyId: {fileID: 0}
+  IsDirty: 0
+  Speed: 1

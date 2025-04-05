@@ -80,15 +80,37 @@ public class NetControls : NetworkComponent {
                 if (IsServer) {
                     switch (_pAction) {
                         case PrimaryActions.PickupItem:
-                            
                             if (!_player.hasBag) return;
                             _player.AddItem(_item);
                             break;
                         case PrimaryActions.PickupBag:
                             if (_player.hasBag) return;
-                            Debug.Log(_player);
-                            _player.AssignBag((Bag)_item);
+                            if (_item is Bag bag) {
+                                if (bag._hasOwner) return;
+                                _player.AssignBag(bag);
+                            }
                             break;
+                        case PrimaryActions.Interaction:
+                        case PrimaryActions.Arrest:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                break;
+            
+            case NetControlFlag.SECONDARY:
+                if (IsServer) {
+                    switch (_sAction) {
+                        case SecondaryActions.Tamper:
+                            
+                            break;
+                        case SecondaryActions.Attack:
+                        case SecondaryActions.Release:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 }
 
@@ -135,6 +157,13 @@ public class NetControls : NetworkComponent {
         if (IsServer) return;
         if (pa.performed || pa.started) {
             SendCommand(NetControlFlag.PRIMARY, "");
+        }
+    }
+
+    public void OnSecondaryAction(InputAction.CallbackContext sa) {
+        if (IsServer) return;
+        if (sa.performed || sa.started) {
+            SendCommand(NetControlFlag.SECONDARY, "");
         }
     }
 
