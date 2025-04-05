@@ -236,6 +236,10 @@ public class NetworkPlayerManager : NetworkComponent {
         SendUpdate(NetworkPlayerManagerFlags.ROLE, isInformant.ToString());
     }
 
+    public bool GetInformant() {
+        return isInformant;
+    }
+
     public void ToggleRoleScreen(bool value) {
         if (IsServer) {
             SendUpdate(NetworkPlayerManagerFlags.SHOWROLE, value.ToString());
