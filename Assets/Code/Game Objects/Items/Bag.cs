@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 struct BagFlags {
     public const string MONEY = "MONEY";
     public const string WEIGHT = "WEIGHT";
+    public const string CANVAS = "CANVAS";
 }
 
 public class Bag : Item {
@@ -13,9 +15,21 @@ public class Bag : Item {
     private readonly Vector2 _offsetMult = new Vector2(0.6f, 0.6f);
     public bool _hasOwner;
     public bool isTampered;
-    [SerializeField] private float maxWeight = 50;
+    public float maxWeight = 50;
 
     public override IEnumerator SlowUpdate() {
+        while (true) {
+            if (IsServer) {
+                if (IsDirty) {
+                    SendUpdate(BagFlags.MONEY, money.ToString());
+                    SendUpdate(BagFlags.WEIGHT, weight.ToString());
+                    IsDirty = false;
+                }
+            }
+
+            yield return new WaitForSeconds(MyCore.MasterTimer);
+        }
+
         yield return new WaitForSeconds(1f);
     }
 
@@ -33,7 +47,7 @@ public class Bag : Item {
     public override void NetworkedStart() { }
 
     public bool AddItem(Item item) {
-        if (item.weight + weight >= maxWeight) {
+        if (item.weight + weight > maxWeight) {
             return false;
         }
 
@@ -56,11 +70,11 @@ public class Bag : Item {
     }
 
     private void Update() {
-        if (IsServer)
-            if (_hasOwner) {
-                transform.position = _owner.transform.position +
-                                     _owner.transform.up * _offsetMult.y +
-                                     _owner.transform.right * _offsetMult.x;
-            }
+        if (!IsServer) return;
+        if (_hasOwner) {
+            transform.position = _owner.transform.position +
+                                 _owner.transform.up * _offsetMult.y +
+                                 _owner.transform.right * _offsetMult.x;
+        }
     }
 }
