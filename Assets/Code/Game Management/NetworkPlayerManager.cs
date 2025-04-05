@@ -84,7 +84,7 @@ public class NetworkPlayerManager : NetworkComponent {
                 if (localTimer > 60) {
                     var min = (int)localTimer / 60;
                     var seconds = localTimer % 60;
-                    timerText.text = $"{min}:{seconds:00F2}";
+                    timerText.text = $"{min}:{seconds:00}";
                 } else {
                     timerText.text = $"{localTimer:F2}";
                 }
