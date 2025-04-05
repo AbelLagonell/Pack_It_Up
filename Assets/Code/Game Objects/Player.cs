@@ -39,6 +39,10 @@ public class Player : Actor {
     }
 
     public override void NetworkedStart() {
+        if(IsLocalPlayer)
+        {
+            SendCommand(PlayerFlags.NAME, PName);
+        }
         foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None)) {
             if (npm.Owner == Owner) {
                 _myNpm = npm;
