@@ -85,7 +85,7 @@ public class GameManager : NetworkComponent
                 foreach (var player in npms)
                 {
                     if (!player.ready) allReady = false;
-                    if (player.playerChar != 0 && !player.isSpawned)
+                    if (player.playerChar != 50 && !player.isSpawned)
                     {
                         player.SpawnChar();
                     }

@@ -54,6 +54,7 @@ public class Player : Actor {
 
     public void AssignBag(Bag bag) {
         _currentBag = bag;
+        _currentBag.AssignOwner(gameObject);
         hasBag = true;
     }
 

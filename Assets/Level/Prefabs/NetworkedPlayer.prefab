@@ -3223,7 +3223,7 @@ MonoBehaviour:
   isInformant: 0
   showRole: 0
   playerName: 
-  playerChar: 0
+  playerChar: 50
   lobby: {fileID: 0}
   isSpawned: 0
   ready: 0

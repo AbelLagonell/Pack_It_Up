@@ -24,6 +24,7 @@ struct NetworkPlayerManagerFlags {
 }
 
 public class NetworkPlayerManager : NetworkComponent {
+    //UI Fields
     [SerializeField] private GameObject startScreen;
     [SerializeField] private GameObject startScreenBG;
     [SerializeField] private GameObject scoreScreen;
@@ -34,11 +35,13 @@ public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private TMP_Text informantScoreText;
     [SerializeField] private TMP_Text winnerText;
     [SerializeField] private TMP_Text timerText;
+    
+    //Values
     [SerializeField] private int robberScore;
     [SerializeField] private int informantScore;
     [SerializeField] private bool overrideWinner, isInformant, showRole;
     [SerializeField] private string playerName;
-    [SerializeField] public int playerChar = -1;
+     public int playerChar = 50;
     [SerializeField] private GameObject lobby;
     
     public bool isSpawned = false;
@@ -81,7 +84,7 @@ public class NetworkPlayerManager : NetworkComponent {
                 if (localTimer > 60) {
                     var min = (int)localTimer / 60;
                     var seconds = localTimer % 60;
-                    timerText.text = $"{min}:{seconds:F2}";
+                    timerText.text = $"{min}:{seconds:00F2}";
                 } else {
                     timerText.text = $"{localTimer:F2}";
                 }
@@ -149,6 +152,7 @@ public class NetworkPlayerManager : NetworkComponent {
                 break;
             case NetworkPlayerManagerFlags.CHAR:
                 playerChar = int.Parse(value);
+                if (playerChar == 50) break;
                 GameManager.CharsTaken[int.Parse(value)] = true;
                 if (IsServer) {
                     SendUpdate(NetworkPlayerManagerFlags.CHAR, value);
@@ -245,7 +249,7 @@ public class NetworkPlayerManager : NetworkComponent {
 
     public void OnCheckBoxClick(bool value) {
         //Blank out box if character hasn't been picked. Functions properly but visually confuses user.
-        if (IsLocalPlayer && playerChar != 0) {
+        if (IsLocalPlayer && playerChar != 50) {
             SendCommand(NetworkPlayerManagerFlags.READY, value.ToString());
         }
     }
