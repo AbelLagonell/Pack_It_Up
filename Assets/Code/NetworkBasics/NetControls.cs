@@ -89,6 +89,7 @@ public class NetControls : NetworkComponent {
                                 if (bag._hasOwner) return;
                                 _player.AssignBag(bag);
                             }
+
                             break;
                         case PrimaryActions.Interaction:
                         case PrimaryActions.Arrest:
@@ -99,15 +100,19 @@ public class NetControls : NetworkComponent {
                 }
 
                 break;
-            
+
             case NetControlFlag.SECONDARY:
                 if (IsServer) {
                     switch (_sAction) {
                         case SecondaryActions.Tamper:
-                            
+                            if (_item is Bag bag) {
+                                bag.isTampered = true;
+                            }
                             break;
                         case SecondaryActions.Attack:
+                            break;
                         case SecondaryActions.Release:
+                            _player.ReleaseBag();
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -180,7 +185,6 @@ public class NetControls : NetworkComponent {
             float angle = Mathf.Atan2(_lastLookInput.x, _lastLookInput.y) * Mathf.Rad2Deg;
             _rb.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-            _pAction = PrimaryActions.Interaction;
 
             Ray ray = new Ray(transform.position, -transform.up);
 
@@ -192,9 +196,17 @@ public class NetControls : NetworkComponent {
                         break;
                     case "Bag":
                         _pAction = PrimaryActions.PickupBag;
+                        if (_player._myNpm.GetInformant()) {
+                            _sAction = SecondaryActions.Tamper;
+                        }
+
                         _item = hit.collider.gameObject.GetComponent<Bag>();
                         break;
                 }
+            } else {
+                _pAction = PrimaryActions.Interaction;
+                _sAction = _player.hasBag ? SecondaryActions.Release : SecondaryActions.Attack;
+                _item = null;
             }
         }
 
