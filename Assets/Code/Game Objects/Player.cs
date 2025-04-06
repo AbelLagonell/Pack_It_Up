@@ -32,18 +32,21 @@ public class Player : Actor {
                 if (IsDirty) {
                     SendUpdate(PlayerFlags.BAG, hasBag.ToString());
                     SendUpdate(ActorFlags.HEALTH, Health.ToString());
+                    SendUpdate(PlayerFlags.NAME, PName);
                     IsDirty = false;
                 }
             }
             yield return new WaitForSeconds(MyCore.MasterTimer);
         }
-        
-        yield return new WaitForSeconds(MyCore.MasterTimer);
     }
 
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case PlayerFlags.NAME:
+                if(IsLocalPlayer)
+                {
+                    PName = value;
+                }
                 if (IsServer) {
                     SendUpdate(PlayerFlags.NAME, value);
                 }
@@ -76,6 +79,7 @@ public class Player : Actor {
         foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None)) {
             if (npm.Owner == Owner) {
                 _myNpm = npm;
+                PName = npm.playerName;
                 //Get Whatever you need from it
             }
         }

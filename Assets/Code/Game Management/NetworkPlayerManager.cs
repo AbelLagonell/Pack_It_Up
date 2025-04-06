@@ -40,7 +40,7 @@ public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private int robberScore;
     [SerializeField] private int informantScore;
     [SerializeField] private bool overrideWinner, isInformant, showRole;
-    [SerializeField] private string playerName;
+    [SerializeField] public string playerName;
      public int playerChar = 50;
     [SerializeField] private GameObject lobby;
     
