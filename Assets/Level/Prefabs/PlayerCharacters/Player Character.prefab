@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 252734019895976695}
   - component: {fileID: 1003062420978288122}
   - component: {fileID: 4793425777954185950}
+  - component: {fileID: 4307156238418837691}
+  - component: {fileID: 7778047919944199573}
   m_Layer: 0
   m_Name: Player Character
   m_TagString: Untagged
@@ -338,6 +340,48 @@ MonoBehaviour:
   linearSpeed: 5
   _item: {fileID: 0}
   _pAction: 0
+--- !u!135 &4307156238418837691
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5417175086917946}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.579535
+  m_Center: {x: 0, y: 0.008182406, z: 0}
+--- !u!135 &7778047919944199573
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5417175086917946}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.0125076
+  m_Center: {x: 0, y: 0.059235692, z: 0}
 --- !u!1 &168262492558401650
 GameObject:
   m_ObjectHideFlags: 0
