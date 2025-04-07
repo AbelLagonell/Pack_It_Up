@@ -104,8 +104,10 @@ public class Player : Actor {
         SendUpdate(PlayerFlags.BAG, hasBag.ToString());
     }
 
+    //Server AddItem
     public void AddItem(Item item) {
         _currentBag.AddItem(item);
+        item.SetDestroy();
     }
 
     public void ReleaseBag() {
