@@ -9,6 +9,7 @@ struct PlayerFlags {
     public const string NAME = "NAME";
     public const string CHAR = "CHAR";
     public const string BAG = "BAG";
+    public const string BAGINFO = "BAGINFO";
 }
 
 
@@ -18,7 +19,7 @@ public class Player : Actor {
     [SerializeField] private GameObject bagInfo;
     public TMP_Text bagTextInfo;
     [SerializeField] private Slider healthBar;
-    
+
     [SerializeField] private Text PlayerName;
     [SerializeField] private string PName = "<Default>";
     public NetworkPlayerManager _myNpm;
@@ -33,9 +34,11 @@ public class Player : Actor {
                     SendUpdate(PlayerFlags.BAG, hasBag.ToString());
                     SendUpdate(ActorFlags.HEALTH, Health.ToString());
                     SendUpdate(PlayerFlags.NAME, PName);
+                    SendUpdate(PlayerFlags.BAGINFO, bagTextInfo.text);
                     IsDirty = false;
                 }
             }
+
             yield return new WaitForSeconds(MyCore.MasterTimer);
         }
     }
@@ -43,10 +46,10 @@ public class Player : Actor {
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case PlayerFlags.NAME:
-                if(IsLocalPlayer)
-                {
+                if (IsLocalPlayer) {
                     PName = value;
                 }
+
                 if (IsServer) {
                     SendUpdate(PlayerFlags.NAME, value);
                 }
@@ -60,6 +63,7 @@ public class Player : Actor {
                 if (IsLocalPlayer) {
                     hasBag = bool.Parse(value);
                 }
+
                 break;
             case ActorFlags.HEALTH:
                 if (IsClient) {
@@ -69,8 +73,11 @@ public class Player : Actor {
                 if (IsLocalPlayer) {
                     healthBar.value = (float)Health / MaxHealth;
                 }
+
                 break;
-            
+            case PlayerFlags.BAGINFO:
+                bagTextInfo.text = value;
+                break;
         }
         //TODO make necessary flags
     }
@@ -111,12 +118,14 @@ public class Player : Actor {
     private void Start() {
         inGameUI.SetActive(false);
     }
-    
+
     private void Update() {
-        if (hasBag) {
-            //TODO Make sure that bag info can be gotten from server
-            //bagTextInfo.text = $"${_currentBag.money}\n{_currentBag.weight}/{_currentBag.maxWeight}";
-        }
+        if (IsServer)
+            if (hasBag) {
+                bagTextInfo.text = $"${_currentBag.money}\n{_currentBag.weight}/{_currentBag.maxWeight}";
+                SendUpdate(PlayerFlags.BAGINFO, bagTextInfo.text);
+            }
+
         if (IsLocalPlayer) {
             inGameUI.SetActive(!GameManager.GamePaused);
             bagInfo.SetActive(hasBag);
