@@ -95,7 +95,8 @@ public class NetControls : NetworkComponent {
 
                             break;
                         case PrimaryActions.Interaction:
-                            if (!_interactable.usable || !hasSomething) return;
+                            if (!hasSomething) return;
+                            if (!_interactable.usable) return;
                             _interactable.OnUse();
                             break;
                         case PrimaryActions.Arrest:

@@ -21,29 +21,38 @@ struct NetworkPlayerManagerFlags {
     public const string CHAR = "CHAR";
     public const string CHARCHANGE = "CHARCHANGE";
     public const string TIMERSTART = "TIMERSTART";
+    public const string SHOWVOTE = "SHOWVOTE";
 }
 
 public class NetworkPlayerManager : NetworkComponent {
-    //UI Fields
+    //Screens
     [SerializeField] private GameObject startScreen;
     [SerializeField] private GameObject startScreenBG;
     [SerializeField] private GameObject scoreScreen;
     [SerializeField] private GameObject robberRoleScreen;
     [SerializeField] private GameObject informantRoleScreen;
     [SerializeField] private GameObject GameUI;
+
+    [SerializeField] private GameObject voteScreen;
+
+    //TEXT
     [SerializeField] private TMP_Text robberScoreText;
     [SerializeField] private TMP_Text informantScoreText;
     [SerializeField] private TMP_Text winnerText;
     [SerializeField] private TMP_Text timerText;
-    
+
+    //Voting
+    public GameObject toggleGroup;
+    public GameObject votePrefab;
+
     //Values
     [SerializeField] private int robberScore;
     [SerializeField] private int informantScore;
     [SerializeField] private bool overrideWinner, isInformant, showRole;
     [SerializeField] public string playerName;
-     public int playerChar = 50;
+    public int playerChar = 50;
     [SerializeField] private GameObject lobby;
-    
+
     public bool isSpawned = false;
     public bool ready;
 
@@ -255,6 +264,16 @@ public class NetworkPlayerManager : NetworkComponent {
         //Blank out box if character hasn't been picked. Functions properly but visually confuses user.
         if (IsLocalPlayer && playerChar != 50) {
             SendCommand(NetworkPlayerManagerFlags.READY, value.ToString());
+        }
+    }
+
+    public void makeVotingUI(bool[] characters) {
+        for (int i = 0; i < characters.Length; i++) {
+            if (characters[i]) {
+                var temp = Instantiate(votePrefab, toggleGroup.transform);
+                var voteObject = temp.GetComponent<VotingObject>();
+                voteObject.characterIndex = i;
+            }
         }
     }
 }
