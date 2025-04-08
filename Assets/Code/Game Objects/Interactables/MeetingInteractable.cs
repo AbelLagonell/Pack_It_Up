@@ -10,13 +10,38 @@ struct MeetingInteractableFlags {
 
 public class MeetingInteractable : Interactable {
     private NetworkPlayerManager[] _managers;
+    private bool checkReady = false;
 
     private void Start() {
         _managers = FindObjectsOfType<NetworkPlayerManager>();
     }
 
     public override IEnumerator SlowUpdate() {
-        yield return new WaitForSeconds(1f);
+            if (IsServer) {
+                bool allReady = true;
+                do {
+                    foreach (var player in _managers) {
+                        if (!player.ready) allReady = false;
+                    }
+
+                    yield return new WaitForSeconds(1f);
+                } while (!allReady);
+
+                //Record everyone's vote
+                int votes = 0;
+                int character = 0;
+                foreach (var manager in _managers) {
+                }
+                
+                foreach (var manager in _managers) {
+                }
+                
+                SendUpdate(MeetingInteractableFlags.SHOW, false.ToString());
+                
+            }
+            
+            yield return new WaitForSeconds(1f);
+        
     }
 
     public override void HandleMessage(string flag, string value) {
@@ -40,6 +65,7 @@ public class MeetingInteractable : Interactable {
         usable = false;
         Time.timeScale = 0;
         GameManager.GamePaused = true;
+        checkReady = true;
         SendUpdate(MeetingInteractableFlags.SHOW, "");
     }
 }

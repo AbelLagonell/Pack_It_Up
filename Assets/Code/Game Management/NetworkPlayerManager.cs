@@ -22,6 +22,7 @@ struct NetworkPlayerManagerFlags {
     public const string CHARCHANGE = "CHARCHANGE";
     public const string TIMERSTART = "TIMERSTART";
     public const string SHOWVOTE = "SHOWVOTE";
+    public const string GETVOTE = "GETVOTE";
 }
 
 public class NetworkPlayerManager : NetworkComponent {
@@ -44,6 +45,7 @@ public class NetworkPlayerManager : NetworkComponent {
     //Voting
     public GameObject toggleGroup;
     public GameObject votePrefab;
+    public int characterIndex;
 
     //Values
     [SerializeField] private int robberScore;
@@ -175,6 +177,11 @@ public class NetworkPlayerManager : NetworkComponent {
             case NetworkPlayerManagerFlags.TIMERSTART:
                 timerStart = bool.Parse(value);
                 break;
+            case NetworkPlayerManagerFlags.GETVOTE:
+                if (IsServer) {
+                    _characterIndex = int.Parse(value);
+                }
+                break;
         }
     }
 
@@ -267,7 +274,7 @@ public class NetworkPlayerManager : NetworkComponent {
         }
     }
 
-    public void makeVotingUI(bool[] characters) {
+    public void MakeVotingUI(bool[] characters) {
         for (int i = 0; i < characters.Length; i++) {
             if (characters[i]) {
                 var temp = Instantiate(votePrefab, toggleGroup.transform);
@@ -275,5 +282,11 @@ public class NetworkPlayerManager : NetworkComponent {
                 voteObject.characterIndex = i;
             }
         }
+    }
+
+    public void GetVoted() {
+        RadioGroup rg = toggleGroup.GetComponent<RadioGroup>();
+        _characterIndex = rg.GetSelected();
+        SendCommand(NetworkPlayerManagerFlags.GETVOTE, _characterIndex.ToString());
     }
 }

@@ -38,7 +38,7 @@ public class GameManager : NetworkComponent {
                                   FindObjectsSortMode.None)) {
                         //TODO Hide Choosing color visuals
                         npm.GameStart();
-                        npm.makeVotingUI(CharsTaken);
+                        npm.MakeVotingUI(CharsTaken);
                     }
                 }
 

@@ -1091,8 +1091,9 @@ GameObject:
   - component: {fileID: 3658316472185567064}
   - component: {fileID: 8334303317079846113}
   - component: {fileID: 6408452191218918240}
+  - component: {fileID: 8385636441976652111}
   m_Layer: 0
-  m_Name: Toggle Group
+  m_Name: Radio Group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1155,6 +1156,18 @@ MonoBehaviour:
   m_Constraint: 0
   FlexibleSize: 1
   m_ConstraintCount: 1
+--- !u!114 &8385636441976652111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642841706888599167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62cee184bf85414da596e67eac6e13c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1646049554602532073
 GameObject:
   m_ObjectHideFlags: 0
@@ -1774,6 +1787,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2088567065491672145}
         m_TargetAssemblyTypeName: NetworkPlayerManager, Assembly-CSharp
         m_MethodName: OnCheckBoxClick
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8334303317079846113}
+        m_TargetAssemblyTypeName: UnityEngine.UI.ToggleGroup, UnityEngine.UI
+        m_MethodName: SetAllTogglesOff
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
