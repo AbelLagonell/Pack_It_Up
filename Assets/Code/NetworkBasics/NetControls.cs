@@ -37,6 +37,8 @@ public class NetControls : NetworkComponent {
 
     //Server only
     public Item _item;
+    public Interactable _interactable;
+    private bool hasSomething = false;
 
     //Sync Vars
     public PrimaryActions _pAction;
@@ -72,6 +74,7 @@ public class NetControls : NetworkComponent {
                 break;
             case NetControlFlag.LOOKINPUT:
                 if (IsServer) {
+                    _rb.angularVelocity = Vector3.zero;
                     _lastLookInput = Vector2FromString(value);
                 }
 
@@ -92,6 +95,9 @@ public class NetControls : NetworkComponent {
 
                             break;
                         case PrimaryActions.Interaction:
+                            if (!_interactable.usable || !hasSomething) return;
+                            _interactable.OnUse();
+                            break;
                         case PrimaryActions.Arrest:
                             break;
                         default:
@@ -202,11 +208,18 @@ public class NetControls : NetworkComponent {
 
                         _item = hit.collider.gameObject.GetComponent<Bag>();
                         break;
+                    case "Interactable":
+                        hasSomething = true;
+                        _pAction = PrimaryActions.Interaction;
+                        _interactable = hit.collider.gameObject.GetComponent<Interactable>();
+                        break;
                 }
             } else {
                 _pAction = PrimaryActions.Interaction;
                 _sAction = _player.hasBag ? SecondaryActions.Release : SecondaryActions.Attack;
                 _item = null;
+                _interactable = null;
+                hasSomething = false;
             }
         }
 

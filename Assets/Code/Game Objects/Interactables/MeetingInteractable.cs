@@ -1,31 +1,47 @@
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Video;
 
-public class MeetingInteractabl : Interactable {
+struct MeetingInteractableFlags {
+    public const string SHOW = "SHOW";
+}
+
+public class MeetingInteractable : Interactable {
+    [SerializeField] private GameObject votingUI;
+    private NetworkPlayerManager[] _managers;
+
+    private void Start() {
+        votingUI.SetActive(false);
+        _managers = FindObjectsOfType<NetworkPlayerManager>();
+    }
+
     public override IEnumerator SlowUpdate() {
-        while (true) {
-            if (IsServer)
-                if (IsDirty) {
-                    SendUpdate(InteractableFlags.USABLE, usable.ToString());   
-                }
-                yield return new WaitForSeconds(1f);
-        }
+        yield return new WaitForSeconds(1f);
     }
 
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
-            case InteractableFlags.USABLE:
-                usable = bool.Parse(value);
+            case MeetingInteractableFlags.SHOW:
+                votingUI.SetActive(true);
+                if (IsClient) {
+                    foreach (var player in _managers) {
+                        player.ready = false;
+                    }
+                }
+
+                //Set up the voting system like the ready basically setting it on ready and voting
                 break;
         }
     }
 
     public override void NetworkedStart() { }
 
-    protected override void OnUse() {
+    public override void OnUse() {
         if (usable) return;
         usable = false;
-        SendUpdate(InteractableFlags.USABLE, usable.ToString());
-        Debug.Log("MeetingInteraction");
+        Time.timeScale = 0;
+        SendUpdate(MeetingInteractableFlags.SHOW, "");
     }
 }

@@ -1,46 +1,40 @@
 using System.Collections;
 using UnityEngine;
 using NETWORK_ENGINE;
+using Unity.VisualScripting;
 
-struct GameManagerFlags
-{
+struct GameManagerFlags {
     public const string GAMESTART = "START";
     public const string GAMEPAUSED = "PAUSE";
     public const string GAMEOVER = "END";
+    public const string TIMECHANGE = "CHANGE";
 }
 
-public class GameManager : NetworkComponent
-{
-    public static float GlobalTimer = 70; //in seconds
+public class GameManager : NetworkComponent {
+    public static float GlobalTimer = 30; //in seconds
     public static bool[] CharsTaken;
     public static bool GamePaused = true;
-    
+
     private bool _gameStart;
     private bool _gameOver;
     private int _robberScore = 10;
     private int _informantScore = 0;
 
-    void Start()
-    {
+    void Start() {
         CharsTaken = new bool[8];
-        for (int i = 0; i < 8; i++)
-        {
+        for (int i = 0; i < 8; i++) {
             CharsTaken[i] = false;
         }
     }
 
-    public override void HandleMessage(string flag, string value)
-    {
-        switch (flag)
-        {
+    public override void HandleMessage(string flag, string value) {
+        switch (flag) {
             case GameManagerFlags.GAMESTART:
                 Debug.Log("Started Game");
-                if (IsClient)
-                {
+                if (IsClient) {
                     _gameStart = true;
                     foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
-                                 FindObjectsSortMode.None))
-                    {
+                                  FindObjectsSortMode.None)) {
                         //TODO Hide Choosing color visuals
                         npm.GameStart();
                     }
@@ -48,13 +42,11 @@ public class GameManager : NetworkComponent
 
                 break;
             case GameManagerFlags.GAMEOVER:
-                if (IsClient)
-                {
+                if (IsClient) {
                     Debug.Log("Game Over");
                     _gameOver = true;
                     foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
-                                  FindObjectsSortMode.None))
-                    {
+                                  FindObjectsSortMode.None)) {
                         npm.GameEnd();
                     }
                     //TODO do client stuff
@@ -67,26 +59,27 @@ public class GameManager : NetworkComponent
                 }
 
                 break;
+            case GameManagerFlags.TIMECHANGE:
+                if (IsClient) {
+                    GlobalTimer += float.Parse(value);
+                }
+
+                break;
         }
     }
 
     public override void NetworkedStart() { }
 
-    public override IEnumerator SlowUpdate()
-    {
-        if (IsServer)
-        {
+    public override IEnumerator SlowUpdate() {
+        if (IsServer) {
             NetworkPlayerManager[] npms;
             bool allReady = true;
-            do
-            {
+            do {
                 npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
                 allReady = true;
-                foreach (var player in npms)
-                {
+                foreach (var player in npms) {
                     if (!player.ready) allReady = false;
-                    if (player.playerChar != 50 && !player.isSpawned)
-                    {
+                    if (player.playerChar != 50 && !player.isSpawned) {
                         player.SpawnChar();
                     }
                 }
@@ -100,7 +93,7 @@ public class GameManager : NetworkComponent
             //TODO Make this a random gen from 1 to the amount of players that there are and then have that be the informant
             npms[0].SetInformant();
             yield return new WaitForSeconds(1f);
-            
+
             _gameStart = true;
             SendUpdate(GameManagerFlags.GAMESTART, "1");
             MyCore.StopListening();
@@ -108,8 +101,7 @@ public class GameManager : NetworkComponent
 
             //So that the players can read their roles
             yield return new WaitForSeconds(2f);
-            foreach (var player in npms)
-            {
+            foreach (var player in npms) {
                 player.transform.GetChild(0).gameObject.SetActive(true);
                 player.ToggleRoleScreen(false);
                 player.SendUpdate(NetworkPlayerManagerFlags.TIMERSTART, true.ToString());
@@ -117,12 +109,10 @@ public class GameManager : NetworkComponent
 
             GamePaused = false;
             SendUpdate(GameManagerFlags.GAMEPAUSED, GamePaused.ToString());
-            
 
-            while (!_gameOver)
-            {
-                if (GlobalTimer < 0)
-                {
+
+            while (!_gameOver) {
+                if (GlobalTimer < 0) {
                     //Timer is over here
                     _gameOver = true;
                 }
@@ -134,8 +124,7 @@ public class GameManager : NetworkComponent
 
 
             //After Game ends but before score screen
-            foreach (var player in npms)
-            {
+            foreach (var player in npms) {
                 player.UpdateRScore(_robberScore);
                 player.UpdateIScore(_informantScore);
                 player.OverrideWinner();
@@ -150,9 +139,12 @@ public class GameManager : NetworkComponent
         }
     }
 
-    private void Update()
-    {
+    private void Update() {
         if (_gameStart && !GamePaused) GlobalTimer -= Time.deltaTime;
     }
 
+    public void ChangeTime(float time) {
+            GlobalTimer += time;
+            SendUpdate(GameManagerFlags.TIMECHANGE, time.ToString());
+    }
 }

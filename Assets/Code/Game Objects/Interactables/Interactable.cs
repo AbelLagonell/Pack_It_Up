@@ -1,10 +1,9 @@
 using NETWORK_ENGINE;
+using UnityEngine;
 
-public struct InteractableFlags {
-    public const string USABLE = "USABLE";
-}
 
+[RequireComponent(typeof(Collider))]
 public abstract class Interactable : NetworkComponent {
     public bool usable = true;
-    protected abstract void OnUse();
+    public abstract void OnUse();
 }
