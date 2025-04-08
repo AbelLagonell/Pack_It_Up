@@ -9,11 +9,9 @@ struct MeetingInteractableFlags {
 }
 
 public class MeetingInteractable : Interactable {
-    [SerializeField] private GameObject votingUI;
     private NetworkPlayerManager[] _managers;
 
     private void Start() {
-        votingUI.SetActive(false);
         _managers = FindObjectsOfType<NetworkPlayerManager>();
     }
 
@@ -24,7 +22,6 @@ public class MeetingInteractable : Interactable {
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case MeetingInteractableFlags.SHOW:
-                votingUI.SetActive(true);
                 if (IsClient) {
                     foreach (var player in _managers) {
                         player.ready = false;
@@ -42,6 +39,7 @@ public class MeetingInteractable : Interactable {
         if (usable) return;
         usable = false;
         Time.timeScale = 0;
+        GameManager.GamePaused = true;
         SendUpdate(MeetingInteractableFlags.SHOW, "");
     }
 }

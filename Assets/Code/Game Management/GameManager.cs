@@ -19,6 +19,7 @@ public class GameManager : NetworkComponent {
     private bool _gameOver;
     private int _robberScore = 10;
     private int _informantScore = 0;
+    private NetworkPlayerManager[] _npms;
 
     void Start() {
         CharsTaken = new bool[8];
@@ -37,6 +38,7 @@ public class GameManager : NetworkComponent {
                                   FindObjectsSortMode.None)) {
                         //TODO Hide Choosing color visuals
                         npm.GameStart();
+                        npm.makeVotingUI(CharsTaken);
                     }
                 }
 
@@ -60,6 +62,7 @@ public class GameManager : NetworkComponent {
 
                 break;
             case GameManagerFlags.TIMECHANGE:
+                    
                 if (IsClient) {
                     GlobalTimer += float.Parse(value);
                 }
@@ -87,12 +90,12 @@ public class GameManager : NetworkComponent {
                 yield return new WaitForSeconds(1f);
             } while (!allReady || npms.Length < 2);
 
-            npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
+            _npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
 
             //Setting informant
             //TODO Make this a random gen from 1 to the amount of players that there are and then have that be the informant
-            npms[0].SetInformant();
-            yield return new WaitForSeconds(1f);
+            _npms[0].SetInformant();
+            yield return new WaitForSeconds(1.5f);
 
             _gameStart = true;
             SendUpdate(GameManagerFlags.GAMESTART, "1");
@@ -101,7 +104,7 @@ public class GameManager : NetworkComponent {
 
             //So that the players can read their roles
             yield return new WaitForSeconds(2f);
-            foreach (var player in npms) {
+            foreach (var player in _npms) {
                 player.transform.GetChild(0).gameObject.SetActive(true);
                 player.ToggleRoleScreen(false);
                 player.SendUpdate(NetworkPlayerManagerFlags.TIMERSTART, true.ToString());
@@ -124,7 +127,7 @@ public class GameManager : NetworkComponent {
 
 
             //After Game ends but before score screen
-            foreach (var player in npms) {
+            foreach (var player in _npms) {
                 player.UpdateRScore(_robberScore);
                 player.UpdateIScore(_informantScore);
                 player.OverrideWinner();
@@ -144,7 +147,7 @@ public class GameManager : NetworkComponent {
     }
 
     public void ChangeTime(float time) {
-            GlobalTimer += time;
-            SendUpdate(GameManagerFlags.TIMECHANGE, time.ToString());
+        GlobalTimer += time;
+        SendUpdate(GameManagerFlags.TIMECHANGE, time.ToString());
     }
 }
