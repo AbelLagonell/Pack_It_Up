@@ -95,6 +95,12 @@ public class Player : Actor {
 
     protected override void OnDeath() {
         //TODO Make do a death thing
+        _myNpm.inGame = false;
+    }
+
+    public void Escape()
+    {
+        _myNpm.inGame = false;
     }
 
     public void AssignBag(Bag bag) {

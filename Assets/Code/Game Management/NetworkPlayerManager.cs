@@ -33,7 +33,6 @@ public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private GameObject robberRoleScreen;
     [SerializeField] private GameObject informantRoleScreen;
     [SerializeField] private GameObject GameUI;
-
     [SerializeField] private GameObject voteScreen;
 
     //TEXT
@@ -45,17 +44,21 @@ public class NetworkPlayerManager : NetworkComponent {
     //Voting
     public GameObject toggleGroup;
     public GameObject votePrefab;
-    public int characterIndex;
+    public int _characterIndex;
 
     //Values
     [SerializeField] private int robberScore;
     [SerializeField] private int informantScore;
-    [SerializeField] private bool overrideWinner, isInformant, showRole;
+    [SerializeField] private bool overrideWinner, showRole;
     [SerializeField] public string playerName;
-    public int playerChar = 50;
     [SerializeField] private GameObject lobby;
 
+    public int playerChar = 50;
+    public bool isInformant;
+    
+
     public bool isSpawned = false;
+    public bool inGame = true; //Set to false upon death or escape
     public bool ready;
 
     public float localTimer;
