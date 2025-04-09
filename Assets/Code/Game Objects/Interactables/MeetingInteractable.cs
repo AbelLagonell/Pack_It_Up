@@ -34,11 +34,6 @@ public class MeetingInteractable : Interactable {
                     counts[manager._characterIndex]++;
                 }
 
-                foreach (var i in counts) {
-                    Debug.Log(i);
-                }
-
-
                 int max = 0;
                 int maxCount = counts[0];
                 bool tie = false;
@@ -56,12 +51,13 @@ public class MeetingInteractable : Interactable {
                     }
                 }
 
+                Debug.Log($"Player {max} has {maxCount} votes");
+
                 //Arresting the character with most votes
-                if (max != 0 && !tie) {
+                if (maxCount != 0 && !tie) {
                     foreach (var manager in _managers) {
                         manager.ShowVotingUI(false);
-                        if (manager._characterIndex == max) {
-                            Debug.Log("Setting Detained");
+                        if (manager.playerChar == max) {
                             manager.SetDetained();
                         }
                     }
@@ -71,6 +67,7 @@ public class MeetingInteractable : Interactable {
                 SendUpdate(MeetingInteractableFlags.SHOW, false.ToString());
                 var gameManager = FindObjectOfType<GameManager>();
                 gameManager.SendUpdate(GameManagerFlags.TIMESCALE, false.ToString());
+                checkReady = false;
             }
 
             yield return new WaitForSeconds(1f);
@@ -80,6 +77,7 @@ public class MeetingInteractable : Interactable {
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case MeetingInteractableFlags.SHOW:
+                Debug.Log($"Setting UI to {value}");
                 _managers = FindObjectsOfType<NetworkPlayerManager>();
                 foreach (var player in _managers) {
                     player.ready = false;
