@@ -37,6 +37,7 @@ public class Civilian : Actor
 
     public override void NetworkedStart()
     {
+        IsDetained = true;
         MyAgent = FindObjectOfType<NavMeshAgent>();
         MyAgent.speed = Speed[CivType];
         MyAnimator.SetBool("walk", false);
@@ -68,6 +69,7 @@ public class Civilian : Actor
                 if(EscapeCheck < Strength[CivType] * 5)
                 {
                     IsDetained = false;
+                    MyAnimator.SetBool("detain", false);
                     if(CivType == 1 || CivType == 2)
                     {
                         IsHero = true;
@@ -184,6 +186,16 @@ public class Civilian : Actor
             ClosestPlayer = null;
             MyAgent.SetDestination(transform.position);
             //Patrol?
+        }
+    }
+
+    public void Detain()
+    {
+        if(!IsDetained)
+        {
+            IsDetained = true;
+            MyAnimator.SetBool("detain", true);
+            MyAgent.SetDestination(transform.position);
         }
     }
 

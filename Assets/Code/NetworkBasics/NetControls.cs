@@ -41,6 +41,7 @@ public class NetControls : NetworkComponent {
     private bool hasSomething = false;
 
     //Sync Vars
+    public Animator MyAnimator;
     public PrimaryActions _pAction;
     private SecondaryActions _sAction;
     private Vector2 _lastMoveInput;
@@ -69,6 +70,14 @@ public class NetControls : NetworkComponent {
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case NetControlFlag.MOVEINPUT:
+                if(Vector2FromString(value) == Vector2.zero) //Need to sync animations
+                {
+                    MyAnimator.SetBool("walk", false);
+                }
+                else 
+                {
+                    MyAnimator.SetBool("walk", true);
+                }
                 if (IsServer)
                     _lastMoveInput = Vector2FromString(value);
                 break;
