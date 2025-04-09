@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 713ad97ad79f64945a107c3fb64eb32e
+guid: 79b333d6125b260438ab781762763985
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1810390135134052543
-    second: Check1_0
+      213: -4085482809504558086
+    second: Detain1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,30 +96,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WindowsStoreApps
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Check1_0
+      name: Detain1_0
       rect:
         serializedVersion: 2
-        x: 42
-        y: 18
-        width: 25
-        height: 24
+        x: 16
+        y: 15
+        width: 225
+        height: 225
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fb0698d6c3ccf1910800000000000000
-      internalID: 1810390135134052543
+      spriteID: af31483d7037d47c0800000000000000
+      internalID: -4085482809504558086
       vertices: []
       indices: 
       edges: []
@@ -147,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Check1_0: 1810390135134052543
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

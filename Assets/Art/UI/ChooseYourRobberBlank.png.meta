@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ChooseYourRobberBlank_0: 3134487575862352018
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
