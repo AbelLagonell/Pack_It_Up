@@ -1786,7 +1786,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2088567065491672145}
         m_TargetAssemblyTypeName: NetworkPlayerManager, Assembly-CSharp
-        m_MethodName: OnCheckBoxClick
+        m_MethodName: OnVoteReady
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1796,9 +1796,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8334303317079846113}
-        m_TargetAssemblyTypeName: UnityEngine.UI.ToggleGroup, UnityEngine.UI
-        m_MethodName: SetAllTogglesOff
+      - m_Target: {fileID: 8385636441976652111}
+        m_TargetAssemblyTypeName: RadioGroup, Assembly-CSharp
+        m_MethodName: SetInactive
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3061,25 +3061,29 @@ MonoBehaviour:
   robberRoleScreen: {fileID: 8216832841753566008}
   informantRoleScreen: {fileID: 3576062404910684240}
   GameUI: {fileID: 7847507088512715165}
-  voteScreen: {fileID: 0}
+  voteScreen: {fileID: 8543105274843369044}
   robberScoreText: {fileID: 5486102375372966819}
   informantScoreText: {fileID: 7612189772429030207}
   winnerText: {fileID: 3293915254148306682}
   timerText: {fileID: 3971459111808629}
   toggleGroup: {fileID: 1642841706888599167}
   votePrefab: {fileID: 5798531366388484845, guid: 8f92383c2b95947249fc382d7ed312a4, type: 3}
+  _characterIndex: 0
   robberScore: 0
   informantScore: 0
   overrideWinner: 0
-  isInformant: 0
   showRole: 0
+  showVote: 0
   playerName: 
-  playerChar: 50
   lobby: {fileID: 0}
+  playerChar: 50
+  isInformant: 0
   isSpawned: 0
+  inGame: 1
   ready: 0
   localTimer: 0
   timerStart: 0
+  player: {fileID: 0}
 --- !u!1 &4531280393791338209
 GameObject:
   m_ObjectHideFlags: 0

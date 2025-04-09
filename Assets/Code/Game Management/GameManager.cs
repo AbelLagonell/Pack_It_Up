@@ -8,6 +8,7 @@ struct GameManagerFlags {
     public const string GAMEPAUSED = "PAUSE";
     public const string GAMEOVER = "END";
     public const string TIMECHANGE = "CHANGE";
+    public const string TIMESCALE = "SCALE";
 }
 
 public class GameManager : NetworkComponent {
@@ -15,11 +16,12 @@ public class GameManager : NetworkComponent {
     public static bool[] CharsTaken;
     public static bool GamePaused = true;
 
-    private bool _gameStart;
+    public static bool _gameStart;
     private bool _gameOver;
     private int _robberScore = 10;
     private int _informantScore = 0;
     private NetworkPlayerManager[] _npms;
+    private int timeScale = 1;
 
     void Start() {
         CharsTaken = new bool[8];
@@ -65,6 +67,12 @@ public class GameManager : NetworkComponent {
                     
                 if (IsClient) {
                     GlobalTimer += float.Parse(value);
+                }
+
+                break;
+            case GameManagerFlags.TIMESCALE:
+                if (IsClient) {
+                    GamePaused = bool.Parse(value);
                 }
 
                 break;

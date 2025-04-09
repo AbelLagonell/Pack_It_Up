@@ -10,47 +10,80 @@ struct MeetingInteractableFlags {
 
 public class MeetingInteractable : Interactable {
     private NetworkPlayerManager[] _managers;
-    private bool checkReady = false;
+    public bool checkReady = false;
 
-    private void Start() {
-        _managers = FindObjectsOfType<NetworkPlayerManager>();
-    }
+    private void Start() { }
 
     public override IEnumerator SlowUpdate() {
-            if (IsServer) {
-                bool allReady = true;
+        while (IsConnected) {
+            _managers = FindObjectsOfType<NetworkPlayerManager>();
+            if (IsServer && checkReady) {
+                bool allReady;
                 do {
+                    allReady = true;
                     foreach (var player in _managers) {
                         if (!player.ready) allReady = false;
                     }
 
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(0.1f);
                 } while (!allReady);
 
                 //Record everyone's vote
-                int votes = 0;
-                int character = 0;
+                int[] counts = new int[8];
                 foreach (var manager in _managers) {
+                    counts[manager._characterIndex]++;
                 }
-                
-                foreach (var manager in _managers) {
+
+                foreach (var i in counts) {
+                    Debug.Log(i);
                 }
-                
+
+
+                int max = 0;
+                int maxCount = counts[0];
+                bool tie = false;
+                for (int i = 1; i < counts.Length; i++) {
+                    if (counts[i] > maxCount) {
+                        maxCount = counts[i];
+                        max = i;
+                    }
+
+                    for (int j = 0; j < counts[i]; j++) {
+                        if (i == j) continue;
+                        if (counts[i] == counts[j]) {
+                            tie = true;
+                        }
+                    }
+                }
+
+                //Arresting the character with most votes
+                if (max != 0 && !tie) {
+                    foreach (var manager in _managers) {
+                        manager.ShowVotingUI(false);
+                        if (manager._characterIndex == max) {
+                            Debug.Log("Setting Detained");
+                            manager.SetDetained();
+                        }
+                    }
+                }
+
+                GameManager.GamePaused = false;
                 SendUpdate(MeetingInteractableFlags.SHOW, false.ToString());
-                
+                var gameManager = FindObjectOfType<GameManager>();
+                gameManager.SendUpdate(GameManagerFlags.TIMESCALE, false.ToString());
             }
-            
+
             yield return new WaitForSeconds(1f);
-        
+        }
     }
 
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case MeetingInteractableFlags.SHOW:
-                if (IsClient) {
-                    foreach (var player in _managers) {
-                        player.ready = false;
-                    }
+                _managers = FindObjectsOfType<NetworkPlayerManager>();
+                foreach (var player in _managers) {
+                    player.ready = false;
+                    player.ShowVotingUI(bool.Parse(value));
                 }
 
                 //Set up the voting system like the ready basically setting it on ready and voting
@@ -61,11 +94,16 @@ public class MeetingInteractable : Interactable {
     public override void NetworkedStart() { }
 
     public override void OnUse() {
-        if (usable) return;
+        _managers = FindObjectsOfType<NetworkPlayerManager>();
+        if (!usable) return;
         usable = false;
-        Time.timeScale = 0;
         GameManager.GamePaused = true;
+        var gameManager = FindObjectOfType<GameManager>();
+        gameManager.SendUpdate(GameManagerFlags.TIMESCALE, true.ToString());
         checkReady = true;
-        SendUpdate(MeetingInteractableFlags.SHOW, "");
+        SendUpdate(MeetingInteractableFlags.SHOW, true.ToString());
+        foreach (var manager in _managers) {
+            manager.ready = false;
+        }
     }
 }

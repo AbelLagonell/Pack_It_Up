@@ -115,6 +115,7 @@ public class NetControls : NetworkComponent {
                             if (_item is Bag bag) {
                                 bag.isTampered = true;
                             }
+
                             break;
                         case SecondaryActions.Attack:
                             break;
@@ -134,6 +135,7 @@ public class NetControls : NetworkComponent {
 
     public void OnMoveAction(InputAction.CallbackContext mv) {
         if (IsServer) return;
+        if (_player.GetDetained() || (GameManager.GamePaused && GameManager._gameStart)) return;
         if (mv.performed || mv.started) {
             SendCommand(NetControlFlag.MOVEINPUT, mv.ReadValue<Vector2>().ToString());
         }
@@ -167,6 +169,7 @@ public class NetControls : NetworkComponent {
 
     public void OnPrimaryAction(InputAction.CallbackContext pa) {
         if (IsServer) return;
+        if (_player.GetDetained() || GameManager.GamePaused) return;
         if (pa.performed || pa.started) {
             SendCommand(NetControlFlag.PRIMARY, "");
         }
@@ -174,6 +177,7 @@ public class NetControls : NetworkComponent {
 
     public void OnSecondaryAction(InputAction.CallbackContext sa) {
         if (IsServer) return;
+        if (_player.GetDetained() || GameManager.GamePaused) return;
         if (sa.performed || sa.started) {
             SendCommand(NetControlFlag.SECONDARY, "");
         }
@@ -222,6 +226,8 @@ public class NetControls : NetworkComponent {
                 _interactable = null;
                 hasSomething = false;
             }
+
+            Debug.DrawRay(transform.position, -transform.up * rayCastDistance, Color.red);
         }
 
         if (IsLocalPlayer) {
