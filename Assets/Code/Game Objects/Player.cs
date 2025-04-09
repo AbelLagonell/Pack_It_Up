@@ -81,7 +81,6 @@ public class Player : Actor {
                 break;
             case PlayerFlags.DETAIN:
                 IsDetained = bool.Parse(value);
-                Debug.Log(IsDetained);
                 break;
         }
         //TODO make necessary flags

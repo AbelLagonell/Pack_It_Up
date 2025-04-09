@@ -191,7 +191,7 @@ public class NetworkPlayerManager : NetworkComponent {
 
             case NetworkPlayerManagerFlags.SHOWVOTE:
                 showVote = bool.Parse(value);
-                ShowVotingUI(true);
+                ShowVotingUI(showVote);
                 break;
         }
     }
@@ -281,7 +281,6 @@ public class NetworkPlayerManager : NetworkComponent {
     public void OnCheckBoxClick(bool value) {
         //Blank out box if character hasn't been picked. Functions properly but visually confuses user.
         if (IsLocalPlayer && playerChar != 50) {
-            Debug.Log("Sending Readiness");
             SendCommand(NetworkPlayerManagerFlags.READY, value.ToString());
         }
     }
@@ -308,7 +307,6 @@ public class NetworkPlayerManager : NetworkComponent {
             showVote = value;
             SendUpdate(NetworkPlayerManagerFlags.SHOWVOTE, value.ToString());
         }
-
         
         if (IsLocalPlayer) {
             voteScreen.SetActive(value);
