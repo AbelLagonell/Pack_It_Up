@@ -7,6 +7,7 @@ public struct ActorFlags {
 
 public abstract class Actor : NetworkComponent {
     protected bool IsDetained = false;
+    [SerializeField] protected Animator MyAnimator;
     [SerializeField] protected float speed = 10f;
     [SerializeField] protected int Health = 10;
     [SerializeField] protected int MaxHealth = 10;
