@@ -127,6 +127,7 @@ MonoBehaviour:
   IsDirty: 0
   money: 10
   weight: 2
+  destroy: 0
 --- !u!135 &8402343995436829478
 SphereCollider:
   m_ObjectHideFlags: 0

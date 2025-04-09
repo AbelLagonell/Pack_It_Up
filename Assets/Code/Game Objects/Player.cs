@@ -10,6 +10,7 @@ struct PlayerFlags {
     public const string CHAR = "CHAR";
     public const string BAG = "BAG";
     public const string BAGINFO = "BAGINFO";
+    public const string DETAIN = "DETAIN";
 }
 
 
@@ -78,6 +79,10 @@ public class Player : Actor {
             case PlayerFlags.BAGINFO:
                 bagTextInfo.text = value;
                 break;
+            case PlayerFlags.DETAIN:
+                IsDetained = bool.Parse(value);
+                Debug.Log(IsDetained);
+                break;
         }
         //TODO make necessary flags
     }
@@ -87,6 +92,7 @@ public class Player : Actor {
             if (npm.Owner == Owner) {
                 _myNpm = npm;
                 PName = npm.playerName;
+                npm.player = this;
                 //Get Whatever you need from it
             }
         }
@@ -137,6 +143,19 @@ public class Player : Actor {
         if (IsLocalPlayer) {
             inGameUI.SetActive(!GameManager.GamePaused);
             bagInfo.SetActive(hasBag);
+        }
+    }
+
+    public bool GetDetained() {
+        return IsDetained;
+    }
+
+    public void SetDetained(bool value) {
+        if (IsServer) Debug.Log("Server Detained");
+        IsDetained = value;
+        SendUpdate(PlayerFlags.DETAIN, value.ToString());
+        if (value && hasBag) {
+            ReleaseBag();
         }
     }
 }

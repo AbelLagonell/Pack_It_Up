@@ -21,37 +21,50 @@ struct NetworkPlayerManagerFlags {
     public const string CHAR = "CHAR";
     public const string CHARCHANGE = "CHARCHANGE";
     public const string TIMERSTART = "TIMERSTART";
+    public const string SHOWVOTE = "SHOWVOTE";
+    public const string GETVOTE = "GETVOTE";
 }
 
 public class NetworkPlayerManager : NetworkComponent {
-    //UI Fields
+    //Screens
     [SerializeField] private GameObject startScreen;
     [SerializeField] private GameObject startScreenBG;
     [SerializeField] private GameObject scoreScreen;
     [SerializeField] private GameObject robberRoleScreen;
     [SerializeField] private GameObject informantRoleScreen;
     [SerializeField] private GameObject GameUI;
+    [SerializeField] private GameObject voteScreen;
+
+    //TEXT
     [SerializeField] private TMP_Text robberScoreText;
     [SerializeField] private TMP_Text informantScoreText;
     [SerializeField] private TMP_Text winnerText;
     [SerializeField] private TMP_Text timerText;
-    
+
+    //Voting
+    public GameObject toggleGroup;
+    public GameObject votePrefab;
+    public int _characterIndex;
+
     //Values
     [SerializeField] private int robberScore;
     [SerializeField] private int informantScore;
-    [SerializeField] private bool overrideWinner, showRole;
+    [SerializeField] private bool overrideWinner, showRole, showVote;
     [SerializeField] public string playerName;
     [SerializeField] private GameObject lobby;
 
     public int playerChar = 50;
     public bool isInformant;
-    
+
+
     public bool isSpawned = false;
     public bool inGame = true; //Set to false upon death or escape
     public bool ready;
 
     public float localTimer;
     public bool timerStart;
+
+    public Player player;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -169,6 +182,17 @@ public class NetworkPlayerManager : NetworkComponent {
             case NetworkPlayerManagerFlags.TIMERSTART:
                 timerStart = bool.Parse(value);
                 break;
+            case NetworkPlayerManagerFlags.GETVOTE:
+                if (IsServer) {
+                    _characterIndex = int.Parse(value);
+                }
+
+                break;
+
+            case NetworkPlayerManagerFlags.SHOWVOTE:
+                showVote = bool.Parse(value);
+                ShowVotingUI(true);
+                break;
         }
     }
 
@@ -257,7 +281,48 @@ public class NetworkPlayerManager : NetworkComponent {
     public void OnCheckBoxClick(bool value) {
         //Blank out box if character hasn't been picked. Functions properly but visually confuses user.
         if (IsLocalPlayer && playerChar != 50) {
+            Debug.Log("Sending Readiness");
             SendCommand(NetworkPlayerManagerFlags.READY, value.ToString());
         }
+    }
+
+    public void OnVoteReady(bool value) {
+        if (IsLocalPlayer) {
+            SendCommand(NetworkPlayerManagerFlags.READY, value.ToString());
+            GetVoted();
+        }
+    }
+
+    public void MakeVotingUI(bool[] characters) {
+        for (int i = 0; i < characters.Length; i++) {
+            if (characters[i]) {
+                var temp = Instantiate(votePrefab, toggleGroup.transform);
+                var voteObject = temp.GetComponent<VotingObject>();
+                voteObject.characterIndex = i;
+            }
+        }
+    }
+
+    public void ShowVotingUI(bool value) {
+        if (IsServer) {
+            showVote = value;
+            SendUpdate(NetworkPlayerManagerFlags.SHOWVOTE, value.ToString());
+        }
+
+        
+        if (IsLocalPlayer) {
+            voteScreen.SetActive(value);
+        }
+    }
+
+    public void GetVoted() {
+        RadioGroup rg = toggleGroup.GetComponent<RadioGroup>();
+        _characterIndex = rg.GetSelected();
+        SendCommand(NetworkPlayerManagerFlags.GETVOTE, _characterIndex.ToString());
+    }
+
+    public void SetDetained() {
+        player.IsDetained = true;
+        player.SetDetained(true);
     }
 }
