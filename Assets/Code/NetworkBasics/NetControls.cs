@@ -37,6 +37,8 @@ public class NetControls : NetworkComponent {
 
     //Server only
     public Item _item;
+    public Interactable _interactable;
+    private bool hasSomething = false;
 
     //Sync Vars
     public PrimaryActions _pAction;
@@ -72,6 +74,7 @@ public class NetControls : NetworkComponent {
                 break;
             case NetControlFlag.LOOKINPUT:
                 if (IsServer) {
+                    _rb.angularVelocity = Vector3.zero;
                     _lastLookInput = Vector2FromString(value);
                 }
 
@@ -92,6 +95,10 @@ public class NetControls : NetworkComponent {
 
                             break;
                         case PrimaryActions.Interaction:
+                            if (!hasSomething) return;
+                            if (!_interactable.usable) return;
+                            _interactable.OnUse();
+                            break;
                         case PrimaryActions.Arrest:
                             break;
                         default:
@@ -108,6 +115,7 @@ public class NetControls : NetworkComponent {
                             if (_item is Bag bag) {
                                 bag.isTampered = true;
                             }
+
                             break;
                         case SecondaryActions.Attack:
                             break;
@@ -127,6 +135,7 @@ public class NetControls : NetworkComponent {
 
     public void OnMoveAction(InputAction.CallbackContext mv) {
         if (IsServer) return;
+        if (_player.GetDetained() || (GameManager.GamePaused && GameManager._gameStart)) return;
         if (mv.performed || mv.started) {
             SendCommand(NetControlFlag.MOVEINPUT, mv.ReadValue<Vector2>().ToString());
         }
@@ -160,6 +169,7 @@ public class NetControls : NetworkComponent {
 
     public void OnPrimaryAction(InputAction.CallbackContext pa) {
         if (IsServer) return;
+        if (_player.GetDetained() || GameManager.GamePaused) return;
         if (pa.performed || pa.started) {
             SendCommand(NetControlFlag.PRIMARY, "");
         }
@@ -167,6 +177,7 @@ public class NetControls : NetworkComponent {
 
     public void OnSecondaryAction(InputAction.CallbackContext sa) {
         if (IsServer) return;
+        if (_player.GetDetained() || GameManager.GamePaused) return;
         if (sa.performed || sa.started) {
             SendCommand(NetControlFlag.SECONDARY, "");
         }
@@ -202,12 +213,21 @@ public class NetControls : NetworkComponent {
 
                         _item = hit.collider.gameObject.GetComponent<Bag>();
                         break;
+                    case "Interactable":
+                        hasSomething = true;
+                        _pAction = PrimaryActions.Interaction;
+                        _interactable = hit.collider.gameObject.GetComponent<Interactable>();
+                        break;
                 }
             } else {
                 _pAction = PrimaryActions.Interaction;
                 _sAction = _player.hasBag ? SecondaryActions.Release : SecondaryActions.Attack;
                 _item = null;
+                _interactable = null;
+                hasSomething = false;
             }
+
+            Debug.DrawRay(transform.position, -transform.up * rayCastDistance, Color.red);
         }
 
         if (IsLocalPlayer) {

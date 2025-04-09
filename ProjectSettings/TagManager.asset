@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Item
   - Bag
+  - Interactable
   layers:
   - Default
   - TransparentFX
