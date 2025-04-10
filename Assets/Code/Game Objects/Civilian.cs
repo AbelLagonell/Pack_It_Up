@@ -43,17 +43,24 @@ public class Civilian : Actor
         MyAnimator.SetBool("walk", false);
         MyAnimator.SetBool("attack", false);
         MyAnimator.SetBool("detain", true);
-
-        //Find all Players
-        int i = 0;
-        foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None))
-        {
-            Players[i] = npm;
-        }
     }
 
     public override IEnumerator SlowUpdate()
     {
+        //Find Players
+        if(GameManager._gameStart)
+        {
+            if(Players[0] == null)
+            {
+                int i = 0;
+                foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None))
+                {
+                    Players[i] = npm;
+                    Debug.Log(Players[i] + " ");
+                }
+            }
+        }
+
         if(!IsDetained)
         {
             //Find Players if not Detained
@@ -137,6 +144,7 @@ public class Civilian : Actor
         }
     }
 
+/*
     void OnCollisionEnter(Collision collision)
     {
         if(CompareTag("PLAYER"))
@@ -145,7 +153,7 @@ public class Civilian : Actor
             //Send Message to Damage player
         }
     }
-
+*/
     public void OnAttack()
     {
         //Hero attack player

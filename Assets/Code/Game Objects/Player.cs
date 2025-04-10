@@ -27,9 +27,14 @@ public class Player : Actor {
 
     public bool hasBag;
     private Bag _currentBag;
+    private bool GameStart = true;
 
     public override IEnumerator SlowUpdate() {
         while (true) {
+            if(GameManager._gameStart && GameStart)
+                {
+                    TeleportStart();
+                }
             if (IsServer) {
                 if (IsDirty) {
                     SendUpdate(PlayerFlags.BAG, hasBag.ToString());
@@ -156,5 +161,17 @@ public class Player : Actor {
         if (value && hasBag) {
             ReleaseBag();
         }
+    }
+
+    public void TeleportStart()
+    {
+        transform.position = new Vector3(-104,-16,0);
+        GameStart = false;
+    }
+
+    public void TeleportEnd()
+    {
+        transform.position = new Vector3(0,0,0);
+        GameStart = true;
     }
 }

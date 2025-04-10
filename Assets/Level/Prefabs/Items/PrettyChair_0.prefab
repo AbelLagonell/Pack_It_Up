@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5872131952307484931}
   - component: {fileID: 283282223972340066}
   - component: {fileID: 8359540556745611153}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PrettyChair_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

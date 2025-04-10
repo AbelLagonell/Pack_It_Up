@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4083176473792597014}
   - component: {fileID: 3323177940969996812}
   - component: {fileID: 3656328758705145150}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SecurityDesk_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

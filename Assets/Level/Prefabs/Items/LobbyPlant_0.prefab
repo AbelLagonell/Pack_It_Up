@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7423308915954036539}
   - component: {fileID: 359734679039690992}
   - component: {fileID: 2155274259608297972}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LobbyPlant_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
