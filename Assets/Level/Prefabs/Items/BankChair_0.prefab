@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1337710285916017522}
   - component: {fileID: 725401666475580331}
   - component: {fileID: 9206911427919215392}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BankChair_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 676443675762140868}
   - component: {fileID: 1592578734542002270}
   - component: {fileID: 9170796913785992555}
+  - component: {fileID: 3157771923557924100}
   m_Layer: 0
   m_Name: NPC1
   m_TagString: Untagged
@@ -240,10 +241,12 @@ MonoBehaviour:
   MyCore: {fileID: 0}
   MyId: {fileID: 0}
   IsDirty: 0
+  IsDetained: 0
+  MyAnimator: {fileID: 0}
   speed: 10
   Health: 10
   MaxHealth: 10
-  MyAgent: {fileID: 0}
+  MyAgent: {fileID: 3157771923557924100}
   IsHero: 0
   CivType: 1
 --- !u!54 &1997508312676680596
@@ -354,6 +357,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!195 &3157771923557924100
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5333298810271070322}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.835
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.7
+  m_BaseOffset: 0.85
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &5366342584100484965
 GameObject:
   m_ObjectHideFlags: 0

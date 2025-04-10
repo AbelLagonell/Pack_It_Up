@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4328082426890673301}
   - component: {fileID: 7919976040872178360}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BankChair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1603896752449103869}
   - component: {fileID: 8162981693608268294}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
