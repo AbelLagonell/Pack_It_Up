@@ -242,7 +242,7 @@ MonoBehaviour:
   MyId: {fileID: 0}
   IsDirty: 0
   IsDetained: 0
-  MyAnimator: {fileID: 0}
+  MyAnimator: {fileID: 9170796913785992555}
   speed: 10
   Health: 10
   MaxHealth: 10

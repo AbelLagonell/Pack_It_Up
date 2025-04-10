@@ -1672,10 +1672,12 @@ MonoBehaviour:
   - {fileID: 6574572905782460634, guid: ff8c5a1443b58d0b38266483723c1586, type: 3}
   - {fileID: 8615472440571758159, guid: 3c822b68ec3e2c845beb133605ad45bd, type: 3}
   - {fileID: 3656328758705145150, guid: 0d33302f6ae237449be7f183684dbc13, type: 3}
+  - {fileID: 6059011415902987165, guid: 106b9b3051188474485d5212687582ed, type: 3}
   - {fileID: 4844977897418110447, guid: 4a5c104009e9e784d8c5a26a24726874, type: 3}
   - {fileID: 4844977897418110447, guid: 4a5c104009e9e784d8c5a26a24726874, type: 3}
   - {fileID: 4844977897418110447, guid: 4a5c104009e9e784d8c5a26a24726874, type: 3}
   - {fileID: 4844977897418110447, guid: 4a5c104009e9e784d8c5a26a24726874, type: 3}
+  - {fileID: 1227479665}
   NetworkPlayerManager: {fileID: 4460439341775647641, guid: 7d28657f2ffe9171cacd8bab6b46b18e, type: 3}
   DefaultReturnScene: 0
 --- !u!4 &408156394
@@ -4169,6 +4171,17 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2.155
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1227479665 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8826951391942932969, guid: aac2436278022184ebfd498bda10ce4f, type: 3}
+  m_PrefabInstance: {fileID: 818071560}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34ca87a457962d459c49c36b9753ca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1235869444
 GameObject:
   m_ObjectHideFlags: 0
