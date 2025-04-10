@@ -27,15 +27,15 @@ public class Player : Actor {
 
     public bool hasBag;
     private Bag _currentBag;
-    private bool GameStart;
+    private bool GameStart = true;
 
     public override IEnumerator SlowUpdate() {
         while (true) {
-            if (IsServer) {
-                if(GameManager._gameStart && GameStart)
+            if(GameManager._gameStart && GameStart)
                 {
                     TeleportStart();
                 }
+            if (IsServer) {
                 if (IsDirty) {
                     SendUpdate(PlayerFlags.BAG, hasBag.ToString());
                     SendUpdate(ActorFlags.HEALTH, Health.ToString());
@@ -166,12 +166,12 @@ public class Player : Actor {
     public void TeleportStart()
     {
         transform.position = new Vector3(-104,-16,0);
-        GameStart = true;
+        GameStart = false;
     }
 
     public void TeleportEnd()
     {
         transform.position = new Vector3(0,0,0);
-        GameStart = false;
+        GameStart = true;
     }
 }
