@@ -48,12 +48,15 @@ public class Civilian : Actor
     public override IEnumerator SlowUpdate()
     {
         //Find Players
-        if(Players[0] == null && GameManager._gameStart)
+        if(GameManager._gameStart)
         {
-            int i = 0;
-            foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None))
+            if(Players[0] == null)
             {
-                Players[i] = npm;
+                int i = 0;
+                foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None))
+                {
+                    Players[i] = npm;
+                }
             }
         }
 
