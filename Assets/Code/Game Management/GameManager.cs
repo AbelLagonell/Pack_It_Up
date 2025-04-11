@@ -34,6 +34,10 @@ public class GameManager : NetworkComponent {
         switch (flag) {
             case GameManagerFlags.GAMESTART:
                 Debug.Log("Started Game");
+                if(IsServer)
+                {
+                    _gameStart = true;
+                }
                 if (IsClient) {
                     _gameStart = true;
                     foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(

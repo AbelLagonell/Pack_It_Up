@@ -58,7 +58,7 @@ public class Civilian : Actor
                 foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None))
                 {
                     Players[i] = npm;
-                    Debug.Log(Players[i] + " ");
+                    Debug.Log("Player added " + Players[i] + " ");
                 }
             }
         }
