@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 8956098650685639469}
   m_Layer: 6
   m_Name: Player Character
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -288,6 +288,7 @@ MonoBehaviour:
   linearSpeed: 5
   _item: {fileID: 0}
   _interactable: {fileID: 0}
+  actor: {fileID: 0}
   MyAnimator: {fileID: 8956098650685639469}
   _pAction: 0
 --- !u!135 &4307156238418837691
@@ -1069,7 +1070,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42.05
+  m_fontSize: 48.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

@@ -31,10 +31,10 @@ public class Player : Actor {
 
     public override IEnumerator SlowUpdate() {
         while (true) {
-            if(GameManager._gameStart && GameStart)
-                {
-                    TeleportStart();
-                }
+            if (GameManager._gameStart && GameStart) {
+                TeleportStart();
+            }
+
             if (IsServer) {
                 if (IsDirty) {
                     SendUpdate(PlayerFlags.BAG, hasBag.ToString());
@@ -108,8 +108,7 @@ public class Player : Actor {
         _myNpm.inGame = false;
     }
 
-    public void Escape()
-    {
+    public void Escape() {
         _myNpm.inGame = false;
     }
 
@@ -155,7 +154,6 @@ public class Player : Actor {
     }
 
     public void SetDetained(bool value) {
-        if (IsServer) Debug.Log("Server Detained");
         IsDetained = value;
         SendUpdate(PlayerFlags.DETAIN, value.ToString());
         if (value && hasBag) {
@@ -163,15 +161,13 @@ public class Player : Actor {
         }
     }
 
-    public void TeleportStart()
-    {
-        transform.position = new Vector3(-104,-16,0);
+    public void TeleportStart() {
+        transform.position = new Vector3(-104, -16, 0);
         GameStart = false;
     }
 
-    public void TeleportEnd()
-    {
-        transform.position = new Vector3(0,0,0);
+    public void TeleportEnd() {
+        transform.position = new Vector3(0, 0, 0);
         GameStart = true;
     }
 }

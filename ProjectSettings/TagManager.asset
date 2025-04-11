@@ -7,6 +7,7 @@ TagManager:
   - Item
   - Bag
   - Interactable
+  - Civilian
   layers:
   - Default
   - TransparentFX

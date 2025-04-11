@@ -38,7 +38,9 @@ public class NetControls : NetworkComponent {
     //Server only
     public Item _item;
     public Interactable _interactable;
+    public Actor actor;
     private bool hasSomething = false;
+    private bool lookingAt = false;
 
     //Sync Vars
     public Animator MyAnimator;
@@ -70,14 +72,13 @@ public class NetControls : NetworkComponent {
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case NetControlFlag.MOVEINPUT:
-                if(Vector2FromString(value) == Vector2.zero) //Need to sync animations
+                if (Vector2FromString(value) == Vector2.zero) //Need to sync animations
                 {
                     MyAnimator.SetBool("walk", false);
-                }
-                else 
-                {
+                } else {
                     MyAnimator.SetBool("walk", true);
                 }
+
                 if (IsServer)
                     _lastMoveInput = Vector2FromString(value);
                 break;
@@ -90,6 +91,7 @@ public class NetControls : NetworkComponent {
                 break;
             case NetControlFlag.PRIMARY:
                 if (IsServer) {
+                    Debug.Log("Primary");
                     switch (_pAction) {
                         case PrimaryActions.PickupItem:
                             if (!_player.hasBag) return;
@@ -109,6 +111,17 @@ public class NetControls : NetworkComponent {
                             _interactable.OnUse();
                             break;
                         case PrimaryActions.Arrest:
+                            if (!lookingAt) return;
+                            switch (actor) {
+                                case Player player:
+                                    Debug.Log("Setting Detained");
+                                    if (_player._myNpm.GetInformant())
+                                        player.SetDetained(true);
+                                    break;
+                                case Civilian civilian:
+                                    civilian.Detain();
+                                    break;
+                            }
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -227,13 +240,21 @@ public class NetControls : NetworkComponent {
                         _pAction = PrimaryActions.Interaction;
                         _interactable = hit.collider.gameObject.GetComponent<Interactable>();
                         break;
+                    case "Player":
+                    case "Civilian":
+                        lookingAt = true;
+                        _pAction = PrimaryActions.Arrest;
+                        actor = hit.collider.gameObject.GetComponent<Actor>();
+                        break;
                 }
             } else {
                 _pAction = PrimaryActions.Interaction;
                 _sAction = _player.hasBag ? SecondaryActions.Release : SecondaryActions.Attack;
                 _item = null;
                 _interactable = null;
+                actor = null;
                 hasSomething = false;
+                lookingAt = false;
             }
 
             Debug.DrawRay(transform.position, -transform.up * rayCastDistance, Color.red);
