@@ -38,7 +38,9 @@ public class Civilian : Actor
     public override void NetworkedStart()
     {
         IsDetained = true;
-        MyAgent = FindObjectOfType<NavMeshAgent>();
+        MyAgent = GetComponent<NavMeshAgent>();
+        //MyAgent.updateRotation = false;
+        //MyAgent.updateUpAxis = true;
         MyAgent.speed = Speed[CivType];
         MyAnimator.SetBool("walk", false);
         MyAnimator.SetBool("attack", false);
@@ -210,7 +212,7 @@ public class Civilian : Actor
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame

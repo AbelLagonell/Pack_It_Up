@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using NETWORK_ENGINE;
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -72,15 +73,19 @@ public class NetControls : NetworkComponent {
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case NetControlFlag.MOVEINPUT:
-                if (Vector2FromString(value) == Vector2.zero) //Need to sync animations
+                if(IsClient)
                 {
-                    MyAnimator.SetBool("walk", false);
-                } else {
-                    MyAnimator.SetBool("walk", true);
+                    if (Vector2FromString(value) == Vector2.zero) //Need to sync animations
+                    {
+                        MyAnimator.SetBool("walk", false);
+                    } else {
+                        MyAnimator.SetBool("walk", true);
+                    }
                 }
 
                 if (IsServer)
                     _lastMoveInput = Vector2FromString(value);
+                    SendUpdate(NetControlFlag.MOVEINPUT, value);
                 break;
             case NetControlFlag.LOOKINPUT:
                 if (IsServer) {
@@ -159,10 +164,18 @@ public class NetControls : NetworkComponent {
         if (IsServer) return;
         if (_player.GetDetained() || (GameManager.GamePaused && GameManager._gameStart)) return;
         if (mv.performed || mv.started) {
+            if(IsLocalPlayer)
+            {
+                MyAnimator.SetBool("walk", true);
+            }
             SendCommand(NetControlFlag.MOVEINPUT, mv.ReadValue<Vector2>().ToString());
         }
 
         if (mv.canceled) {
+            if(IsLocalPlayer)
+            {
+                MyAnimator.SetBool("walk", false);
+            }
             SendCommand(NetControlFlag.MOVEINPUT, Vector2.zero.ToString());
         }
     }

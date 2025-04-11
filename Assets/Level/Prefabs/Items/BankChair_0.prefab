@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1337710285916017522}
   - component: {fileID: 725401666475580331}
   - component: {fileID: 9206911427919215392}
+  - component: {fileID: 6677956571911755480}
   m_Layer: 10
   m_Name: BankChair_0
   m_TagString: Untagged
@@ -109,3 +110,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2999998, y: 0.31247017, z: 0.2}
   m_Center: {x: -0.0000028611894, y: -0.5787634, z: 0}
+--- !u!114 &6677956571911755480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3889823349904516317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4083176473792597014}
   - component: {fileID: 3323177940969996812}
   - component: {fileID: 3656328758705145150}
+  - component: {fileID: 3497698636432007906}
   m_Layer: 10
   m_Name: SecurityDesk_0
   m_TagString: Untagged
@@ -174,3 +175,19 @@ MonoBehaviour:
   UseLobby: 0
   UpdateFrequency: 0.1
   MyCore: {fileID: 0}
+--- !u!114 &3497698636432007906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4021120678364616032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
