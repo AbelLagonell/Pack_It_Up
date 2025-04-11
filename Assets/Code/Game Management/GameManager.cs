@@ -12,7 +12,7 @@ struct GameManagerFlags {
 }
 
 public class GameManager : NetworkComponent {
-    public static float GlobalTimer = 30; //in seconds
+    public static float GlobalTimer = 300; //in seconds
     public static bool[] CharsTaken;
     public static bool GamePaused = true;
 
