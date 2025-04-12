@@ -9,6 +9,7 @@ public class HitboxSpawner : MonoBehaviour {
     public int damage = 1;
     private Quaternion _rotation;
 
+    //Sets up the provided attack given the attributes set beforehand
     public void SpawnAttack() {
         Vector3 offset = transform.forward * attackOffset.z + transform.right * attackOffset.x +
                          transform.up * attackOffset.y;
