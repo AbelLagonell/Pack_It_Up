@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4793425777954185950}
   - component: {fileID: 4307156238418837691}
   - component: {fileID: 7778047919944199573}
+  - component: {fileID: 2455020773113534721}
   m_Layer: 6
   m_Name: Player Character 06
   m_TagString: Player
@@ -288,8 +289,11 @@ MonoBehaviour:
   _item: {fileID: 0}
   _interactable: {fileID: 0}
   actor: {fileID: 0}
+  attackCooldown: 0
+  _currentCooldown: 0
   MyAnimator: {fileID: 2476955731433573415}
   _pAction: 0
+  _sAction: 0
 --- !u!135 &4307156238418837691
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -332,6 +336,24 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.0125076
   m_Center: {x: 0, y: 0.059235692, z: 0}
+--- !u!114 &2455020773113534721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5417175086917946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd9942aaa51541e5a835d8bf06f03a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackObject: {fileID: 4051401666585208996, guid: 1e5dff987c1822b48b83092c853cdbcf, type: 3}
+  attackDuration: 1
+  attackSize: {x: 2, y: 1, z: 1}
+  attackOffset: {x: 0, y: -1.2, z: 0}
+  linearVelocity: {x: 0, y: 0, z: 0}
+  damage: 1
 --- !u!1 &168262492558401650
 GameObject:
   m_ObjectHideFlags: 0

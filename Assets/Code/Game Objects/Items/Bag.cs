@@ -36,7 +36,7 @@ public class Bag : Item {
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case BagFlags.MONEY:
-                money = float.Parse(value);
+                money = int.Parse(value);
                 break;
             case BagFlags.WEIGHT:
                 weight = float.Parse(value);
