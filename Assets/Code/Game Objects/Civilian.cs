@@ -19,11 +19,9 @@ public class Civilian : Actor
     [SerializeField] private int CivType;
     private int[] Strength = {4,3,2,1};
     private int[] Speed = {10,9,9,10};
-    private int Radius1 = 4;
     private bool CanEscape;
-    private NetworkPlayerManager[] Players;
-    private List<NetworkPlayerManager> ClosePlayers;
-    private NetworkPlayerManager ClosestPlayer;
+    private List<GameObject> ClosePlayers;
+    private GameObject ClosestPlayer;
     public override void HandleMessage(string flag, string value)
     {
         switch (flag) {
@@ -37,7 +35,8 @@ public class Civilian : Actor
 
     public override void NetworkedStart()
     {
-        IsDetained = true;
+        IsDetained = false;
+        IsHero = true;
         MyAgent = GetComponent<NavMeshAgent>();
         //MyAgent.updateRotation = false;
         //MyAgent.updateUpAxis = true;
@@ -49,31 +48,12 @@ public class Civilian : Actor
 
     public override IEnumerator SlowUpdate()
     {
-        //Find Players
-        if(GameManager._gameStart)
+        while(true) 
         {
-            if(Players[0] == null)
-            {
-                int i = 0;
-                foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None))
-                {
-                    Players[i] = npm;
-                    Debug.Log("Player added " + Players[i] + " ");
-                }
-            }
-        }
-
-        if(!IsDetained)
-        {
-            //Find Players if not Detained
-            CheckPlayers();
-        }
-        else
-        {
-            IsHero = false;
             //Try to escape
             if(CanEscape && IsDetained)
             {
+                IsHero = false;
                 int EscapeCheck = Random.Range(0,100);
                 if(EscapeCheck < Strength[CivType] * 5)
                 {
@@ -87,9 +67,6 @@ public class Civilian : Actor
                 CanEscape = false;
                 StartCoroutine(Wait());
             }
-        }
-        while(true)
-        {
             yield return new WaitForSeconds(MyCore.MasterTimer);
         }
     }
@@ -101,26 +78,36 @@ public class Civilian : Actor
         MyCore.NetDestroyObject(NetId);
     }
 
-    public void CheckPlayers()
+    void OnTriggerEnter(Collider c)
     {
-        //Find all players within radius
-        FindClosestPlayer();
-
-        if(IsHero)
+        if(c.gameObject.CompareTag("Player") && !IsDetained)
         {
-            //Attack closest player if in radius
-            if(ClosestPlayer != null)
+            Debug.Log("Adding Player");
+            if(ClosePlayers == null)
             {
-                MyAnimator.SetBool("walk", true);
-                MyAgent.SetDestination(ClosestPlayer.transform.position);
+                ClosePlayers.Add(c.gameObject);
             }
-        }
-        else 
-        {
-            //Run away from closest player if in radius
-            if(ClosestPlayer != null)
+            else
             {
-                MyAnimator.SetBool("walk", true);
+                if(!ClosePlayers.Contains(c.gameObject))
+                {
+                    ClosePlayers.Add(c.gameObject);
+                }
+            }
+
+            Debug.Log("Searching Player");
+            FindClosestPlayer();
+            if(IsHero)
+            {
+                if(ClosestPlayer != null)
+                {
+                    Debug.Log("Chasing Player");
+                    MyAgent.SetDestination(ClosestPlayer.transform.position);
+                }
+                //Add player to close player list, chase closest
+            }
+            else
+            {
                 float targetZ = transform.position.z;
                 float targetX;
                 if (transform.position.x > ClosestPlayer.transform.position.x)
@@ -142,20 +129,33 @@ public class Civilian : Actor
                 }
 
                 MyAgent.SetDestination(new UnityEngine.Vector3(targetX, transform.position.y, targetZ));
+                //Run
             }
         }
     }
 
-/*
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerExit(Collider c)
     {
-        if(CompareTag("PLAYER"))
+        if(c.CompareTag("Player"))
         {
-            //Attack
-            //Send Message to Damage player
+            if(ClosePlayers.Count > 0)
+            {
+                ClosePlayers.Remove(c.gameObject);
+            }
+            FindClosestPlayer();
         }
     }
-*/
+
+    /*
+        void OnCollisionEnter(Collision collision)
+        {
+            if(CompareTag("PLAYER"))
+            {
+                //Attack
+                //Send Message to Damage player
+            }
+        }
+    */
     public void OnAttack()
     {
         //Hero attack player
@@ -167,25 +167,17 @@ public class Civilian : Actor
         float Minimum = 100;
 
         //Find close players 
-        foreach (var player in Players)
+        foreach (var player in ClosePlayers)
         {
-            float Distance = UnityEngine.Vector3.Distance(MyAgent.transform.position, player.gameObject.transform.position);
-            if(Distance <= Radius1)
+            MyAnimator.SetBool("walk", true);
+            float Distance = UnityEngine.Vector3.Distance(MyAgent.transform.position, player.transform.position);
+            foreach (var unit in ClosePlayers)
             {
-                ClosePlayers.Add(player);
-                foreach (var unit in ClosePlayers)
+                if(Distance < Minimum)
                 {
-                    if(Distance < Minimum)
-                    {
-                        Minimum = Distance;
-                        ClosestPlayer = unit;
-                    }
+                    Minimum = Distance;
+                    ClosestPlayer = unit;
                 }
-            }
-
-            if(Distance > Radius1)
-            {
-                ClosePlayers.Remove(player);
             }
         }
 
@@ -204,6 +196,7 @@ public class Civilian : Actor
         if(!IsDetained)
         {
             IsDetained = true;
+            IsHero = false;
             MyAnimator.SetBool("detain", true);
             MyAgent.SetDestination(transform.position);
         }
