@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using NETWORK_ENGINE;
 using Unity.VisualScripting;
@@ -15,29 +16,34 @@ public class GameManager : NetworkComponent {
     public static float GlobalTimer = 300; //in seconds
     public static bool[] CharsTaken;
     public static bool GamePaused = true;
-
     public static bool _gameStart;
+
+    public GameEndCollider gameEndCollider;
+
     private bool _gameOver;
     private int _robberScore = 10;
     private int _informantScore = 0;
     private NetworkPlayerManager[] _npms;
     private int timeScale = 1;
+    private bool _override = false;
 
     void Start() {
         CharsTaken = new bool[8];
         for (int i = 0; i < 8; i++) {
             CharsTaken[i] = false;
         }
+        
+        gameEndCollider = GameObject.FindGameObjectWithTag("GameEnd").GetComponent<GameEndCollider>();
     }
 
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case GameManagerFlags.GAMESTART:
                 Debug.Log("Started Game");
-                if(IsServer)
-                {
+                if (IsServer) {
                     _gameStart = true;
                 }
+
                 if (IsClient) {
                     _gameStart = true;
                     foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
@@ -68,7 +74,7 @@ public class GameManager : NetworkComponent {
 
                 break;
             case GameManagerFlags.TIMECHANGE:
-                    
+
                 if (IsClient) {
                     GlobalTimer += float.Parse(value);
                 }
@@ -129,20 +135,28 @@ public class GameManager : NetworkComponent {
             while (!_gameOver) {
                 if (GlobalTimer < 0) {
                     //Timer is over here
-                    _gameOver = true;
+                    yield return new WaitForSeconds(.1f);
                 }
 
-                //The Game will still go on here tho only after everyone gets out
-                //TODO do game logic here
+                var undetained = _npms.Count(manager => !manager.player.IsDetained);
+                
+                //Make sure that all but the informant is in the end collider
+                if ((undetained - 1) == gameEndCollider.AmountOfPlayers())
+                    _gameOver = true;
+                //Making sure that informant won
+                else if ((undetained -1) == 0)
+                    _override = true;
+
                 yield return new WaitForSeconds(.1f);
             }
 
+            (_robberScore, _informantScore) = gameEndCollider.TotalScores();
 
             //After Game ends but before score screen
             foreach (var player in _npms) {
                 player.UpdateRScore(_robberScore);
                 player.UpdateIScore(_informantScore);
-                player.OverrideWinner();
+                if (_override) player.OverrideWinner();
             }
 
             SendUpdate(GameManagerFlags.GAMEOVER, "1");
