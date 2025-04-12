@@ -85,7 +85,10 @@ public class Civilian : Actor
             Debug.Log("Adding Player");
             if(ClosePlayers == null)
             {
-                ClosePlayers.Add(c.gameObject);
+                ClosePlayers = new List<GameObject>
+                {
+                    c.gameObject
+                };
             }
             else
             {
@@ -103,6 +106,7 @@ public class Civilian : Actor
                 {
                     Debug.Log("Chasing Player");
                     MyAgent.SetDestination(ClosestPlayer.transform.position);
+                    // Make NPC look at player transform.rotation = 
                 }
                 //Add player to close player list, chase closest
             }
