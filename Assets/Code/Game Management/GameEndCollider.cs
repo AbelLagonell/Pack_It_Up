@@ -48,9 +48,9 @@ public class GameEndCollider : MonoBehaviour {
     }
 
     ///Returns robber then informant score
-    public (float, float) TotalScores() {
-        float informantScore = 0;
-        float robberScore = 0;
+    public (int, int) TotalScores() {
+        int informantScore = 0;
+        int robberScore = 0;
 
         foreach (var bag in bagList) {
             if (bag.isTampered) {

@@ -3,7 +3,7 @@ using NETWORK_ENGINE;
 using UnityEngine;
 
 public class Item : NetworkComponent {
-    public float money;
+    public int money;
     public float weight;
     public bool destroy = false;
     
