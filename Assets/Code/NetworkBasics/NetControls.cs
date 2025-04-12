@@ -20,16 +20,16 @@ public enum PrimaryActions {
     Arrest
 }
 
-enum SecondaryActions {
+public enum SecondaryActions {
     Attack,
     Release,
     Tamper
 }
 
 
-[RequireComponent(typeof(Rigidbody), typeof(PlayerInput))]
+[RequireComponent(typeof(Rigidbody), typeof(PlayerInput), typeof(HitboxSpawner))]
 public class NetControls : NetworkComponent {
-    private Camera cam;
+    private Camera _cam;
     private Rigidbody _rb;
     public Player _player;
 
@@ -42,13 +42,17 @@ public class NetControls : NetworkComponent {
     public Actor actor;
     private bool hasSomething = false;
     private bool lookingAt = false;
+    public float attackCooldown;
+    [SerializeField]private float _currentCooldown;
 
     //Sync Vars
     public Animator MyAnimator;
     public PrimaryActions _pAction;
-    private SecondaryActions _sAction;
+    public SecondaryActions _sAction;
     private Vector2 _lastMoveInput;
     private Vector2 _lastLookInput;
+
+    private HitboxSpawner _hitboxSpawner;
 
     private Vector2 Vector2FromString(string s) {
         string[] split = s.Trim().Trim('(', ')').Split(',');
@@ -56,25 +60,13 @@ public class NetControls : NetworkComponent {
     }
 
     public override IEnumerator SlowUpdate() {
-        while (true) {
-            if (IsServer) {
-                //Primary Action
-                //Secondary Action
-            }
-
-            if (IsLocalPlayer) {
-                //Camera
-            }
-
-            yield return new WaitForSeconds(MyCore.MasterTimer);
-        }
+        yield return new WaitForSeconds(MyCore.MasterTimer);
     }
 
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
             case NetControlFlag.MOVEINPUT:
-                if(IsClient)
-                {
+                if (IsClient) {
                     if (Vector2FromString(value) == Vector2.zero) //Need to sync animations
                     {
                         MyAnimator.SetBool("walk", false);
@@ -85,7 +77,7 @@ public class NetControls : NetworkComponent {
 
                 if (IsServer)
                     _lastMoveInput = Vector2FromString(value);
-                    SendUpdate(NetControlFlag.MOVEINPUT, value);
+                SendUpdate(NetControlFlag.MOVEINPUT, value);
                 break;
             case NetControlFlag.LOOKINPUT:
                 if (IsServer) {
@@ -127,6 +119,7 @@ public class NetControls : NetworkComponent {
                                     civilian.Detain();
                                     break;
                             }
+
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -145,6 +138,11 @@ public class NetControls : NetworkComponent {
 
                             break;
                         case SecondaryActions.Attack:
+                            if (IsServer) Debug.Log("Attacking");
+                            if (_currentCooldown > 0) break;
+                            if (IsClient) break;
+                            _hitboxSpawner.SpawnAttack();
+                            _currentCooldown = attackCooldown;
                             break;
                         case SecondaryActions.Release:
                             _player.ReleaseBag();
@@ -158,24 +156,25 @@ public class NetControls : NetworkComponent {
         }
     }
 
-    public override void NetworkedStart() { }
+    public override void NetworkedStart() {
+    }
 
     public void OnMoveAction(InputAction.CallbackContext mv) {
         if (IsServer) return;
         if (_player.GetDetained() || (GameManager.GamePaused && GameManager._gameStart)) return;
         if (mv.performed || mv.started) {
-            if(IsLocalPlayer)
-            {
+            if (IsLocalPlayer) {
                 MyAnimator.SetBool("walk", true);
             }
+
             SendCommand(NetControlFlag.MOVEINPUT, mv.ReadValue<Vector2>().ToString());
         }
 
         if (mv.canceled) {
-            if(IsLocalPlayer)
-            {
+            if (IsLocalPlayer) {
                 MyAnimator.SetBool("walk", false);
             }
+
             SendCommand(NetControlFlag.MOVEINPUT, Vector2.zero.ToString());
         }
     }
@@ -220,8 +219,9 @@ public class NetControls : NetworkComponent {
 
     private void Start() {
         _rb = GetComponent<Rigidbody>();
-        cam = Camera.main;
+        _cam = Camera.main;
         _player = GetComponent<Player>();
+        _hitboxSpawner = GetComponent<HitboxSpawner>();
     }
 
     private void Update() {
@@ -230,7 +230,7 @@ public class NetControls : NetworkComponent {
             //Change look rot
             float angle = Mathf.Atan2(_lastLookInput.x, _lastLookInput.y) * Mathf.Rad2Deg;
             _rb.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
+            _currentCooldown -= Time.deltaTime;
 
             Ray ray = new Ray(transform.position, -transform.up);
 
@@ -274,7 +274,7 @@ public class NetControls : NetworkComponent {
         }
 
         if (IsLocalPlayer) {
-            cam.transform.position = transform.position - Vector3.forward * 5f;
+            _cam.transform.position = transform.position - Vector3.forward * 5f;
         }
 
         //Animation
