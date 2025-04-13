@@ -33,7 +33,7 @@ public class GameManager : NetworkComponent {
             CharsTaken[i] = false;
         }
         
-        gameEndCollider = GameObject.FindGameObjectWithTag("GameEnd").GetComponent<GameEndCollider>();
+        //gameEndCollider = GameObject.FindGameObjectWithTag("GameEnd").GetComponent<GameEndCollider>();
     }
 
     public override void HandleMessage(string flag, string value) {
