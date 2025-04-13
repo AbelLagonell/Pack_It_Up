@@ -71,6 +71,7 @@ public class Bag : Item {
 
     private void Update() {
         if (!IsServer) return;
+        if (!_owner) _hasOwner = false;
         if (_hasOwner) {
             transform.position = _owner.transform.position +
                                  _owner.transform.up * _offsetMult.y +
