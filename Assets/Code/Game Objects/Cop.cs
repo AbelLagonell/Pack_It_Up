@@ -7,7 +7,8 @@ using UnityEngine.AI;
 [RequireComponent(typeof(HitboxSpawner))]
 public class Cop : Actor {
     [SerializeField] private NavMeshAgent MyAgent;
-    private bool CanFire;
+    private bool CanFire, CanAttack;
+    public static bool ChaseStart; //Update this when timer reaches zero from gamemanager to false
     private List<NetworkPlayerManager> Players;
     private List<NetworkPlayerManager> Targets;
     private NetworkPlayerManager Target;
@@ -17,27 +18,33 @@ public class Cop : Actor {
     }
 
     public override void NetworkedStart() {
-        MyAgent = FindObjectOfType<NavMeshAgent>();
+        
+        MyAgent = GetComponent<NavMeshAgent>();
         MyAnimator.SetBool("walk", true);
-        //Find all Players, assign all but informant as targets
-        int i = 0;
-        foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None)) {
-            Players[i] = npm;
-            if (!npm.isInformant) {
-                Targets[i] = npm;
-            }
-        }
-
-        int RandomTarget = Random.Range(0, Targets.Count() - 1);
-        Target = Targets[RandomTarget];
+        ChaseStart = false;
     }
 
     public override IEnumerator SlowUpdate() {
-        if (!Target.inGame && Target != null) {
+        if(GameManager._gameStart && !ChaseStart)
+        {
+            int i = 0;
+            foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None)) {
+                Players[i] = npm;
+                if (!npm.isInformant) {
+                    Targets[i] = npm;
+                }
+            }
+
+            int RandomTarget = Random.Range(0, Targets.Count() - 1);
+            Target = Targets[RandomTarget];
+            ChaseStart = true;
+        }
+        
+        if (Target == null) {
             NewTarget();
         }
-
-        if (Target != null) {
+        else
+        {
             ChasePlayer();
         }
 
@@ -45,40 +52,52 @@ public class Cop : Actor {
     }
 
     public void NewTarget() {
-        foreach (var player in Targets) {
-            if (!player.inGame) {
-                Targets.Remove(player);
+        if(Targets != null)
+        {
+            foreach (var player in Targets) {
+                if (!player.inGame) {
+                    Targets.Remove(player);
+                }
+            }
+
+            if (Targets.Count() != 0) 
+            {
+                int RandomTarget = Random.Range(0, Targets.Count() - 1);
+                Target = Targets[RandomTarget];
+            } 
+            else 
+            {
+                Target = null;
+                MyAnimator.SetBool("walk", false);
             }
         }
-
-        if (Targets.Count() != 0) {
-            int RandomTarget = Random.Range(0, Targets.Count() - 1);
-            Target = Targets[RandomTarget];
-        } else {
+        else 
+        {
             Target = null;
             MyAnimator.SetBool("walk", false);
         }
     }
 
     public void ChasePlayer() {
-        MyAgent.SetDestination(new Vector3(Target.transform.position.x, Target.transform.position.y,
-                                           Target.transform.position.z));
+        MyAnimator.SetBool("walk", true);
+        MyAgent.SetDestination(new Vector3(Target.transform.position.x, Target.transform.position.y, Target.transform.position.z));
+        Debug.Log("All Robbers have escaped or died.");
     }
 
     protected override void OnDeath() {
         //Cop die
         MyCore.NetDestroyObject(NetId);
-        StartCoroutine(Wait());
     }
 
     public void FireBullets() {
         if (CanFire) {
-            //fire bullet
+            CanFire = false;
+            StartCoroutine(WaitFire());
         }
     }
 
-    private IEnumerator Wait() {
-        yield return new WaitForSecondsRealtime(5);
+    private IEnumerator WaitFire() {
+        yield return new WaitForSeconds(2.5f);
         CanFire = true;
     }
 }

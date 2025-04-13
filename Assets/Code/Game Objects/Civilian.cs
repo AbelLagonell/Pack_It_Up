@@ -12,6 +12,7 @@ public struct CivFlags
     public const string HERO = "HERO";
     public const string DETAIN = "DETAIN";
     public const string NODETAIN = "NODETAIN";
+    public const string ATTEMPT = "ATTEMPT";
 }
 public class Civilian : Actor
 {
@@ -20,8 +21,8 @@ public class Civilian : Actor
     [SerializeField] private bool IsHero;
     [SerializeField] private int CivType;
     private int[] Strength = {4,3,2,1};
-    private int[] Speed = {10,9,9,10};
-    private bool CanEscape;
+    private int[] Speed = {8,7,6,10};
+    private bool CanEscape, CanAttack;
     private List<GameObject> ClosePlayers;
     private GameObject ClosestPlayer;
     public override void HandleMessage(string flag, string value)
@@ -32,6 +33,7 @@ public class Civilian : Actor
                 IsDetained = true;
                 IsHero = false;
                 CanEscape = true;
+                MyAnimator.SetBool("detain", true);
             break;
             case CivFlags.NODETAIN:
                 if(IsClient)
@@ -46,11 +48,19 @@ public class Civilian : Actor
                     Debug.Log("Civ Has Escaped");
                 }
             break;
+            case CivFlags.ATTEMPT:
+                if(IsClient)
+                {
+                    MyAnimator.SetBool("attempt", true);
+                    StartCoroutine(WaitAnimate());
+                }
+            break;
         }
     }
 
     public override void NetworkedStart()
     {
+        CanAttack = true;
         IsDetained = true;
         IsHero = false;
         CanEscape = true;
@@ -61,6 +71,7 @@ public class Civilian : Actor
         MyAnimator.SetBool("walk", false);
         MyAnimator.SetBool("attack", false);
         MyAnimator.SetBool("detain", true);
+        MyAnimator.SetBool("attempt", false);
     }
 
     public override IEnumerator SlowUpdate()
@@ -74,8 +85,8 @@ public class Civilian : Actor
                 {
                     IsHero = false;
                     int EscapeCheck = UnityEngine.Random.Range(0,100);
-                    Debug.Log("Attempt to Escape, rolled: " + EscapeCheck + " / " + Strength[CivType] * 10);
-                    if(EscapeCheck < Strength[CivType] * 10)
+                    Debug.Log("Attempt to Escape, rolled: " + Strength[CivType] * 10 + " / " + EscapeCheck);
+                    if(EscapeCheck < Strength[CivType] * 100)
                     {
                         IsDetained = false;
                         MyAnimator.SetBool("detain", false);
@@ -91,7 +102,8 @@ public class Civilian : Actor
                     {
                         Debug.Log("Civ Wait Begins");
                         CanEscape = false;
-                       yield return Wait();
+                        SendUpdate(CivFlags.ATTEMPT, "1");
+                        yield return Wait();
                     }
                 }
             }
@@ -126,7 +138,7 @@ public class Civilian : Actor
                 }
             }
 
-            Debug.Log("Searching Player");
+            Debug.Log("Searching For Player");
             FindClosestPlayer();
             if(IsHero)
             {
@@ -134,17 +146,18 @@ public class Civilian : Actor
                 {
                     Debug.Log("Chasing Player");
                     MyAgent.SetDestination(ClosestPlayer.transform.position);
-                    float lookZ = ClosestPlayer.transform.position.z - transform.position.z;
-                    UnityEngine.Quaternion LookRotate = new UnityEngine.Quaternion(0, 0, lookZ, 0);
-                    transform.rotation = UnityEngine.Quaternion.Slerp(transform.rotation, LookRotate, 5);
+                    //MyAnimator.SetLookAtPosition(ClosestPlayer.transform.position);
+                    //float lookZ = ClosestPlayer.transform.position.z - transform.position.z;
+                    //UnityEngine.Quaternion LookRotate = new UnityEngine.Quaternion(0, 0, lookZ, 0);
+                    //transform.rotation = UnityEngine.Quaternion.Slerp(transform.rotation, LookRotate, 5);
                     // Make NPC look at player transform.rotation = 
                 }
                 //Add player to close player list, chase closest
             }
             else
             {
-                float targetZ = transform.position.z;
-                float targetX = transform.position.x;
+                float targetY;
+                float targetX;
                 if (transform.position.x > ClosestPlayer.transform.position.x)
                 {
                     targetX = ClosestPlayer.transform.position.x + 5;
@@ -154,16 +167,17 @@ public class Civilian : Actor
                     targetX = ClosestPlayer.transform.position.x - 5;
                 }
 
-                if (transform.position.z > ClosestPlayer.transform.position.z)
+                if (transform.position.y > ClosestPlayer.transform.position.y)
                 {
-                    targetX = ClosestPlayer.transform.position.z + 5;
+                    targetY = ClosestPlayer.transform.position.y + 5;
                 }
                 else
                 {
-                    targetX = ClosestPlayer.transform.position.z - 5;
+                    targetY = ClosestPlayer.transform.position.y - 5;
                 }
 
-                MyAgent.SetDestination(new UnityEngine.Vector3(targetX, transform.position.y, targetZ));
+                MyAgent.SetDestination(new UnityEngine.Vector3(targetX, targetY, transform.position.z));
+                //MyAnimator.SetLookAtPosition(-ClosestPlayer.transform.position);
                 //Run
             }
         }
@@ -171,7 +185,7 @@ public class Civilian : Actor
 
     void OnTriggerExit(Collider c)
     {
-        if(c.CompareTag("Player"))
+        if(c.gameObject.CompareTag("Player"))
         {
             if(ClosePlayers != null)
             {
@@ -184,16 +198,21 @@ public class Civilian : Actor
         }
     }
 
-    /*
-        void OnCollisionEnter(Collision collision)
+    
+        void OnCollisionEnter(Collision c)
         {
-            if(CompareTag("PLAYER"))
+            if(c.gameObject.CompareTag("Player"))
             {
-                //Attack
-                //Send Message to Damage player
+                if(CanAttack)
+                {
+                    MyAnimator.SetBool("attack", true);
+                    SendCommand("DAMAGE",c.gameObject.GetComponent<Player>()._myNpm.Owner.ToString());
+                    CanAttack = false;
+                    StartCoroutine(WaitAttack());
+                }
             }
         }
-    */
+    
     public void OnAttack()
     {
         //Hero attack player
@@ -257,5 +276,18 @@ public class Civilian : Actor
     {
         yield return new WaitForSeconds(30 - Speed[CivType]);
         CanEscape = true;
+    }
+
+    private IEnumerator WaitAttack()
+    {
+        yield return new WaitForSeconds(1);
+        MyAnimator.SetBool("attack", false);
+        CanAttack = true;
+    }
+
+    private IEnumerator WaitAnimate()
+    {
+        yield return new WaitForSeconds(0.2f);
+        MyAnimator.SetBool("attempt", false);
     }
 }

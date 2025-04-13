@@ -11,6 +11,7 @@ struct PlayerFlags {
     public const string BAG = "BAG";
     public const string BAGINFO = "BAGINFO";
     public const string DETAIN = "DETAIN";
+    public const string DAMAGE = "DAMAGE";
 }
 
 
@@ -86,6 +87,23 @@ public class Player : Actor {
                 break;
             case PlayerFlags.DETAIN:
                 IsDetained = bool.Parse(value);
+                break;
+            case PlayerFlags.DAMAGE:
+                if(IsServer)
+                {
+                    SendUpdate("HEALTH", Health.ToString());
+                }
+                if(IsClient)
+                {
+                    if(this.Owner == int.Parse(value))
+                    {
+                        Health--;
+                        if(Health <= 0)
+                        {
+                            //kill player
+                        }
+                    }
+                }
                 break;
         }
         //TODO make necessary flags
