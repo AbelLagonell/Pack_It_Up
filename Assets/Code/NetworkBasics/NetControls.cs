@@ -43,7 +43,7 @@ public class NetControls : NetworkComponent {
     private bool hasSomething = false;
     private bool lookingAt = false;
     public float attackCooldown;
-    [SerializeField]private float _currentCooldown;
+    [SerializeField] private float _currentCooldown;
 
     //Sync Vars
     public Animator MyAnimator;
@@ -88,7 +88,6 @@ public class NetControls : NetworkComponent {
                 break;
             case NetControlFlag.PRIMARY:
                 if (IsServer) {
-                    Debug.Log("Primary");
                     switch (_pAction) {
                         case PrimaryActions.PickupItem:
                             if (!_player.hasBag) return;
@@ -111,7 +110,6 @@ public class NetControls : NetworkComponent {
                             if (!lookingAt) return;
                             switch (actor) {
                                 case Player player:
-                                    Debug.Log("Setting Detained");
                                     if (_player._myNpm.GetInformant())
                                         player.SetDetained(true);
                                     break;
@@ -156,8 +154,7 @@ public class NetControls : NetworkComponent {
         }
     }
 
-    public override void NetworkedStart() {
-    }
+    public override void NetworkedStart() { }
 
     public void OnMoveAction(InputAction.CallbackContext mv) {
         if (IsServer) return;
