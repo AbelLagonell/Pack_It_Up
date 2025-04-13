@@ -2,7 +2,6 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using NETWORK_ENGINE;
-using Unity.VisualScripting;
 
 struct GameManagerFlags {
     public const string GAMESTART = "START";
@@ -13,7 +12,7 @@ struct GameManagerFlags {
 }
 
 public class GameManager : NetworkComponent {
-    public static float GlobalTimer = 300; //in seconds
+    public static float GlobalTimer = 0; //in seconds
     public static bool[] CharsTaken;
     public static bool GamePaused = true;
     public static bool _gameStart;
@@ -32,7 +31,7 @@ public class GameManager : NetworkComponent {
         for (int i = 0; i < 8; i++) {
             CharsTaken[i] = false;
         }
-        
+
         //gameEndCollider = GameObject.FindGameObjectWithTag("GameEnd").GetComponent<GameEndCollider>();
     }
 
@@ -111,9 +110,8 @@ public class GameManager : NetworkComponent {
             _npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
 
             //Setting informant
-            //TODO Make this a random gen from 1 to the amount of players that there are and then have that be the informant
-            _npms[0].SetInformant();
-            yield return new WaitForSeconds(1.5f);
+            _npms[Random.Range(0, _npms.Length)].SetInformant();
+            yield return new WaitForSeconds(3f);
 
             _gameStart = true;
             SendUpdate(GameManagerFlags.GAMESTART, "1");
@@ -133,19 +131,22 @@ public class GameManager : NetworkComponent {
 
 
             while (!_gameOver) {
-                if (GlobalTimer < 0) {
-                    //Timer is over here
-                    yield return new WaitForSeconds(.1f);
+                var undetained = _npms.Count(manager => !manager.player.IsDetained);
+
+                //If ever the informant gets everyone
+                if (undetained == 1) {
+                    _gameOver = true;
+                    _override = true;
                 }
 
-                var undetained = _npms.Count(manager => !manager.player.IsDetained);
-                
-                //Make sure that all but the informant is in the end collider
-                if ((undetained - 1) == gameEndCollider.AmountOfPlayers())
-                    _gameOver = true;
-                //Making sure that informant won
-                else if ((undetained -1) == 0)
-                    _override = true;
+                if (GlobalTimer < 0) {
+                    gameEndCollider.collider.enabled = true;
+                    //Make sure that all but the informant is in the end collider
+                    if ((undetained - 1) == gameEndCollider.AmountOfPlayers(false))
+                        _gameOver = true;
+                    //! We can make it so that even if they are detained but are all there it still good but idk
+                }
+
 
                 yield return new WaitForSeconds(.1f);
             }

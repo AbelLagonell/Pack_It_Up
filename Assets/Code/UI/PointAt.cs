@@ -1,23 +1,23 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PointAt : MonoBehaviour {
     private RectTransform rectTransform;
-    private GameObject target;
+    private Image image;
+    public GameObject target;
+    public Transform referenceTransform;
+    public NetworkPlayerManager npm;
 
-    [Header("Settings")] [Tooltip("Optional offset angle in degrees")]
-    public float angleOffset = 0f;
-
-    [Tooltip("True to keep pointer on screen edges, false to allow it to move anywhere")]
-    public bool keepOnScreen = true;
-
-    [Tooltip("Distance from screen edge when keepOnScreen is enabled")]
-    public float screenBorderOffset = 25f;
+    public Vector3 worldUp;
 
     void Start() {
         rectTransform = GetComponent<RectTransform>();
-
+        image = GetComponent<Image>();
+        image.enabled = false;
         // Find the object with the "GameEnd" tag
         target = GameObject.FindWithTag("GameEnd");
+
+        referenceTransform = npm.player.transform;
 
         if (target == null) {
             Debug.LogWarning("No object with tag 'GameEnd' found!");
@@ -25,63 +25,30 @@ public class PointAt : MonoBehaviour {
     }
 
     void Update() {
-        if (GameManager.GlobalTimer > 0) return;
-        
-        if (target == null) return;
+        //if (GameManager.GlobalTimer > 0) return;
+        image.enabled = true;
+        if (!target) return;
 
-        // Get the screen position of the target
-        Vector3 targetScreenPos = Camera.main.WorldToScreenPoint(target.transform.position);
+        // Get the direction to the target
+        Vector3 direction = target.transform.position - referenceTransform.position;
 
-        // Calculate if target is behind camera
-        bool isBehind = targetScreenPos.z < 0;
 
-        // If target is behind camera, flip the position
-        if (isBehind) {
-            targetScreenPos.x = Screen.width - targetScreenPos.x;
-            targetScreenPos.y = Screen.height - targetScreenPos.y;
-        }
+        image.color = new Color(1, 1, 1, Mathf.Clamp((direction.magnitude - 3f) / 50f, 0f, 1f));
 
-        // Calculate direction vector from UI object to target
-        Vector3 direction = targetScreenPos - new Vector3(Screen.width / 2, Screen.height / 2, 0);
 
-        // Calculate angle
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f + angleOffset;
+        // Calculate the angle in degrees
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        // Apply rotation
-        rectTransform.rotation = Quaternion.Euler(0, 0, angle);
+        // Calculate current z rotation
+        float currentZRotation = rectTransform.eulerAngles.z;
 
-        // Handle keeping indicator on screen
-        if (keepOnScreen) {
-            Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-            Vector3 cappedPosition;
+        // Calculate the rotation needed to point at the target (with -90 offset to point correctly)
+        float targetZRotation = angle - 90;
 
-            if (IsPositionOnScreen(targetScreenPos)) {
-                // Target is on screen, position the UI element at the target position
-                cappedPosition = targetScreenPos;
-            } else {
-                // Target is off screen, find edge position
-                direction.Normalize();
+        // Calculate the rotation difference
+        float rotationDifference = Mathf.DeltaAngle(currentZRotation, targetZRotation);
 
-                // Find screen edge intersection
-                float screenRadius = Mathf.Min(Screen.width, Screen.height) / 2 - screenBorderOffset;
-                cappedPosition = screenCenter + direction * screenRadius;
-            }
-
-            // Update UI position on canvas
-            Vector3 localPosition;
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                                                                    rectTransform.parent as RectTransform,
-                                                                    cappedPosition,
-                                                                    null,
-                                                                    out localPosition);
-
-            rectTransform.position = localPosition;
-        }
-    }
-
-    bool IsPositionOnScreen(Vector3 position) {
-        return position.x > 0 && position.x < Screen.width &&
-               position.y > 0 && position.y < Screen.height &&
-               position.z > 0;
+        // Rotate the RectTransform around the Z axis only
+        rectTransform.Rotate(0, 0, rotationDifference);
     }
 }

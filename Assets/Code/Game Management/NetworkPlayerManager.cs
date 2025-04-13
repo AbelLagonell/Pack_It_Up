@@ -84,9 +84,16 @@ public class NetworkPlayerManager : NetworkComponent {
             Debug.LogError("No Robber Role Screen chosen");
         }
 
+        
+        //Making sure that it always initializes the same way
         scoreScreen.SetActive(false);
         informantRoleScreen.SetActive(false);
         robberRoleScreen.SetActive(false);
+        GameUI.SetActive(false);
+        voteScreen.SetActive(false);
+        
+        startScreen.SetActive(true);
+        startScreenBG.SetActive(true);
     }
 
     private void Update() {

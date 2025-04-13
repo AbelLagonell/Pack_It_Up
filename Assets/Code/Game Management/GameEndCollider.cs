@@ -7,15 +7,17 @@ using UnityEngine;
 public class GameEndCollider : MonoBehaviour {
     private List<Bag> bagList = new List<Bag>();
     private List<Player> playerList = new List<Player>();
+    public Collider collider;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
-        Collider collider = GetComponent<Collider>();
+        collider = GetComponent<Collider>();
         collider.isTrigger = true;
         collider.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other) {
+        Debug.Log("Enter: " + other.gameObject.name);
         if (other.CompareTag("Player")) {
             Player playerScript = other.gameObject.GetComponent<Player>();
             if (!playerList.Contains(playerScript)) {
@@ -30,6 +32,7 @@ public class GameEndCollider : MonoBehaviour {
     }
 
     private void OnTriggerExit(Collider other) {
+        Debug.Log("Exit: " + other.gameObject.name);
         if (other.CompareTag("Player")) {
             Player playerScript = other.gameObject.GetComponent<Player>();
             if (!playerList.Contains(playerScript)) {
@@ -43,8 +46,28 @@ public class GameEndCollider : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Gets the amount of players in the collider
+    /// </summary>
+    /// <returns>integer count</returns>
     public int AmountOfPlayers() {
         return playerList.Count;
+    }
+
+    /// <summary>
+    /// Returns the count of isInformant = check
+    /// </summary>
+    /// <param name="isInformant"> wether or not the player should count if its an informant</param>
+    /// <returns></returns>
+    public int AmountOfPlayers(bool isInformant) {
+        int count = 0;
+        foreach (var player in playerList) {
+            if (player._myNpm.isInformant == isInformant) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     ///Returns robber then informant score
