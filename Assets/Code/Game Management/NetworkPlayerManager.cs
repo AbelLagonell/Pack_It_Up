@@ -23,6 +23,8 @@ struct NetworkPlayerManagerFlags {
     public const string TIMERSTART = "TIMERSTART";
     public const string SHOWVOTE = "SHOWVOTE";
     public const string GETVOTE = "GETVOTE";
+    public const string PLAYEND = "PLAYEND";
+    public const string GAMEEND = "GAMEEND";
 }
 
 public class NetworkPlayerManager : NetworkComponent {
@@ -84,14 +86,14 @@ public class NetworkPlayerManager : NetworkComponent {
             Debug.LogError("No Robber Role Screen chosen");
         }
 
-        
+
         //Making sure that it always initializes the same way
         scoreScreen.SetActive(false);
         informantRoleScreen.SetActive(false);
         robberRoleScreen.SetActive(false);
         GameUI.SetActive(false);
         voteScreen.SetActive(false);
-        
+
         startScreen.SetActive(true);
         startScreenBG.SetActive(true);
     }
@@ -151,16 +153,20 @@ public class NetworkPlayerManager : NetworkComponent {
                 //Should only ever be run on clients
                 informantScore = int.Parse(value);
                 informantScoreText.text = "Score: " + informantScore;
+                Debug.Log("CHANGE");
                 break;
             case NetworkPlayerManagerFlags.WINNER:
                 //Should only ever be run on clients
+                if (IsLocalPlayer && GameManager._gameStart) AudioManager.Instance.PlayBGM("Win_Informant_Arrest");
                 overrideWinner = bool.Parse(value);
                 winnerText.text = "Winner are Informants\nEveryone got Arrested";
                 break;
             case NetworkPlayerManagerFlags.ROLE:
                 //Should only ever be run on clients
-                if (IsLocalPlayer)
+                if (IsLocalPlayer) {
                     isInformant = bool.Parse(value);
+                }
+
                 break;
             case NetworkPlayerManagerFlags.SHOWROLE:
                 showRole = bool.Parse(value);
@@ -188,6 +194,7 @@ public class NetworkPlayerManager : NetworkComponent {
                 break;
             case NetworkPlayerManagerFlags.TIMERSTART:
                 timerStart = bool.Parse(value);
+                if (IsLocalPlayer) AudioManager.Instance.PlayBGM("Gameplay_Theme");
                 break;
             case NetworkPlayerManagerFlags.GETVOTE:
                 if (IsServer) {
@@ -200,12 +207,31 @@ public class NetworkPlayerManager : NetworkComponent {
                 showVote = bool.Parse(value);
                 ShowVotingUI(showVote);
                 break;
+            case NetworkPlayerManagerFlags.PLAYEND:
+                //Client only
+                AudioManager.Instance.PlayBGM(bool.Parse(value) ? "Win_Robber" : "Win_Informant");
+                break;
+            case NetworkPlayerManagerFlags.GAMEEND:
+                Debug.Log(int.Parse(value));
+                int val = int.Parse(value);
+                if (val < 0) {
+                    winnerText.text = "Winner are Informants\nEveryone got Arrested";
+                } else {
+                    winnerText.text = "Winner are " + (val != 0 ? "Informants" : "Robbers");
+                }
+
+                if (IsLocalPlayer) scoreScreen.SetActive(true);
+                break;
         }
     }
 
     public override void NetworkedStart() {
         if (!IsLocalPlayer) {
             startScreen.SetActive(false);
+        }
+
+        if (IsLocalPlayer) {
+            AudioManager.Instance.PlayBGM("Lobby_Theme");
         }
     }
 
@@ -242,15 +268,7 @@ public class NetworkPlayerManager : NetworkComponent {
         ToggleRoleScreen(true);
     }
 
-    public void GameEnd() {
-        if (overrideWinner) {
-            winnerText.text = "Winner are Informants\nEveryone got Arrested";
-        } else {
-            winnerText.text = "Winner are " + (((robberScore - informantScore) < 0) ? "Informants" : "Robbers");
-        }
-
-        if (IsLocalPlayer) scoreScreen.SetActive(true);
-    }
+    public void GameEnd(int value) { }
 
     public void UpdateIScore(int score) {
         SendUpdate(NetworkPlayerManagerFlags.ISCORE, score.ToString());
@@ -279,10 +297,11 @@ public class NetworkPlayerManager : NetworkComponent {
             SendUpdate(NetworkPlayerManagerFlags.SHOWROLE, value.ToString());
         }
 
-        if (isInformant)
-            informantRoleScreen.SetActive(value);
-        else
-            robberRoleScreen.SetActive(value);
+        if (IsLocalPlayer)
+            if (isInformant)
+                informantRoleScreen.SetActive(value);
+            else
+                robberRoleScreen.SetActive(value);
     }
 
     public void OnCheckBoxClick(bool value) {
@@ -314,7 +333,7 @@ public class NetworkPlayerManager : NetworkComponent {
             showVote = value;
             SendUpdate(NetworkPlayerManagerFlags.SHOWVOTE, value.ToString());
         }
-        
+
         if (IsLocalPlayer) {
             voteScreen.SetActive(value);
         }
