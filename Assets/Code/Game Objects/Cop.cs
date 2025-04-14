@@ -1,87 +1,109 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(HitboxSpawner))]
 public class Cop : Actor {
     [SerializeField] private NavMeshAgent MyAgent;
-    private bool CanFire, CanAttack;
+    private bool CanFire;
     public static bool ChaseStart; //Update this when timer reaches zero from gamemanager to false
-    private List<NetworkPlayerManager> Players;
-    private List<NetworkPlayerManager> Targets;
-    private NetworkPlayerManager Target;
+    //private List<GameObject> Players;
+    private List<GameObject> Targets;
+    private GameObject Target;
 
     public override void HandleMessage(string flag, string value) {
-        MyAgent.speed = 5;
+
     }
 
     public override void NetworkedStart() {
-        
         MyAgent = GetComponent<NavMeshAgent>();
-        MyAnimator.SetBool("walk", true);
         ChaseStart = false;
+        MyAgent.speed = 5;
     }
 
     public override IEnumerator SlowUpdate() {
-        if(GameManager._gameStart && !ChaseStart)
+
+        while(true)
         {
-            int i = 0;
-            foreach (var npm in FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None)) {
-                Players[i] = npm;
-                if (!npm.isInformant) {
-                    Targets[i] = npm;
+            if(Targets != null)
+            {
+                foreach(var target in Targets)
+                {
+                    if(!target.GetComponent<Player>()._myNpm.inGame)
+                    {
+                        Targets.Remove(target);
+                    }
+                    if(!target.GetComponent<Player>()._myNpm.isInformant)
+                    {
+                        Targets.Remove(target);
+                    }
                 }
             }
-
-            int RandomTarget = Random.Range(0, Targets.Count() - 1);
-            Target = Targets[RandomTarget];
-            ChaseStart = true;
+            yield return new WaitForSeconds(MyCore.MasterTimer);
         }
-        
-        if (Target == null) {
-            NewTarget();
-        }
-        else
-        {
-            ChasePlayer();
-        }
-
-        yield return new WaitForSeconds(MyCore.MasterTimer);
     }
 
-    public void NewTarget() {
-        if(Targets != null)
+    void OnTriggerStay(Collider c)
+    {
+        if(c.gameObject.CompareTag("Player"))
         {
-            foreach (var player in Targets) {
-                if (!player.inGame) {
-                    Targets.Remove(player);
+            Debug.Log("Cop: Adding Player");
+            if(Targets == null)
+            {
+                Targets = new List<GameObject>
+                {
+                    c.gameObject
+                };
+            }
+            else
+            {
+                if(!Targets.Contains(c.gameObject) && !c.gameObject.GetComponent<Player>()._myNpm.isInformant)
+                {
+                    Targets.Add(c.gameObject);
                 }
             }
 
-            if (Targets.Count() != 0) 
+            Debug.Log("Cop: Searching For Player");
+            FindClosestPlayer();
+
+            if(Target != null)
             {
-                int RandomTarget = Random.Range(0, Targets.Count() - 1);
-                Target = Targets[RandomTarget];
-            } 
-            else 
-            {
-                Target = null;
-                MyAnimator.SetBool("walk", false);
+                Debug.Log("Chasing Player");
+                MyAgent.SetDestination(Target.transform.position);
             }
         }
-        else 
+    }
+
+    private protected void FindClosestPlayer()
+    {
+        float Minimum = 100;
+
+        //Find close players 
+        foreach (var player in Targets)
         {
-            Target = null;
+            MyAnimator.SetBool("walk", true);
+            float Distance = UnityEngine.Vector3.Distance(MyAgent.transform.position, player.transform.position);
+            foreach (var unit in Targets)
+            {
+                if(Distance < Minimum)
+                {
+                    Minimum = Distance;
+                    Target = unit;
+                }
+            }
+        }
+
+        if(Targets.Count == 0)
+        {
             MyAnimator.SetBool("walk", false);
+            Minimum = 100;
+            Target = null;
+            MyAgent.SetDestination(transform.position);
+            //Patrol?
         }
-    }
-
-    public void ChasePlayer() {
-        MyAnimator.SetBool("walk", true);
-        MyAgent.SetDestination(new Vector3(Target.transform.position.x, Target.transform.position.y, Target.transform.position.z));
-        Debug.Log("All Robbers have escaped or died.");
     }
 
     protected override void OnDeath() {

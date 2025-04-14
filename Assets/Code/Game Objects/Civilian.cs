@@ -146,11 +146,6 @@ public class Civilian : Actor
                 {
                     Debug.Log("Chasing Player");
                     MyAgent.SetDestination(ClosestPlayer.transform.position);
-                    //MyAnimator.SetLookAtPosition(ClosestPlayer.transform.position);
-                    //float lookZ = ClosestPlayer.transform.position.z - transform.position.z;
-                    //UnityEngine.Quaternion LookRotate = new UnityEngine.Quaternion(0, 0, lookZ, 0);
-                    //transform.rotation = UnityEngine.Quaternion.Slerp(transform.rotation, LookRotate, 5);
-                    // Make NPC look at player transform.rotation = 
                 }
                 //Add player to close player list, chase closest
             }
@@ -177,7 +172,6 @@ public class Civilian : Actor
                 }
 
                 MyAgent.SetDestination(new UnityEngine.Vector3(targetX, targetY, transform.position.z));
-                //MyAnimator.SetLookAtPosition(-ClosestPlayer.transform.position);
                 //Run
             }
         }
@@ -203,7 +197,7 @@ public class Civilian : Actor
         {
             if(c.gameObject.CompareTag("Player"))
             {
-                if(CanAttack)
+                if(CanAttack && IsHero)
                 {
                     MyAnimator.SetBool("attack", true);
                     SendCommand("DAMAGE",c.gameObject.GetComponent<Player>()._myNpm.Owner.ToString());
@@ -219,7 +213,7 @@ public class Civilian : Actor
         MyAnimator.SetBool("attack", true);
     }
 
-    private void FindClosestPlayer()
+    private protected void FindClosestPlayer()
     {
         float Minimum = 100;
 

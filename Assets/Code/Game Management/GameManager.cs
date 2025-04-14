@@ -41,6 +41,7 @@ public class GameManager : NetworkComponent {
                 Debug.Log("Started Game");
                 if (IsServer) {
                     _gameStart = true;
+                    SendUpdate(GameManagerFlags.GAMESTART, "1");
                 }
 
                 if (IsClient) {
@@ -58,12 +59,10 @@ public class GameManager : NetworkComponent {
                 if (IsClient) {
                     Debug.Log("Game Over");
                     _gameOver = true;
-                    foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
-                                  FindObjectsSortMode.None)) {
-                        npm.GameEnd();
-                    }
+                   
                     //TODO do client stuff
                 }
+
 
                 break;
             case GameManagerFlags.GAMEPAUSED:
@@ -111,7 +110,7 @@ public class GameManager : NetworkComponent {
 
             //Setting informant
             _npms[Random.Range(0, _npms.Length)].SetInformant();
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
 
             _gameStart = true;
             SendUpdate(GameManagerFlags.GAMESTART, "1");
@@ -151,6 +150,8 @@ public class GameManager : NetworkComponent {
                 yield return new WaitForSeconds(.1f);
             }
 
+            yield return new WaitForSeconds(1f);
+            
             (_robberScore, _informantScore) = gameEndCollider.TotalScores();
 
             //After Game ends but before score screen
@@ -158,10 +159,22 @@ public class GameManager : NetworkComponent {
                 player.UpdateRScore(_robberScore);
                 player.UpdateIScore(_informantScore);
                 if (_override) player.OverrideWinner();
+                else player.SendUpdate(NetworkPlayerManagerFlags.PLAYEND, (_robberScore > _informantScore).ToString());
             }
 
+
+            //Game Over
             SendUpdate(GameManagerFlags.GAMEOVER, "1");
-            yield return new WaitForSeconds(5f);
+            
+            int send =0 ;
+            if (_override) send = -1;
+            else if (_robberScore > _informantScore) send = 0;
+            else if (_robberScore < _informantScore) send = 1;
+            
+            foreach (NetworkPlayerManager npm in _npms) {
+                npm.SendUpdate(NetworkPlayerManagerFlags.GAMEEND, send.ToString());
+            }
+            yield return new WaitForSeconds(10f);
 
 
             MyId.NotifyDirty();
