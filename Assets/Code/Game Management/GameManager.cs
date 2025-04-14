@@ -41,6 +41,7 @@ public class GameManager : NetworkComponent {
                 Debug.Log("Started Game");
                 if (IsServer) {
                     _gameStart = true;
+                    SendUpdate(GameManagerFlags.GAMESTART, "1");
                 }
 
                 if (IsClient) {
