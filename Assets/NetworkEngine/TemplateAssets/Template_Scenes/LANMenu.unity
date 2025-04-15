@@ -13751,6 +13751,54 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: uiSounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 429596266c1a67748b22bc16e5feb5c9, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: uiSounds.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 3d3be1dde32d167438f9b7488cf766a7, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: bgmSounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 026b7f5060c0fe64885338a11a1bec77, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: bgmSounds.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 2ef6640887c9a2f4194a784688119331, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: bgmSounds.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: e4866930389cf1346ba11f14d6bb5bb3, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: bgmSounds.Array.data[3].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 43f82c41d8f651d4192af3cff4d1ff7a, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: bgmSounds.Array.data[4].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: d3d9b3d65946e4648b813fb3836cc8e4, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: bgmSounds.Array.data[5].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 63c48b2af7cb0b14997c908012df764f, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: bgmSounds.Array.data[6].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 1181d952119e05c42a9c69a15c50d4dd, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: b5a99475427baa24aacbd95db5260ed8, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: c652c411cc0ee4344a66acd500f3b4d6, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 3d145b6b0289d0047a401a9707748754, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
