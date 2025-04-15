@@ -78,7 +78,19 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 52c336a5031305c4cb37ceb7052dc31a, type: 3}
     volume: 1
     pitch: 1
-  sfxSounds: []
+  sfxSounds:
+  - name: Tamper
+    clip: {fileID: 8300000, guid: f731e1394d6c2e34fa91f2be9bc57bb4, type: 3}
+    volume: 1
+    pitch: 1
+  - name: Bag
+    clip: {fileID: 8300000, guid: da5a74736fe1f5242bb6b0d11028ffe9, type: 3}
+    volume: 1
+    pitch: 1
+  - name: Item_Pickup
+    clip: {fileID: 8300000, guid: baab42879231d4441abe460d54433354, type: 3}
+    volume: 1
+    pitch: 1
   uiSounds:
   - name: UI_Cancel
     clip: {fileID: 8300000, guid: 2dc44acda0a53f140bb355edcafa831f, type: 3}
