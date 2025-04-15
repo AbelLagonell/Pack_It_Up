@@ -13750,6 +13750,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9f5abe0ab3bc63045b46c6e9256714fb, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[0].name
+      value: Civ_Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 2ae504936cda6414a902548a9ac94c12, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[1].name
+      value: Cop_Shoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[2].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: baab42879231d4441abe460d54433354, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[2].name
+      value: Civ_Escape
+      objectReference: {fileID: 0}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[3].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 42c84232c47ce0f449f9dcb5bf086c82, type: 3}
+    - target: {fileID: 8351466208745230440, guid: f64e3a7c0f9d83c4da5165de1534b378, type: 3}
+      propertyPath: sfxSounds.Array.data[3].name
+      value: Civ_Detain
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
