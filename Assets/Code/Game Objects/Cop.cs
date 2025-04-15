@@ -28,17 +28,20 @@ public class Cop : Actor {
 
         while(true)
         {
-            if(Targets != null)
+            if(IsServer)
             {
-                foreach(var target in Targets)
+                if(Targets != null)
                 {
-                    if(!target.GetComponent<Player>()._myNpm.inGame)
+                    foreach(var target in Targets)
                     {
-                        Targets.Remove(target);
-                    }
-                    if(!target.GetComponent<Player>()._myNpm.isInformant)
-                    {
-                        Targets.Remove(target);
+                        if(!target.GetComponent<Player>()._myNpm.inGame)
+                        {
+                            Targets.Remove(target);
+                        }
+                        if(!target.GetComponent<Player>()._myNpm.isInformant)
+                        {
+                            Targets.Remove(target);
+                        }
                     }
                 }
             }
@@ -48,31 +51,46 @@ public class Cop : Actor {
 
     void OnTriggerStay(Collider c)
     {
-        if(c.gameObject.CompareTag("Player"))
+        if(IsServer)
         {
-            Debug.Log("Cop: Adding Player");
-            if(Targets == null)
+            if(c.gameObject.CompareTag("Player"))
             {
-                Targets = new List<GameObject>
+                Debug.Log("Cop: Adding Player");
+                if(Targets == null)
                 {
-                    c.gameObject
-                };
-            }
-            else
-            {
-                if(!Targets.Contains(c.gameObject) && !c.gameObject.GetComponent<Player>()._myNpm.isInformant)
-                {
-                    Targets.Add(c.gameObject);
+                    Targets = new List<GameObject>
+                    {
+                        c.gameObject
+                    };
                 }
-            }
+                else
+                {
+                    if(!Targets.Contains(c.gameObject) && !c.gameObject.GetComponent<Player>()._myNpm.isInformant)
+                    {
+                        Targets.Add(c.gameObject);
+                    }
 
-            Debug.Log("Cop: Searching For Player");
-            FindClosestPlayer();
+                    foreach(var target in Targets)
+                    {
+                        if(!target.GetComponent<Player>()._myNpm.inGame)
+                        {
+                            Targets.Remove(target);
+                        }
+                        if(!target.GetComponent<Player>()._myNpm.isInformant)
+                        {
+                            Targets.Remove(target);
+                        }
+                    }
+                }
 
-            if(Target != null)
-            {
-                Debug.Log("Chasing Player");
-                MyAgent.SetDestination(Target.transform.position);
+                Debug.Log("Cop: Searching For Player");
+                FindClosestPlayer();
+
+                if(Target != null)
+                {
+                    Debug.Log("Chasing Player");
+                    MyAgent.SetDestination(Target.transform.position);
+                }
             }
         }
     }

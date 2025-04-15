@@ -29,11 +29,18 @@ public class Civilian : Actor
     {
         switch (flag) {
             case CivFlags.DETAIN:
-                //Needs to be detained on all clients. Let server know unit is detained as well?
-                IsDetained = true;
-                IsHero = false;
-                CanEscape = true;
-                MyAnimator.SetBool("detain", true);
+                if(IsClient)
+                {
+                    //Needs to be detained on all clients. Let server know unit is detained as well?
+                    IsDetained = true;
+                    IsHero = false;
+                    CanEscape = true;
+                    MyAnimator.SetBool("detain", true);
+                }
+                if(IsServer)
+                {
+                    SendUpdate(CivFlags.DETAIN,"1");
+                }
             break;
             case CivFlags.NODETAIN:
                 if(IsClient)
@@ -47,12 +54,20 @@ public class Civilian : Actor
                     CanEscape = false;
                     Debug.Log("Civ Has Escaped");
                 }
+                if(IsServer)
+                {
+                    SendUpdate(CivFlags.NODETAIN,"1");
+                }
             break;
             case CivFlags.ATTEMPT:
                 if(IsClient)
                 {
                     MyAnimator.SetBool("attempt", true);
                     StartCoroutine(WaitAnimate());
+                }
+                if(IsServer)
+                {
+                    SendUpdate(CivFlags.ATTEMPT,"1");
                 }
             break;
         }
@@ -120,80 +135,88 @@ public class Civilian : Actor
 
     void OnTriggerEnter(Collider c)
     {
-        if(c.gameObject.CompareTag("Player") && !IsDetained)
+        if(IsServer)
         {
-            Debug.Log("Adding Player");
-            if(ClosePlayers == null)
+            if(c.gameObject.CompareTag("Player") && !IsDetained)
             {
-                ClosePlayers = new List<GameObject>
+                Debug.Log("Adding Player");
+                if(ClosePlayers == null)
                 {
-                    c.gameObject
-                };
-            }
-            else
-            {
-                if(!ClosePlayers.Contains(c.gameObject))
-                {
-                    ClosePlayers.Add(c.gameObject);
-                }
-            }
-
-            Debug.Log("Searching For Player");
-            FindClosestPlayer();
-            if(IsHero)
-            {
-                if(ClosestPlayer != null)
-                {
-                    Debug.Log("Chasing Player");
-                    MyAgent.SetDestination(ClosestPlayer.transform.position);
-                }
-                //Add player to close player list, chase closest
-            }
-            else
-            {
-                float targetY;
-                float targetX;
-                if (transform.position.x > ClosestPlayer.transform.position.x)
-                {
-                    targetX = ClosestPlayer.transform.position.x + 5;
+                    ClosePlayers = new List<GameObject>
+                    {
+                        c.gameObject
+                    };
                 }
                 else
                 {
-                    targetX = ClosestPlayer.transform.position.x - 5;
+                    if(!ClosePlayers.Contains(c.gameObject))
+                    {
+                        ClosePlayers.Add(c.gameObject);
+                    }
                 }
 
-                if (transform.position.y > ClosestPlayer.transform.position.y)
+                Debug.Log("Searching For Player");
+                FindClosestPlayer();
+                if(IsHero)
                 {
-                    targetY = ClosestPlayer.transform.position.y + 5;
+                    if(ClosestPlayer != null)
+                    {
+                        Debug.Log("Chasing Player");
+                        MyAgent.SetDestination(ClosestPlayer.transform.position);
+                    }
+                    //Add player to close player list, chase closest
                 }
                 else
                 {
-                    targetY = ClosestPlayer.transform.position.y - 5;
-                }
+                    float targetY;
+                    float targetX;
+                    if (transform.position.x > ClosestPlayer.transform.position.x)
+                    {
+                        targetX = ClosestPlayer.transform.position.x + 5;
+                    }
+                    else
+                    {
+                        targetX = ClosestPlayer.transform.position.x - 5;
+                    }
 
-                MyAgent.SetDestination(new UnityEngine.Vector3(targetX, targetY, transform.position.z));
-                //Run
+                    if (transform.position.y > ClosestPlayer.transform.position.y)
+                    {
+                        targetY = ClosestPlayer.transform.position.y + 5;
+                    }
+                    else
+                    {
+                        targetY = ClosestPlayer.transform.position.y - 5;
+                    }
+
+                    MyAgent.SetDestination(new UnityEngine.Vector3(targetX, targetY, transform.position.z));
+                    //Run
+                }
             }
         }
     }
 
     void OnTriggerExit(Collider c)
     {
-        if(c.gameObject.CompareTag("Player"))
+        if(IsServer)
         {
-            if(ClosePlayers != null)
+            if(c.gameObject.CompareTag("Player"))
             {
-                if(ClosePlayers.Count > 0)
+                if(ClosePlayers != null)
                 {
-                    ClosePlayers.Remove(c.gameObject);
-                }
-                FindClosestPlayer();
-            }  
+                    if(ClosePlayers.Count > 0)
+                    {
+                        ClosePlayers.Remove(c.gameObject);
+                    }
+                    FindClosestPlayer();
+                }  
+            }
         }
     }
 
     
-        void OnCollisionEnter(Collision c)
+    void OnCollisionEnter(Collision c)
+    {
+        if(IsServer)
         {
             if(c.gameObject.CompareTag("Player"))
             {
@@ -206,6 +229,7 @@ public class Civilian : Actor
                 }
             }
         }
+    }
     
     public void OnAttack()
     {
@@ -244,13 +268,14 @@ public class Civilian : Actor
 
     public void Detain()
     {
-        if(!IsDetained)
+        if(!IsDetained && IsServer)
         {
             IsDetained = true;
             IsHero = false;
             CanEscape = true;
             MyAnimator.SetBool("detain", true);
             MyAgent.SetDestination(transform.position);
+            HandleMessage(CivFlags.DETAIN,"1");
         }
     }
 
