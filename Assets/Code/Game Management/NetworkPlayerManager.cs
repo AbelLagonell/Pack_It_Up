@@ -334,7 +334,7 @@ public class NetworkPlayerManager : NetworkComponent {
             SendUpdate(NetworkPlayerManagerFlags.SHOWVOTE, value.ToString());
         }
 
-        if (IsLocalPlayer) {
+        if (IsLocalPlayer && !player.IsDetained) {
             voteScreen.SetActive(value);
         }
     }

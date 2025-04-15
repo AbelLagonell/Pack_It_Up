@@ -21,8 +21,9 @@ public class MeetingInteractable : Interactable {
                 bool allReady;
                 do {
                     allReady = true;
-                    foreach (var player in _managers) {
-                        if (!player.ready) allReady = false;
+                    foreach (var playerManager in _managers) {
+                        if (playerManager.player.IsDetained) continue;
+                        if (!playerManager.ready) allReady = false;
                     }
 
                     yield return new WaitForSeconds(0.1f);
