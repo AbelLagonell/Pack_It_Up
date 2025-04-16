@@ -37,6 +37,35 @@ public class Cop : Actor {
 
             if(ChaseStart && IsServer)
             {
+                Debug.Log("Cop: Adding Player");
+                if(Targets == null)
+                {
+                    Targets = new List<GameObject>
+                    {
+                        c.gameObject
+                    };
+                }
+                else
+                {
+                    if(!Targets.Contains(c.gameObject) && !c.gameObject.GetComponent<Player>()._myNpm.isInformant)
+                    {
+                        Targets.Add(c.gameObject);
+                    }
+
+                    foreach(var target in Targets)
+                    {
+                        if(!target.GetComponent<Player>()._myNpm.inGame)
+                        {
+                            //Targets.Remove(target);
+                        }
+                        if(!target.GetComponent<Player>()._myNpm.isInformant)
+                        {
+                            //Targets.Remove(target);
+                        }
+                    }
+                }
+
+                Debug.Log("Cop: Searching For Player");
                 FindClosestPlayer();
                 FireBullets();
             }
