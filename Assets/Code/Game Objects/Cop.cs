@@ -132,6 +132,7 @@ public class Cop : Actor {
     public void FireBullets() {
         if (CanFire) {
             CanFire = false;
+            AudioManager.Instance.PlaySFX("Cop_Fire");
             StartCoroutine(WaitFire());
         }
     }

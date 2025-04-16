@@ -36,6 +36,7 @@ public class Civilian : Actor
                     IsHero = false;
                     CanEscape = true;
                     MyAnimator.SetBool("detain", true);
+                    AudioManager.Instance.PlaySFX("Civ_Detain");
                 }
                 if(IsServer)
                 {
@@ -53,6 +54,7 @@ public class Civilian : Actor
                     }
                     CanEscape = false;
                     Debug.Log("Civ Has Escaped");
+                    AudioManager.Instance.PlaySFX("Civ_Escape");
                 }
                 if(IsServer)
                 {
@@ -235,6 +237,7 @@ public class Civilian : Actor
     {
         //Hero attack player
         MyAnimator.SetBool("attack", true);
+        AudioManager.Instance.PlaySFX("Civ_Attack");
     }
 
     private protected void FindClosestPlayer()
