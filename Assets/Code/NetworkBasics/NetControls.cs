@@ -11,6 +11,8 @@ struct NetControlFlag {
     public const string LOOKINPUT = "Look";
     public const string PRIMARY = "Primary";
     public const string SECONDARY = "Secondary";
+    public const string SOUND = "SOUND";
+    public const string ANIMATION = "Animation";
 }
 
 public enum PrimaryActions {
@@ -65,14 +67,18 @@ public class NetControls : NetworkComponent {
 
     public override void HandleMessage(string flag, string value) {
         switch (flag) {
+            case NetControlFlag.ANIMATION:
+                if (IsServer) break;
+                MyAnimator.SetBool(value, !MyAnimator.GetBool(value));
+                        
+                break;
+            case NetControlFlag.SOUND:
+                if (IsServer) break;
+                AudioManager.Instance.PlaySFX(value, transform.position);
+                break;
             case NetControlFlag.MOVEINPUT:
                 if (IsClient) {
-                    if (Vector2FromString(value) == Vector2.zero) //Need to sync animations
-                    {
-                        MyAnimator.SetBool("walk", false);
-                    } else {
-                        MyAnimator.SetBool("walk", true);
-                    }
+                    MyAnimator.SetBool("walk", Vector2FromString(value) != Vector2.zero); 
                 }
 
                 if (IsServer)
@@ -92,12 +98,15 @@ public class NetControls : NetworkComponent {
                         case PrimaryActions.PickupItem:
                             if (!_player.hasBag) return;
                             _player.AddItem(_item);
+                            SendUpdate(NetControlFlag.SOUND, "Item_Pickup");
                             break;
                         case PrimaryActions.PickupBag:
                             if (_player.hasBag) return;
                             if (_item is Bag bag) {
                                 if (bag._hasOwner) return;
                                 _player.AssignBag(bag);
+                                SendUpdate(NetControlFlag.SOUND, "Bag");
+                                SendUpdate(NetControlFlag.ANIMATION, "bag");
                             }
 
                             break;
@@ -131,6 +140,7 @@ public class NetControls : NetworkComponent {
                     switch (_sAction) {
                         case SecondaryActions.Tamper:
                             if (_item is Bag bag) {
+                                SendUpdate(NetControlFlag.SOUND, "Tamper");
                                 bag.isTampered = true;
                             }
 
@@ -138,12 +148,16 @@ public class NetControls : NetworkComponent {
                         case SecondaryActions.Attack:
                             if (IsServer) Debug.Log("Attacking");
                             if (_currentCooldown > 0) break;
+                            _currentCooldown = attackCooldown;
                             if (IsClient) break;
                             _hitboxSpawner.SpawnAttack();
-                            _currentCooldown = attackCooldown;
+                            SendUpdate(NetControlFlag.ANIMATION, "attack");
+                            SendUpdate(NetControlFlag.ANIMATION, "attack");
                             break;
                         case SecondaryActions.Release:
                             _player.ReleaseBag();
+                            SendUpdate(NetControlFlag.SOUND, "Bag");
+                            SendUpdate(NetControlFlag.ANIMATION, "bag");
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
