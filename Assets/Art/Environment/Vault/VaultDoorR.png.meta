@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      VaultDoorR_0: -5416252488993355755
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
