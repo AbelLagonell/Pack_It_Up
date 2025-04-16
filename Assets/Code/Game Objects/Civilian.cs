@@ -215,7 +215,6 @@ public class Civilian : Actor
         }
     }
 
-    
     void OnCollisionEnter(Collision c)
     {
         if(IsServer)
@@ -238,12 +237,13 @@ public class Civilian : Actor
         //Hero attack player
         MyAnimator.SetBool("attack", true);
         AudioManager.Instance.PlaySFX("Civ_Attack");
+
     }
 
     private protected void FindClosestPlayer()
     {
         float Minimum = 100;
-
+        Debug.Log("Hero chasing closest player");
         //Find close players 
         foreach (var player in ClosePlayers)
         {

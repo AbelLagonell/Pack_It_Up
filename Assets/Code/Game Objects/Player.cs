@@ -103,6 +103,7 @@ public class Player : Actor {
                             //kill player
                         }
                     }
+                    SendCommand("HEALTH",Health.ToString());
                 }
                 break;
         }
