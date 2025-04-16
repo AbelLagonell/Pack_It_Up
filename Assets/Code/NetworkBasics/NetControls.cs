@@ -97,6 +97,7 @@ public class NetControls : NetworkComponent {
                     switch (_pAction) {
                         case PrimaryActions.PickupItem:
                             if (!_player.hasBag) return;
+                            if (!_player.PossibleAdd(_item)) return;
                             _player.AddItem(_item);
                             SendUpdate(NetControlFlag.SOUND, "Item_Pickup");
                             break;

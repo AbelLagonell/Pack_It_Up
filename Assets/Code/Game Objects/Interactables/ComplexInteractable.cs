@@ -23,8 +23,13 @@ public class ComplexInteractable : Interactable {
     }
     
     public override void OnUse() {
+        Debug.Log("Complex use");
         usable = false;
         OnUseEvent?.Invoke();
         SendUpdate(ComplexInteractableFlag.UPDATE, "");
+    }
+
+    public void SetUsable() {
+        usable = true;
     }
 }

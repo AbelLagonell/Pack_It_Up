@@ -144,6 +144,10 @@ public class Player : Actor {
         item.SetDestroy();
     }
 
+    public bool PossibleAdd(Item item) {
+        return item.weight + _currentBag.weight < _currentBag.maxWeight;
+    }
+
     public void ReleaseBag() {
         //To be called on release
         _currentBag.ReleaseOwner();
