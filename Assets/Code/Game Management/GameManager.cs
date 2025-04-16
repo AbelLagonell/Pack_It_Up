@@ -12,12 +12,13 @@ struct GameManagerFlags {
 }
 
 public class GameManager : NetworkComponent {
-    public static float GlobalTimer = 0; //in seconds
+    public static float GlobalTimer = 180; //in seconds
     public static bool[] CharsTaken;
     public static bool GamePaused = true;
     public static bool _gameStart;
 
     public GameEndCollider gameEndCollider;
+    public int minPlayers = 3;
 
     private bool _gameOver;
     private int _robberScore = 10;
@@ -47,7 +48,7 @@ public class GameManager : NetworkComponent {
                 if (IsClient) {
                     _gameStart = true;
                     foreach (NetworkPlayerManager npm in GameObject.FindObjectsByType<NetworkPlayerManager>(
-                                  FindObjectsSortMode.None)) {
+                                 FindObjectsSortMode.None)) {
                         //TODO Hide Choosing color visuals
                         npm.GameStart();
                         npm.MakeVotingUI(CharsTaken);
@@ -59,7 +60,7 @@ public class GameManager : NetworkComponent {
                 if (IsClient) {
                     Debug.Log("Game Over");
                     _gameOver = true;
-                   
+
                     //TODO do client stuff
                 }
 
@@ -104,7 +105,7 @@ public class GameManager : NetworkComponent {
                 }
 
                 yield return new WaitForSeconds(1f);
-            } while (!allReady || npms.Length < 2);
+            } while (!allReady || npms.Length < minPlayers);
 
             _npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
 
@@ -133,12 +134,13 @@ public class GameManager : NetworkComponent {
                 var undetained = _npms.Count(manager => !manager.player.IsDetained);
 
                 //If ever the informant gets everyone
-                if (undetained == 1) {
+                if (undetained == 1 && minPlayers != 1) {
                     _gameOver = true;
                     _override = true;
                 }
 
                 if (GlobalTimer < 0) {
+                    //RIGHT HERE
                     gameEndCollider.collider.enabled = true;
                     //Make sure that all but the informant is in the end collider
                     if ((undetained - 1) == gameEndCollider.AmountOfPlayers(false))
@@ -151,7 +153,7 @@ public class GameManager : NetworkComponent {
             }
 
             yield return new WaitForSeconds(1f);
-            
+
             (_robberScore, _informantScore) = gameEndCollider.TotalScores();
 
             //After Game ends but before score screen
@@ -165,15 +167,16 @@ public class GameManager : NetworkComponent {
 
             //Game Over
             SendUpdate(GameManagerFlags.GAMEOVER, "1");
-            
-            int send =0 ;
+
+            int send = 0;
             if (_override) send = -1;
             else if (_robberScore > _informantScore) send = 0;
             else if (_robberScore < _informantScore) send = 1;
-            
+
             foreach (NetworkPlayerManager npm in _npms) {
                 npm.SendUpdate(NetworkPlayerManagerFlags.GAMEEND, send.ToString());
             }
+
             yield return new WaitForSeconds(10f);
 
 

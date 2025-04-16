@@ -447,7 +447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00067710865}
+  m_AnchoredPosition: {x: 0, y: 42.430084}
   m_SizeDelta: {x: 0, y: 810.43}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &68152915
@@ -793,8 +793,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 378318157}
   m_HandleRect: {fileID: 378318156}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: -0.0000014384908
+  m_Size: 0.94764274
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5757,8 +5757,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1658902906}
   m_HandleRect: {fileID: 1658902905}
   m_Direction: 0
-  m_Value: 0.49635684
-  m_Size: 0.99945956
+  m_Value: 0.49616066
+  m_Size: 0.9992446
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7889,8 +7889,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1904947442}
   m_HandleRect: {fileID: 1904947441}
   m_Direction: 2
-  m_Value: 0.49999997
-  m_Size: 0.08959692
+  m_Value: 0.5
+  m_Size: 0.06610897
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8605,7 +8605,7 @@ MonoBehaviour:
   NetworkPlayerManager: {fileID: 7124888953299117985, guid: aa91568026d4b66408ee390ed8c99ee3, type: 3}
   DefaultReturnScene: 0
   publicIPAddress: 23.128.112.73
-  privateIPAddress: 10.200.208.193
+  privateIPAddress: 127.0.0.1
   portMininimum: 9001
   portMaxinimum: 10000
   isGameServer: 0
