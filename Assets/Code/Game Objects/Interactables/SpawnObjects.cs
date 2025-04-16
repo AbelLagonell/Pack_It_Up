@@ -17,7 +17,7 @@ public class SpawnObjects : NetworkComponent {
         Vector3 totalOffset = transform.forward * offset.z + transform.right * offset.x +
                                  transform.up * offset.y;
         for (int i = 0; i < count; i++) {
-            MyCore.NetCreateObject(typeIndex, 0, totalOffset, default);
+            MyCore.NetCreateObject(typeIndex, 0, transform.position + totalOffset, default);
         }
     }
 }
