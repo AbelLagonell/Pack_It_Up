@@ -32,7 +32,7 @@ public class Cop : Actor {
             {
                 if(Targets != null)
                 {
-                    foreach(var target in Targets)
+                    /* foreach(var target in Targets)
                     {
                         if(!target.GetComponent<Player>()._myNpm.inGame)
                         {
@@ -42,7 +42,7 @@ public class Cop : Actor {
                         {
                             Targets.Remove(target);
                         }
-                    }
+                    } */
                 }
             }
             yield return new WaitForSeconds(MyCore.MasterTimer);
@@ -74,11 +74,11 @@ public class Cop : Actor {
                     {
                         if(!target.GetComponent<Player>()._myNpm.inGame)
                         {
-                            Targets.Remove(target);
+                            //Targets.Remove(target);
                         }
                         if(!target.GetComponent<Player>()._myNpm.isInformant)
                         {
-                            Targets.Remove(target);
+                            //Targets.Remove(target);
                         }
                     }
                 }
