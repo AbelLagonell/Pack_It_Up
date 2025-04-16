@@ -11,8 +11,6 @@ public class Cop : Actor {
     [SerializeField] private GameObject Bullet;
     private bool CanFire;
     public static bool ChaseStart; //Update this when timer reaches zero from gamemanager to false
-    //private List<GameObject> Players;
-    //private List<GameObject> Targets;
     private Vector3 Target;
 
     public override void HandleMessage(string flag, string value) {
@@ -37,34 +35,6 @@ public class Cop : Actor {
 
             if(ChaseStart && IsServer)
             {
-                Debug.Log("Cop: Adding Player");
-                if(Targets == null)
-                {
-                    Targets = new List<GameObject>
-                    {
-                        c.gameObject
-                    };
-                }
-                else
-                {
-                    if(!Targets.Contains(c.gameObject) && !c.gameObject.GetComponent<Player>()._myNpm.isInformant)
-                    {
-                        Targets.Add(c.gameObject);
-                    }
-
-                    foreach(var target in Targets)
-                    {
-                        if(!target.GetComponent<Player>()._myNpm.inGame)
-                        {
-                            //Targets.Remove(target);
-                        }
-                        if(!target.GetComponent<Player>()._myNpm.isInformant)
-                        {
-                            //Targets.Remove(target);
-                        }
-                    }
-                }
-
                 Debug.Log("Cop: Searching For Player");
                 FindClosestPlayer();
                 FireBullets();
@@ -94,17 +64,6 @@ public class Cop : Actor {
         }
 
         MyAgent.SetDestination(Target);
-
-        /*
-        if(Targets.Count == 0)
-        {
-            MyAnimator.SetBool("walk", false);
-            Minimum = 100;
-            Target = null;
-            MyAgent.SetDestination(transform.position);
-            //Patrol?
-        }
-        */
     }
 
     protected override void OnDeath() {
