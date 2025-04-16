@@ -9,6 +9,7 @@ TagManager:
   - Interactable
   - Civilian
   - GameEnd
+  - Wall
   layers:
   - Default
   - TransparentFX
