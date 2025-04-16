@@ -91,6 +91,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 42c84232c47ce0f449f9dcb5bf086c82, type: 3}
     volume: 1
     pitch: 1
+  - name: Vault_Open
+    clip: {fileID: 8300000, guid: f1a07ecf765e873409e992a8a407f320, type: 3}
+    volume: 1
+    pitch: 1
   - name: Tamper
     clip: {fileID: 8300000, guid: b5a99475427baa24aacbd95db5260ed8, type: 3}
     volume: 1
@@ -101,10 +105,6 @@ MonoBehaviour:
     pitch: 1
   - name: Item_Pickup
     clip: {fileID: 8300000, guid: 3d145b6b0289d0047a401a9707748754, type: 3}
-    volume: 1
-    pitch: 1
-  - name: Vault_Open
-    clip: {fileID: 8300000, guid: f1a07ecf765e873409e992a8a407f320, type: 3}
     volume: 1
     pitch: 1
   uiSounds:
