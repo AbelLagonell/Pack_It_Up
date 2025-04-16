@@ -51,53 +51,57 @@ MonoBehaviour:
   uiMixerGroup: {fileID: 5982599307791335847, guid: 253e178009ab29946a45729f47cdd914, type: 2}
   bgmSounds:
   - name: Credits
-    clip: {fileID: 8300000, guid: 6da029aee4edfa542b08af4c13cab461, type: 3}
+    clip: {fileID: 8300000, guid: 026b7f5060c0fe64885338a11a1bec77, type: 3}
     volume: 1
     pitch: 1
   - name: Main_Menu_Theme
-    clip: {fileID: 8300000, guid: 25b1bb1d00695ad4a898b9e6007c1fac, type: 3}
+    clip: {fileID: 8300000, guid: 2ef6640887c9a2f4194a784688119331, type: 3}
     volume: 1
     pitch: 1
   - name: Win_Robber
-    clip: {fileID: 8300000, guid: 0c56e6cf6b484fd43a6568a23612ad5f, type: 3}
+    clip: {fileID: 8300000, guid: e4866930389cf1346ba11f14d6bb5bb3, type: 3}
     volume: 1
     pitch: 1
   - name: Win_Informant_Arrest
-    clip: {fileID: 8300000, guid: 2d73482749d1f7044a7a1ce46d5ab8d9, type: 3}
+    clip: {fileID: 8300000, guid: 43f82c41d8f651d4192af3cff4d1ff7a, type: 3}
     volume: 1
     pitch: 1
   - name: Win_Informant
-    clip: {fileID: 8300000, guid: ca3b2c8838681414cafcda7f5ceeff14, type: 3}
+    clip: {fileID: 8300000, guid: d3d9b3d65946e4648b813fb3836cc8e4, type: 3}
     volume: 1
     pitch: 1
   - name: Gameplay_Theme
-    clip: {fileID: 8300000, guid: fd7371c78ec8e154895de6a33aa97ba1, type: 3}
+    clip: {fileID: 8300000, guid: 63c48b2af7cb0b14997c908012df764f, type: 3}
     volume: 1
     pitch: 1
   - name: Lobby_Theme
-    clip: {fileID: 8300000, guid: 52c336a5031305c4cb37ceb7052dc31a, type: 3}
+    clip: {fileID: 8300000, guid: 1181d952119e05c42a9c69a15c50d4dd, type: 3}
     volume: 1
     pitch: 1
   sfxSounds:
   - name: Tamper
-    clip: {fileID: 8300000, guid: f731e1394d6c2e34fa91f2be9bc57bb4, type: 3}
+    clip: {fileID: 8300000, guid: b5a99475427baa24aacbd95db5260ed8, type: 3}
     volume: 1
     pitch: 1
   - name: Bag
-    clip: {fileID: 8300000, guid: da5a74736fe1f5242bb6b0d11028ffe9, type: 3}
+    clip: {fileID: 8300000, guid: c652c411cc0ee4344a66acd500f3b4d6, type: 3}
     volume: 1
     pitch: 1
   - name: Item_Pickup
-    clip: {fileID: 8300000, guid: baab42879231d4441abe460d54433354, type: 3}
+    clip: {fileID: 8300000, guid: 3d145b6b0289d0047a401a9707748754, type: 3}
+    volume: 1
+    pitch: 1
+  - name: Vault_Open
+    clip: {fileID: 8300000, guid: f1a07ecf765e873409e992a8a407f320, type: 3}
     volume: 1
     pitch: 1
   uiSounds:
   - name: UI_Cancel
-    clip: {fileID: 8300000, guid: 2dc44acda0a53f140bb355edcafa831f, type: 3}
+    clip: {fileID: 8300000, guid: 429596266c1a67748b22bc16e5feb5c9, type: 3}
     volume: 1
     pitch: 1
   - name: UI_Confirm
-    clip: {fileID: 8300000, guid: d215a6fdafa95f04d940d36e9536a566, type: 3}
+    clip: {fileID: 8300000, guid: 3d3be1dde32d167438f9b7488cf766a7, type: 3}
     volume: 1
     pitch: 1
   initialPoolSize: 10

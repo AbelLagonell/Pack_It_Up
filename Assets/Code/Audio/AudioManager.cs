@@ -178,6 +178,10 @@ public class AudioManager : MonoBehaviour {
         bgmSource.Play();
     }
 
+    public void PlaySFX(string soundName) {
+        PlaySFX("", null);
+    }
+    
     // Play an SFX sound by name
     public void PlaySFX(string soundName, Vector3? position = null) {
         if (!sfxDictionary.TryGetValue(soundName, out Sound sound)) {
