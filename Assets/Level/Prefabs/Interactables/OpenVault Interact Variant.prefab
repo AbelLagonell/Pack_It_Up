@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2826481068488452251, guid: 0d33302f6ae237449be7f183684dbc13, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -54.52762
+      value: -41.449997
       objectReference: {fileID: 0}
     - target: {fileID: 2826481068488452251, guid: 0d33302f6ae237449be7f183684dbc13, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 29.973816
+      value: 10.87
       objectReference: {fileID: 0}
     - target: {fileID: 2826481068488452251, guid: 0d33302f6ae237449be7f183684dbc13, type: 3}
       propertyPath: m_LocalPosition.z
@@ -59,6 +59,10 @@ PrefabInstance:
     - target: {fileID: 4021120678364616032, guid: 0d33302f6ae237449be7f183684dbc13, type: 3}
       propertyPath: m_Name
       value: OpenVault Interact Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4021120678364616032, guid: 0d33302f6ae237449be7f183684dbc13, type: 3}
+      propertyPath: m_TagString
+      value: Interactable
       objectReference: {fileID: 0}
     - target: {fileID: 4083176473792597014, guid: 0d33302f6ae237449be7f183684dbc13, type: 3}
       propertyPath: m_Enabled
