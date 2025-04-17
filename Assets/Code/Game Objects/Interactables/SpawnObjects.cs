@@ -14,10 +14,11 @@ public class SpawnObjects : NetworkComponent {
     public override void NetworkedStart() { }
 
     public void SpawnObject() {
+        if (!IsServer) return;
         Vector3 totalOffset = transform.forward * offset.z + transform.right * offset.x +
                                  transform.up * offset.y;
         for (int i = 0; i < count; i++) {
-            MyCore.NetCreateObject(typeIndex, -1, transform.position + totalOffset, default);
+            MyCore.NetCreateObject(typeIndex, -1, transform.position + totalOffset, Quaternion.identity);
         }
     }
 }

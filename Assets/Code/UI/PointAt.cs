@@ -25,7 +25,7 @@ public class PointAt : MonoBehaviour {
     }
 
     void Update() {
-        //if (GameManager.GlobalTimer > 0) return;
+        if (GameManager.GlobalTimer > 0) return;
         image.enabled = true;
         if (!target) return;
 

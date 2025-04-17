@@ -224,7 +224,7 @@ MonoBehaviour:
   MyCore: {fileID: 0}
   MyId: {fileID: 0}
   IsDirty: 0
-  typeIndex: 23
+  typeIndex: 28
   offset: {x: 1, y: 0, z: 0}
   count: 2
 --- !u!65 &-3083007675535842079

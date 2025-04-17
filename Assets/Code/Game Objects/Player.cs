@@ -26,6 +26,14 @@ public class Player : Actor {
     [SerializeField] private string PName = "<Default>";
     public NetworkPlayerManager _myNpm;
 
+    //Action Display
+    [SerializeField] private Sprite[] primaryActions;
+    [SerializeField] private Sprite[] secondaryActions;
+    [SerializeField] private Image primaryActionImage;
+    [SerializeField] private Image secondaryActionImage;
+    private NetControls _myControls;
+    
+    
     public bool hasBag;
     private Bag _currentBag;
     private bool GameStart = true;
@@ -145,7 +153,7 @@ public class Player : Actor {
     }
 
     public bool PossibleAdd(Item item) {
-        return item.weight + _currentBag.weight < _currentBag.maxWeight;
+        return item.weight + _currentBag.weight <= _currentBag.maxWeight;
     }
 
     public void ReleaseBag() {
@@ -157,6 +165,7 @@ public class Player : Actor {
 
     private void Start() {
         inGameUI.SetActive(false);
+        _myControls = GetComponent<NetControls>();
     }
 
     private void Update() {
@@ -169,6 +178,8 @@ public class Player : Actor {
         if (IsLocalPlayer) {
             inGameUI.SetActive(!GameManager.GamePaused);
             bagInfo.SetActive(hasBag);
+            primaryActionImage.sprite = primaryActions[(int)_myControls._pAction];
+            secondaryActionImage.sprite = secondaryActions[(int)_myControls._sAction];
         }
     }
 

@@ -62,6 +62,17 @@ public class NetControls : NetworkComponent {
     }
 
     public override IEnumerator SlowUpdate() {
+        while (IsConnected) {
+            if (IsServer)
+                if (IsDirty) {
+                    SendUpdate(NetControlFlag.PRIMARY, ((int)_pAction).ToString());
+                    SendUpdate(NetControlFlag.SECONDARY, ((int)_sAction).ToString());
+                    IsDirty = false;
+                }
+
+            yield return new WaitForSeconds(MyCore.MasterTimer);
+        }
+
         yield return new WaitForSeconds(MyCore.MasterTimer);
     }
 
@@ -70,7 +81,7 @@ public class NetControls : NetworkComponent {
             case NetControlFlag.ANIMATION:
                 if (IsServer) break;
                 MyAnimator.SetBool(value, !MyAnimator.GetBool(value));
-                        
+
                 break;
             case NetControlFlag.SOUND:
                 if (IsServer) break;
@@ -78,7 +89,7 @@ public class NetControls : NetworkComponent {
                 break;
             case NetControlFlag.MOVEINPUT:
                 if (IsClient) {
-                    MyAnimator.SetBool("walk", Vector2FromString(value) != Vector2.zero); 
+                    MyAnimator.SetBool("walk", Vector2FromString(value) != Vector2.zero);
                 }
 
                 if (IsServer)
@@ -107,7 +118,6 @@ public class NetControls : NetworkComponent {
                                 if (bag._hasOwner) return;
                                 _player.AssignBag(bag);
                                 SendUpdate(NetControlFlag.SOUND, "Bag");
-                                SendUpdate(NetControlFlag.ANIMATION, "bag");
                             }
 
                             break;
@@ -129,9 +139,11 @@ public class NetControls : NetworkComponent {
                             }
 
                             break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
                     }
+                }
+
+                if (IsLocalPlayer) {
+                    _pAction = (PrimaryActions)int.Parse(value);
                 }
 
                 break;
@@ -141,28 +153,33 @@ public class NetControls : NetworkComponent {
                     switch (_sAction) {
                         case SecondaryActions.Tamper:
                             if (_item is Bag bag) {
+                                if (_currentCooldown > 0) break;
+                                _currentCooldown = 2 * attackCooldown;
+                                if (IsClient) break;
                                 SendUpdate(NetControlFlag.SOUND, "Tamper");
                                 bag.isTampered = true;
                             }
 
                             break;
                         case SecondaryActions.Attack:
-                            if (IsServer) Debug.Log("Attacking");
                             if (_currentCooldown > 0) break;
                             _currentCooldown = attackCooldown;
                             if (IsClient) break;
                             _hitboxSpawner.SpawnAttack();
                             SendUpdate(NetControlFlag.ANIMATION, "attack");
-                            SendUpdate(NetControlFlag.ANIMATION, "attack");
+                            StartCoroutine(StopTrigger("attack"));
                             break;
                         case SecondaryActions.Release:
                             _player.ReleaseBag();
                             SendUpdate(NetControlFlag.SOUND, "Bag");
-                            SendUpdate(NetControlFlag.ANIMATION, "bag");
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
+                }
+
+                if (IsLocalPlayer) {
+                    _sAction = (SecondaryActions)int.Parse(value);
                 }
 
                 break;
@@ -174,6 +191,7 @@ public class NetControls : NetworkComponent {
     public void OnMoveAction(InputAction.CallbackContext mv) {
         if (IsServer) return;
         if (_player.GetDetained() || (GameManager.GamePaused && GameManager._gameStart)) return;
+        if (MyAnimator.GetBool("attack")) return;
         if (mv.performed || mv.started) {
             if (IsLocalPlayer) {
                 MyAnimator.SetBool("walk", true);
@@ -229,6 +247,11 @@ public class NetControls : NetworkComponent {
         }
     }
 
+    private IEnumerator StopTrigger(string trigger) {
+        yield return new WaitForSeconds(.6f);
+        SendUpdate(NetControlFlag.ANIMATION, trigger);
+    }
+
     private void Start() {
         _rb = GetComponent<Rigidbody>();
         _cam = Camera.main;
@@ -246,7 +269,22 @@ public class NetControls : NetworkComponent {
 
             Ray ray = new Ray(transform.position, -transform.up);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, rayCastDistance)) {
+            RaycastHit[] hits = Physics.RaycastAll(ray, rayCastDistance);
+            RaycastHit? firstHit = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (RaycastHit hit in hits) {
+                Debug.Log(hit.collider.gameObject.name);
+                if (hit.collider.isTrigger && hit.distance < closestDistance) {
+                    closestDistance = hit.distance;
+                    firstHit = hit;
+                }
+            }
+
+
+            if (firstHit.HasValue) {
+                RaycastHit hit = firstHit.Value;
+
                 switch (hit.collider.tag) {
                     case "Item":
                         _pAction = PrimaryActions.PickupItem;
@@ -282,6 +320,8 @@ public class NetControls : NetworkComponent {
                 lookingAt = false;
             }
 
+            SendUpdate(NetControlFlag.PRIMARY, ((int)_pAction).ToString());
+            SendUpdate(NetControlFlag.SECONDARY, ((int)_sAction).ToString());
             Debug.DrawRay(transform.position, -transform.up * rayCastDistance, Color.red);
         }
 

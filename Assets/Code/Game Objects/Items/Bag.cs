@@ -18,7 +18,7 @@ public class Bag : Item {
     public float maxWeight = 50;
 
     public override IEnumerator SlowUpdate() {
-        while (true) {
+        while (IsConnected) {
             if (IsServer) {
                 if (IsDirty) {
                     SendUpdate(BagFlags.MONEY, money.ToString());
