@@ -16,7 +16,7 @@ public class MeetingInteractable : Interactable {
 
     public override IEnumerator SlowUpdate() {
         while (IsConnected) {
-            _managers = FindObjectsOfType<NetworkPlayerManager>();
+            _managers = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
             if (IsServer && checkReady) {
                 bool allReady;
                 do {
@@ -66,7 +66,7 @@ public class MeetingInteractable : Interactable {
 
                 GameManager.GamePaused = false;
                 SendUpdate(MeetingInteractableFlags.SHOW, false.ToString());
-                var gameManager = FindObjectOfType<GameManager>();
+                var gameManager = FindAnyObjectByType<GameManager>();
                 gameManager.SendUpdate(GameManagerFlags.TIMESCALE, false.ToString());
                 checkReady = false;
             }
@@ -79,7 +79,7 @@ public class MeetingInteractable : Interactable {
         switch (flag) {
             case MeetingInteractableFlags.SHOW:
                 Debug.Log($"Setting UI to {value}");
-                _managers = FindObjectsOfType<NetworkPlayerManager>();
+                _managers = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
                 foreach (var player in _managers) {
                     player.ready = false;
                     player.ShowVotingUI(bool.Parse(value));
@@ -93,11 +93,11 @@ public class MeetingInteractable : Interactable {
     public override void NetworkedStart() { }
 
     public override void OnUse() {
-        _managers = FindObjectsOfType<NetworkPlayerManager>();
+        _managers = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
         if (!usable) return;
         usable = false;
         GameManager.GamePaused = true;
-        var gameManager = FindObjectOfType<GameManager>();
+        var gameManager = FindAnyObjectByType<GameManager>();
         gameManager.SendUpdate(GameManagerFlags.TIMESCALE, true.ToString());
         checkReady = true;
         SendUpdate(MeetingInteractableFlags.SHOW, true.ToString());

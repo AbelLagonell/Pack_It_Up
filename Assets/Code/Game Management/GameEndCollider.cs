@@ -1,19 +1,19 @@
-#pragma strict;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Collider))]
 public class GameEndCollider : MonoBehaviour {
     private List<Bag> bagList = new List<Bag>();
     private List<Player> playerList = new List<Player>();
-    public Collider collider;
+    public Collider MyCollider { get; private set; }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
-        collider = GetComponent<Collider>();
-        collider.isTrigger = true;
-        collider.enabled = false;
+        MyCollider = GetComponent<Collider>();
+        MyCollider.isTrigger = true;
+        MyCollider.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other) {

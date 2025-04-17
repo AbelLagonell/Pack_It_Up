@@ -24,7 +24,6 @@ public class GameManager : NetworkComponent {
     private int _robberScore = 10;
     private int _informantScore = 0;
     private NetworkPlayerManager[] _npms;
-    private int timeScale = 1;
     private bool _override = false;
 
     void Start() {
@@ -141,7 +140,7 @@ public class GameManager : NetworkComponent {
 
                 if (GlobalTimer < 0) {
                     //RIGHT HERE
-                    gameEndCollider.collider.enabled = true;
+                    gameEndCollider.MyCollider.enabled = true;
                     //Make sure that all but the informant is in the end collider
                     if ((undetained - 1) == gameEndCollider.AmountOfPlayers(false))
                         _gameOver = true;
