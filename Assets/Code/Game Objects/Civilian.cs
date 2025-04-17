@@ -103,7 +103,7 @@ public class Civilian : Actor
                     IsHero = false;
                     int EscapeCheck = UnityEngine.Random.Range(0,100);
                     Debug.Log("Attempt to Escape, rolled: " + Strength[CivType] * 10 + " / " + EscapeCheck);
-                    if(EscapeCheck < Strength[CivType] * 100)
+                    if(EscapeCheck < Strength[CivType])
                     {
                         IsDetained = false;
                         MyAnimator.SetBool("detain", false);
