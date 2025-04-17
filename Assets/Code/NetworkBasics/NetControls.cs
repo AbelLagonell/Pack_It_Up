@@ -247,6 +247,20 @@ public class NetControls : NetworkComponent {
         }
     }
 
+    public void Primary()
+    {
+        if (IsServer) return;
+        if (_player.GetDetained() || GameManager.GamePaused) return;
+        SendCommand(NetControlFlag.PRIMARY, "");
+    }
+
+    public void Secondary()
+    {
+        if (IsServer) return;
+        if (_player.GetDetained() || GameManager.GamePaused) return;
+        SendCommand(NetControlFlag.SECONDARY, "");
+    }
+
     private IEnumerator StopTrigger(string trigger) {
         yield return new WaitForSeconds(.6f);
         SendUpdate(NetControlFlag.ANIMATION, trigger);

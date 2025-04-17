@@ -180,7 +180,20 @@ public class Player : Actor {
             bagInfo.SetActive(hasBag);
             primaryActionImage.sprite = primaryActions[(int)_myControls._pAction];
             secondaryActionImage.sprite = secondaryActions[(int)_myControls._sAction];
+            Button primaryButton = primaryActionImage.GetComponent<Button>();
+            primaryButton.onClick.AddListener(OnClickPrimary);
+            Button secondaryButton = primaryActionImage.GetComponent<Button>();
+            secondaryButton.onClick.AddListener(OnClickSecondary);
         }
+    }
+
+    public void OnClickPrimary()
+    {
+        primaryActionImage.sprite = primaryActions[(int)_myControls._pAction + 4];
+    }
+    private void OnClickSecondary()
+    {
+        primaryActionImage.sprite = primaryActions[(int)_myControls._pAction + 3];
     }
 
     public bool GetDetained() {
