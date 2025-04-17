@@ -82,11 +82,11 @@ MonoBehaviour:
   speed: 10
   Health: 10
   MaxHealth: 10
-  inGameUI: {fileID: 0}
-  bagInfo: {fileID: 0}
-  bagTextInfo: {fileID: 0}
-  healthBar: {fileID: 0}
-  PlayerName: {fileID: 0}
+  inGameUI: {fileID: 7390641624875875559}
+  bagInfo: {fileID: 7618805352006367651}
+  bagTextInfo: {fileID: 6494342874874721053}
+  healthBar: {fileID: 8078559349596452338}
+  PlayerName: {fileID: 8154361703148187247}
   PName: <Default>
   _myNpm: {fileID: 0}
   primaryActions:
@@ -98,8 +98,8 @@ MonoBehaviour:
   - {fileID: -7008412969330441016, guid: 1e15bcfb789a3294081569cb28fadb7b, type: 3}
   - {fileID: -7959107863437027284, guid: 3670d96e835aa5a49a0602e94400131c, type: 3}
   - {fileID: 9143362214146227198, guid: da5c915625ec2f449bc096bc7c07165f, type: 3}
-  primaryActionImage: {fileID: 0}
-  secondaryActionImage: {fileID: 0}
+  primaryActionImage: {fileID: 2396538359444052945}
+  secondaryActionImage: {fileID: 1531123750222393727}
   hasBag: 0
 --- !u!54 &2066719836494758276
 Rigidbody:
@@ -1085,7 +1085,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45.75
+  m_fontSize: 26.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

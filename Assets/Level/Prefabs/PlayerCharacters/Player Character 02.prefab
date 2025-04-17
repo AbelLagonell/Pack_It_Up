@@ -82,11 +82,11 @@ MonoBehaviour:
   speed: 10
   Health: 10
   MaxHealth: 10
-  inGameUI: {fileID: 0}
-  bagInfo: {fileID: 0}
-  bagTextInfo: {fileID: 0}
-  healthBar: {fileID: 0}
-  PlayerName: {fileID: 0}
+  inGameUI: {fileID: 170556340127101980}
+  bagInfo: {fileID: 5842160352881022236}
+  bagTextInfo: {fileID: 8626630922012476000}
+  healthBar: {fileID: 3258980827188833950}
+  PlayerName: {fileID: 5281961207996288053}
   PName: <Default>
   _myNpm: {fileID: 0}
   primaryActions:
@@ -98,8 +98,8 @@ MonoBehaviour:
   - {fileID: -7008412969330441016, guid: 1e15bcfb789a3294081569cb28fadb7b, type: 3}
   - {fileID: -7959107863437027284, guid: 3670d96e835aa5a49a0602e94400131c, type: 3}
   - {fileID: 9143362214146227198, guid: da5c915625ec2f449bc096bc7c07165f, type: 3}
-  primaryActionImage: {fileID: 0}
-  secondaryActionImage: {fileID: 0}
+  primaryActionImage: {fileID: 3897043618783560006}
+  secondaryActionImage: {fileID: 6113378466529758761}
   hasBag: 0
 --- !u!54 &2066719836494758276
 Rigidbody:
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 035c26f0c8fb5454e9e6cf90c30086b0, type: 3}
+  m_Actions: {fileID: 0}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -1008,7 +1008,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45.75
+  m_fontSize: 26.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
