@@ -132,7 +132,7 @@ public class Player : Actor {
                 //Get Whatever you need from it
             }
         }
-        inGameUI.SetActive(true);
+        inGameUI.SetActive(false);
         //TODO Make what happens when they connect to the server
     }
 
