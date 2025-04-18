@@ -12,11 +12,12 @@ struct GameManagerFlags {
 }
 
 public class GameManager : NetworkComponent {
-    public static float GlobalTimer = 180; //in seconds
+    public static float GlobalTimer; //in seconds
     public static bool[] CharsTaken;
     public static bool GamePaused = true;
     public static bool _gameStart;
 
+    public float TotalGameTime = 180;
     public GameEndCollider gameEndCollider;
     public int minPlayers = 3;
 
@@ -32,6 +33,8 @@ public class GameManager : NetworkComponent {
             CharsTaken[i] = false;
         }
 
+        GlobalTimer = TotalGameTime;
+        Debug.Log(GlobalTimer);
         //gameEndCollider = GameObject.FindGameObjectWithTag("GameEnd").GetComponent<GameEndCollider>();
     }
 
@@ -90,6 +93,8 @@ public class GameManager : NetworkComponent {
     public override void NetworkedStart() { }
 
     public override IEnumerator SlowUpdate() {
+        
+        gameEndCollider = (GameEndCollider)FindAnyObjectByType(typeof(GameEndCollider));
         if (IsServer) {
             NetworkPlayerManager[] npms;
             bool allReady = true;
@@ -107,7 +112,6 @@ public class GameManager : NetworkComponent {
             } while (!allReady || npms.Length < minPlayers);
 
             _npms = FindObjectsByType<NetworkPlayerManager>(FindObjectsSortMode.None);
-
             //Setting informant
             _npms[Random.Range(0, _npms.Length)].SetInformant();
             yield return new WaitForSeconds(1f);

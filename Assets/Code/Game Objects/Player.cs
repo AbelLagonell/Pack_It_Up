@@ -32,8 +32,8 @@ public class Player : Actor {
     [SerializeField] private Image primaryActionImage;
     [SerializeField] private Image secondaryActionImage;
     private NetControls _myControls;
-    
-    
+
+
     public bool hasBag;
     private Bag _currentBag;
     private bool GameStart = true;
@@ -90,8 +90,7 @@ public class Player : Actor {
                     healthBar.value = (float)Health / MaxHealth;
                 }
 
-                if(IsServer)
-                {
+                if (IsServer) {
                     SendUpdate(ActorFlags.HEALTH, value);
                 }
 
@@ -103,23 +102,22 @@ public class Player : Actor {
                 IsDetained = bool.Parse(value);
                 break;
             case PlayerFlags.DAMAGE:
-                if(IsServer)
-                {
+                if (IsServer) {
                     SendUpdate(PlayerFlags.DAMAGE, value);
                 }
-                if(IsClient)
-                {
+
+                if (IsClient) {
                     Debug.Log(value + " Health: " + Health);
-                    if(_myNpm.playerChar.ToString() == value)
-                    {
+                    if (_myNpm.playerChar.ToString() == value) {
                         UpdateHealth(-1);
-                        if(Health <= 0)
-                        {
+                        if (Health <= 0) {
                             //kill player
                         }
                     }
-                    SendCommand(ActorFlags.HEALTH,Health.ToString());
+
+                    SendCommand(ActorFlags.HEALTH, Health.ToString());
                 }
+
                 break;
         }
         //TODO make necessary flags
@@ -140,6 +138,9 @@ public class Player : Actor {
     protected override void OnDeath() {
         //TODO Make do a death thing
         _myNpm.inGame = false;
+        ReleaseBag();
+        if(IsServer) SendUpdate(PlayerFlags.DETAIN, true.ToString()); 
+        IsDetained = true;
     }
 
     public void Escape() {
@@ -173,7 +174,6 @@ public class Player : Actor {
     private void Start() {
         inGameUI.SetActive(false);
         _myControls = GetComponent<NetControls>();
-        
     }
 
     private void Update() {
@@ -195,12 +195,11 @@ public class Player : Actor {
         }
     }
 
-    public void OnClickPrimary()
-    {
+    public void OnClickPrimary() {
         primaryActionImage.sprite = primaryActions[(int)_myControls._pAction + 4];
     }
-    private void OnClickSecondary()
-    {
+
+    private void OnClickSecondary() {
         primaryActionImage.sprite = primaryActions[(int)_myControls._pAction + 3];
     }
 

@@ -179,7 +179,7 @@ public class AudioManager : MonoBehaviour {
     }
 
     public void PlaySFX(string soundName) {
-        PlaySFX("", null);
+        PlaySFX(soundName, null);
     }
     
     // Play an SFX sound by name
