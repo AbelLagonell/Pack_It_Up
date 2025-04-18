@@ -80,7 +80,7 @@ public class Civilian : Actor
                 {
                     Debug.Log("Civ attacked " + value);
                     MyAnimator.SetBool("attack", true);
-                    SendCommand("DAMAGE", value);
+                    SendCommand(PlayerFlags.DAMAGE, value);
                     AM.PlaySFX("Civ_Attack");
                     CanAttack = false;
                     StartCoroutine(WaitAttack());

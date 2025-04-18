@@ -112,7 +112,7 @@ public class Player : Actor {
                     if(_myNpm.playerChar.ToString() == value)
                     {
                         Debug.Log(value + " Health: " + Health);
-                        Health--;
+                        UpdateHealth(-1);
                         if(Health <= 0)
                         {
                             //kill player
