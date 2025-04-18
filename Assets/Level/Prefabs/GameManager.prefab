@@ -68,3 +68,6 @@ MonoBehaviour:
   MyCore: {fileID: 0}
   MyId: {fileID: 0}
   IsDirty: 0
+  TotalGameTime: 180
+  gameEndCollider: {fileID: 0}
+  minPlayers: 1
