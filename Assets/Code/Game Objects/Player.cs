@@ -17,7 +17,7 @@ public struct PlayerFlags {
 
 public class Player : Actor {
     //UI
-    [SerializeField] private GameObject inGameUI;
+    [SerializeField] public GameObject inGameUI;
     [SerializeField] private GameObject bagInfo;
     public TMP_Text bagTextInfo;
     [SerializeField] private Slider healthBar;
@@ -132,6 +132,7 @@ public class Player : Actor {
                 //Get Whatever you need from it
             }
         }
+        inGameUI.SetActive(true);
         //TODO Make what happens when they connect to the server
     }
 

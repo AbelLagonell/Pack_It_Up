@@ -212,6 +212,7 @@ public class NetworkPlayerManager : NetworkComponent {
                 AudioManager.Instance.PlayBGM(bool.Parse(value) ? "Win_Robber" : "Win_Informant");
                 break;
             case NetworkPlayerManagerFlags.GAMEEND:
+                player.inGameUI.SetActive(false);
                 Debug.Log(int.Parse(value));
                 int val = int.Parse(value);
                 if (val < 0) {

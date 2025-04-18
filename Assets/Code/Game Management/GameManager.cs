@@ -118,7 +118,7 @@ public class GameManager : NetworkComponent {
 
             _gameStart = true;
             SendUpdate(GameManagerFlags.GAMESTART, "1");
-            MyCore.StopListening();
+            MyCore.NotifyGameStart();
 
 
             //So that the players can read their roles
@@ -184,7 +184,7 @@ public class GameManager : NetworkComponent {
 
 
             MyId.NotifyDirty();
-            StartCoroutine(MyCore.DisconnectServer());
+            MyCore.UI_Quit();
         }
     }
 
