@@ -127,8 +127,9 @@ GameObject:
   - component: {fileID: 8184589801661097534}
   - component: {fileID: 6598818725093667556}
   - component: {fileID: 629253663719509636}
-  - component: {fileID: 7993765190607980137}
   - component: {fileID: 3788709755607414592}
+  - component: {fileID: 7993765190607980137}
+  - component: {fileID: 3654789693830501046}
   m_Layer: 7
   m_Name: NPC1
   m_TagString: Civilian
@@ -273,6 +274,27 @@ MonoBehaviour:
   MyAgent: {fileID: 8184589801661097534}
   IsHero: 0
   CivType: 0
+--- !u!135 &3788709755607414592
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5333298810271070322}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &7993765190607980137
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -294,7 +316,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 4
   m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &3788709755607414592
+--- !u!135 &3654789693830501046
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

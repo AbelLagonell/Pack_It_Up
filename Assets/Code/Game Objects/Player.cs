@@ -138,7 +138,6 @@ public class Player : Actor {
     protected override void OnDeath() {
         //TODO Make do a death thing
         _myNpm.inGame = false;
-        ReleaseBag();
         if(IsServer) SendUpdate(PlayerFlags.DETAIN, true.ToString()); 
         IsDetained = true;
     }

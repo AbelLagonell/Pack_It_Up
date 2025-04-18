@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 8184589801661097534}
   - component: {fileID: 6598818725093667556}
   - component: {fileID: 629253663719509636}
+  - component: {fileID: 6665075260017584431}
   - component: {fileID: 7993765190607980137}
   - component: {fileID: 3788709755607414592}
   m_Layer: 7
@@ -273,6 +274,27 @@ MonoBehaviour:
   MyAgent: {fileID: 8184589801661097534}
   IsHero: 0
   CivType: 2
+--- !u!135 &6665075260017584431
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5333298810271070322}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!135 &7993765190607980137
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -286,7 +308,7 @@ SphereCollider:
     m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 1975
+    m_Bits: 1971
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

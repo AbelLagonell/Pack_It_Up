@@ -107,6 +107,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 3d145b6b0289d0047a401a9707748754, type: 3}
     volume: 1
     pitch: 1
+  - name: Civ_Attack
+    clip: {fileID: 8300000, guid: 5e4915b8600b10f419e176d02da3857b, type: 3}
+    volume: 1
+    pitch: 1
   uiSounds:
   - name: UI_Cancel
     clip: {fileID: 8300000, guid: 429596266c1a67748b22bc16e5feb5c9, type: 3}

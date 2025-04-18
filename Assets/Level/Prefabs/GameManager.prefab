@@ -70,4 +70,4 @@ MonoBehaviour:
   IsDirty: 0
   TotalGameTime: 180
   gameEndCollider: {fileID: 0}
-  minPlayers: 1
+  minPlayers: 3
