@@ -34,6 +34,7 @@ public class NetControls : NetworkComponent {
     private Camera _cam;
     private Rigidbody _rb;
     public Player _player;
+    private AudioManager AM;
 
     [SerializeField] private float rayCastDistance = 2.5f;
     [SerializeField] private float linearSpeed = 5f;
@@ -85,7 +86,7 @@ public class NetControls : NetworkComponent {
                 break;
             case NetControlFlag.SOUND:
                 if (IsServer) break;
-                AudioManager.Instance.PlaySFX(value, transform.position);
+                AM.PlaySFX(value, transform.position);
                 break;
             case NetControlFlag.MOVEINPUT:
                 if (IsClient) {
@@ -271,6 +272,7 @@ public class NetControls : NetworkComponent {
         _cam = Camera.main;
         _player = GetComponent<Player>();
         _hitboxSpawner = GetComponent<HitboxSpawner>();
+        AM = FindFirstObjectByType<AudioManager>();
     }
 
     private void Update() {

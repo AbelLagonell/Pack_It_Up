@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-struct PlayerFlags {
+public struct PlayerFlags {
     public const string NAME = "NAME";
     public const string CHAR = "CHAR";
     public const string BAG = "BAG";
@@ -86,7 +86,13 @@ public class Player : Actor {
                 }
 
                 if (IsLocalPlayer) {
+                    Health = int.Parse(value);
                     healthBar.value = (float)Health / MaxHealth;
+                }
+
+                if(IsServer)
+                {
+                    SendUpdate("HEALTH", value);
                 }
 
                 break;
@@ -103,8 +109,9 @@ public class Player : Actor {
                 }
                 if(IsClient)
                 {
-                    if(this.Owner == int.Parse(value))
+                    if(_myNpm.playerChar.ToString() == value)
                     {
+                        Debug.Log(value + " Health: " + Health);
                         Health--;
                         if(Health <= 0)
                         {
@@ -166,6 +173,7 @@ public class Player : Actor {
     private void Start() {
         inGameUI.SetActive(false);
         _myControls = GetComponent<NetControls>();
+        
     }
 
     private void Update() {

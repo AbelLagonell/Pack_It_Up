@@ -13,6 +13,7 @@ public struct CivFlags
     public const string DETAIN = "DETAIN";
     public const string NODETAIN = "NODETAIN";
     public const string ATTEMPT = "ATTEMPT";
+    public const string ATTACK = "ATTACK";
 }
 public class Civilian : Actor
 {
@@ -20,6 +21,7 @@ public class Civilian : Actor
 
     [SerializeField] private bool IsHero;
     [SerializeField] private int CivType;
+    private AudioManager AM;
     private int[] Strength = {4,3,2,1};
     private int[] Speed = {8,7,6,10};
     private bool CanEscape, CanAttack;
@@ -36,7 +38,7 @@ public class Civilian : Actor
                     IsHero = false;
                     CanEscape = true;
                     MyAnimator.SetBool("detain", true);
-                    AudioManager.Instance.PlaySFX("Civ_Detain");
+                    AM.PlaySFX("Civ_Detain");
                 }
                 if(IsServer)
                 {
@@ -53,8 +55,9 @@ public class Civilian : Actor
                         IsHero = true;
                     }
                     CanEscape = false;
+                    CanAttack = true;
                     Debug.Log("Civ Has Escaped");
-                    AudioManager.Instance.PlaySFX("Civ_Escape");
+                    AM.PlaySFX("Civ_Escape");
                 }
                 if(IsServer)
                 {
@@ -70,6 +73,21 @@ public class Civilian : Actor
                 if(IsServer)
                 {
                     SendUpdate(CivFlags.ATTEMPT,"1");
+                }
+            break;
+            case CivFlags.ATTACK:
+                if(IsClient)
+                {
+                    Debug.Log("Civ attacked " + value);
+                    MyAnimator.SetBool("attack", true);
+                    SendCommand("DAMAGE", value);
+                    AM.PlaySFX("Civ_Attack");
+                    CanAttack = false;
+                    StartCoroutine(WaitAttack());
+                }
+                if(IsServer)
+                {
+                    SendUpdate(CivFlags.ATTACK,value);
                 }
             break;
         }
@@ -89,6 +107,7 @@ public class Civilian : Actor
         MyAnimator.SetBool("attack", false);
         MyAnimator.SetBool("detain", true);
         MyAnimator.SetBool("attempt", false);
+        AM = FindFirstObjectByType<AudioManager>();
     }
 
     public override IEnumerator SlowUpdate()
@@ -103,7 +122,7 @@ public class Civilian : Actor
                     IsHero = false;
                     int EscapeCheck = UnityEngine.Random.Range(0,100);
                     Debug.Log("Attempt to Escape, rolled: " + Strength[CivType] * 10 + " / " + EscapeCheck);
-                    if(EscapeCheck < Strength[CivType])
+                    if(EscapeCheck < Strength[CivType] * 100)
                     {
                         IsDetained = false;
                         MyAnimator.SetBool("detain", false);
@@ -223,21 +242,10 @@ public class Civilian : Actor
             {
                 if(CanAttack && IsHero)
                 {
-                    MyAnimator.SetBool("attack", true);
-                    SendCommand("DAMAGE",c.gameObject.GetComponent<Player>()._myNpm.Owner.ToString());
-                    CanAttack = false;
-                    StartCoroutine(WaitAttack());
+                    SendUpdate(CivFlags.ATTACK,c.gameObject.GetComponent<Player>()._myNpm.playerChar.ToString());
                 }
             }
         }
-    }
-    
-    public void OnAttack()
-    {
-        //Hero attack player
-        MyAnimator.SetBool("attack", true);
-        AudioManager.Instance.PlaySFX("Civ_Attack");
-
     }
 
     private protected void FindClosestPlayer()
@@ -285,7 +293,7 @@ public class Civilian : Actor
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        AM = FindFirstObjectByType<AudioManager>();
     }
 
     // Update is called once per frame

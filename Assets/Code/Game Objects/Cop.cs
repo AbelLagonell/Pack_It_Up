@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(HitboxSpawner))]
 public class Cop : Actor {
     [SerializeField] private NavMeshAgent MyAgent;
     [SerializeField] private GameObject Bullet;
