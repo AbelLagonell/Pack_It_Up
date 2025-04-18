@@ -22341,14 +22341,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2779154538019934198, guid: 40118b0c032702998bf7bd574dd39120, type: 3}
-      propertyPath: minPlayers
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2779154538019934198, guid: 40118b0c032702998bf7bd574dd39120, type: 3}
-      propertyPath: gameEndCollider
-      value: 
-      objectReference: {fileID: 679330259}
     - target: {fileID: 7623219295790652536, guid: 40118b0c032702998bf7bd574dd39120, type: 3}
       propertyPath: m_LocalPosition.x
       value: 605.81885
@@ -22393,8 +22385,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 584894778914576724, guid: 40118b0c032702998bf7bd574dd39120, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
