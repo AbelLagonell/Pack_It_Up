@@ -92,7 +92,7 @@ public class Player : Actor {
 
                 if(IsServer)
                 {
-                    SendUpdate("HEALTH", value);
+                    SendUpdate(ActorFlags.HEALTH, value);
                 }
 
                 break;
@@ -105,20 +105,20 @@ public class Player : Actor {
             case PlayerFlags.DAMAGE:
                 if(IsServer)
                 {
-                    SendUpdate("HEALTH", Health.ToString());
+                    SendUpdate(PlayerFlags.DAMAGE, value);
                 }
                 if(IsClient)
                 {
+                    Debug.Log(value + " Health: " + Health);
                     if(_myNpm.playerChar.ToString() == value)
                     {
-                        Debug.Log(value + " Health: " + Health);
                         UpdateHealth(-1);
                         if(Health <= 0)
                         {
                             //kill player
                         }
                     }
-                    SendCommand("HEALTH",Health.ToString());
+                    SendCommand(ActorFlags.HEALTH,Health.ToString());
                 }
                 break;
         }
