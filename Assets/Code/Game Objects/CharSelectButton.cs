@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class CharSelectButton : MonoBehaviour
 {
     public Button[] Buttons;
-    public Image takenImg;
+    public Sprite takenImg;
     private bool[] CharsTaken;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,9 +19,9 @@ public class CharSelectButton : MonoBehaviour
         {
             if(CharsTaken[i])
             {
-                Buttons[i].image = takenImg;
+                Buttons[i].transform.GetChild(0).gameObject.GetComponent<Image>().sprite = takenImg;
+                Buttons[i].transform.GetChild(0).gameObject.GetComponent<Image>().color = new Vector4(255,255,255,0);
                 Buttons[i].interactable = false;
-                Destroy(Buttons[i]);
             }
             CharsTaken[i] = GameManager.CharsTaken[i];
         }

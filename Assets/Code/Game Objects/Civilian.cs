@@ -299,7 +299,7 @@ public class Civilian : Actor
             CanEscape = true;
             MyAnimator.SetBool("detain", true);
             MyAgent.SetDestination(transform.position);
-            HandleMessage(CivFlags.DETAIN,"1");
+            SendUpdate(CivFlags.DETAIN,"1");
         }
     }
 

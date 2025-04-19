@@ -2543,7 +2543,7 @@ MonoBehaviour:
   - {fileID: 5409534337529649554}
   - {fileID: 8900512534012147743}
   - {fileID: 8982946328958645338}
-  takenImg: {fileID: 8319352535245571665}
+  takenImg: {fileID: 0}
 --- !u!1 &3741781589696587759
 GameObject:
   m_ObjectHideFlags: 0
