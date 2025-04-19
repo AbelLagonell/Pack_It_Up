@@ -85,11 +85,6 @@ public class Player : Actor {
                     Health = int.Parse(value);
                 }
 
-                if (IsLocalPlayer) {
-                    Health = int.Parse(value);
-                    healthBar.value = (float)Health / MaxHealth;
-                }
-
                 if (IsServer) {
                     SendUpdate(ActorFlags.HEALTH, value);
                 }
@@ -188,6 +183,7 @@ public class Player : Actor {
             }
 
         if (IsLocalPlayer) {
+            healthBar.value = (float)Health / MaxHealth;
             inGameUI.SetActive(!GameManager.GamePaused);
             bagInfo.SetActive(hasBag);
             primaryActionImage.sprite = primaryActions[(int)_myControls._pAction];
