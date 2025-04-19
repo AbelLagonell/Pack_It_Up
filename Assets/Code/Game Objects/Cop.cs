@@ -76,7 +76,7 @@ public class Cop : Actor {
     }
 
     private IEnumerator WaitFire() {
-        yield return new WaitForSecondsRealtime(3.5f);
+        yield return new WaitForSecondsRealtime(2.5f);
         CanFire = true;
     }
 }

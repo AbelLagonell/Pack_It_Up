@@ -18,6 +18,7 @@ public class Bullet : NetworkComponent
 
     public override IEnumerator SlowUpdate()
     {
+        myRig.AddForce(new Vector3(2,0,0), ForceMode.Force);
         if(KillBullet)
         {
             MyCore.NetDestroyObject(this.NetId);
@@ -30,8 +31,8 @@ public class Bullet : NetworkComponent
     void Start()
     {
         KillBullet = false;
-        myRig.linearVelocity = new Vector3(transform.forward.x*5,0,0);
         StartCoroutine(KillTime());
+        KillBullet = true;
     }
 
     // Update is called once per frame
@@ -43,6 +44,5 @@ public class Bullet : NetworkComponent
     private IEnumerator KillTime()
     {
         yield return new WaitForSeconds(3f);
-        KillBullet = true;
     }
 }

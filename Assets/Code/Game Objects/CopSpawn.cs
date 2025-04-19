@@ -21,7 +21,7 @@ public class CopSpawn : NetworkComponent
         while(true)
         {
             //if(GameManager._timeOut && !HasSpawned)
-            if(GameManager._gameStart && !HasSpawned)
+            if(GameManager._timeOut && !HasSpawned)
             {
                 Debug.Log("COP SPAWN");
                 MyCore.NetCreateObject(20, NetId, transform.position, transform.rotation);

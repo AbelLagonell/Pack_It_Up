@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 5306892636395456991}
   - component: {fileID: 7478165948746180922}
   - component: {fileID: 366995161759176088}
-  - component: {fileID: 4758089706090987899}
   - component: {fileID: 6531169478148486176}
+  - component: {fileID: 5861054593085826096}
   m_Layer: 7
   m_Name: Bullet
   m_TagString: Untagged
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -2
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.795773, a: 1}
+  m_Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -155,7 +155,7 @@ MonoBehaviour:
   MyCore: {fileID: 0}
   MyId: {fileID: 0}
   IsDirty: 0
-  adjustVelocity: {x: 0, y: 0, z: 0}
+  adjustVelocity: {x: 4, y: 0, z: 0}
   useAdjustedVelocity: 0
 --- !u!65 &366995161759176088
 BoxCollider:
@@ -178,22 +178,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4758089706090987899
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6848505181096723874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6144150adbe68f34fb045d8a5f8c16b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MyCore: {fileID: 0}
-  MyId: {fileID: 3697760957337406371}
-  IsDirty: 0
-  myRig: {fileID: 5306892636395456991}
 --- !u!114 &6531169478148486176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,3 +192,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   enemyTag: Player
+--- !u!114 &5861054593085826096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6848505181096723874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6144150adbe68f34fb045d8a5f8c16b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MyCore: {fileID: 0}
+  MyId: {fileID: 0}
+  IsDirty: 0
+  myRig: {fileID: 5306892636395456991}
