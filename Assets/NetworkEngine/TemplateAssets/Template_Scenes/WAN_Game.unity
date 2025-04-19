@@ -5359,8 +5359,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 413856796}
   m_HandleRect: {fileID: 413856795}
   m_Direction: 0
-  m_Value: 0.49616066
-  m_Size: 0.99909896
+  m_Value: 0.4963572
+  m_Size: 0.99913853
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -22841,8 +22841,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 755234959}
   m_HandleRect: {fileID: 755234958}
   m_Direction: 2
-  m_Value: 1.0000006
-  m_Size: 0.6194243
+  m_Value: 1.0000007
+  m_Size: 0.6589095
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -31662,8 +31662,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 627426324}
   m_HandleRect: {fileID: 627426323}
   m_Direction: 2
-  m_Value: 0.6360448
-  m_Size: 0.04298019
+  m_Value: 0.63604486
+  m_Size: 0.04576573
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32774,7 +32774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d566c9a9f1aea7d459ce44786f73fb26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OutputConsole: {fileID: 0}
+  OutputConsole: {fileID: 11627232}
   MaxConsoleLogSize: 1024
   UsingUDP: 0
   IsListening: 0
@@ -35016,7 +35016,7 @@ MonoBehaviour:
   NetworkPlayerManager: {fileID: 7124888953299117985, guid: aa91568026d4b66408ee390ed8c99ee3, type: 3}
   DefaultReturnScene: 0
   publicIPAddress: 23.128.112.73
-  privateIPAddress: 127.0.0.1
+  privateIPAddress: 10.200.208.193
   portMininimum: 9001
   portMaxinimum: 10000
   isGameServer: 0

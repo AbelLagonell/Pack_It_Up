@@ -31,6 +31,8 @@ public class GameManager : NetworkComponent {
     private bool _override = false;
 
     void Start() {
+        GamePaused = true;
+        _gameStart = false;
         CharsTaken = new bool[8];
         for (int i = 0; i < 8; i++) {
             CharsTaken[i] = false;
@@ -187,9 +189,9 @@ public class GameManager : NetworkComponent {
 
             yield return new WaitForSeconds(10f);
 
-
             MyId.NotifyDirty();
             MyCore.UI_Quit();
+            StartCoroutine(MyCore.DisconnectServer());       
         }
     }
 
