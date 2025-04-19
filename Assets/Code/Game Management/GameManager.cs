@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using NETWORK_ENGINE;
+using System.Threading;
 
 struct GameManagerFlags {
     public const string GAMESTART = "START";
@@ -9,6 +10,7 @@ struct GameManagerFlags {
     public const string GAMEOVER = "END";
     public const string TIMECHANGE = "CHANGE";
     public const string TIMESCALE = "SCALE";
+    public const string TIMEOUT = "TIMEOUT";
 }
 
 public class GameManager : NetworkComponent {
@@ -16,8 +18,9 @@ public class GameManager : NetworkComponent {
     public static bool[] CharsTaken;
     public static bool GamePaused = true;
     public static bool _gameStart;
+    public static bool _timeOut;
 
-    public float TotalGameTime = 180;
+    public float TotalGameTime = 20;
     public GameEndCollider gameEndCollider;
     public int minPlayers = 1;
 
@@ -145,6 +148,8 @@ public class GameManager : NetworkComponent {
                 if (GlobalTimer < 0) {
                     //RIGHT HERE
                     gameEndCollider.MyCollider.enabled = true;
+                    _timeOut = true;
+                    SendUpdate(GameManagerFlags.TIMEOUT, "1");
                     //Make sure that all but the informant is in the end collider
                     if ((undetained - 1) == gameEndCollider.AmountOfPlayers(false))
                         _gameOver = true;

@@ -13,7 +13,6 @@ public class Cop : Actor {
     private Vector3 Target;
 
     public override void HandleMessage(string flag, string value) {
-
     }
 
     public override void NetworkedStart() {

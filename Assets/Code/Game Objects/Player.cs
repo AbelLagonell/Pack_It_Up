@@ -166,10 +166,13 @@ public class Player : Actor {
     }
 
     public void ReleaseBag() {
-        //To be called on release
-        _currentBag.ReleaseOwner();
-        hasBag = false;
-        SendUpdate(PlayerFlags.BAG, hasBag.ToString());
+        if(hasBag)
+        {
+            //To be called on release
+            _currentBag.ReleaseOwner();
+            hasBag = false;
+            SendUpdate(PlayerFlags.BAG, hasBag.ToString());
+        }
     }
 
     private void Start() {

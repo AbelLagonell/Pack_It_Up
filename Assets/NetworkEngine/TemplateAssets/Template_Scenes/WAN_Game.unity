@@ -32604,7 +32604,7 @@ MonoBehaviour:
   SpawnPrefab: []
   NetworkPlayerManager: {fileID: 7124888953299117985, guid: aa91568026d4b66408ee390ed8c99ee3, type: 3}
   DefaultReturnScene: 0
-  publicIPAddress: 23.128.112.73
+  publicIPAddress: 127.0.0.1
   privateIPAddress: 10.200.208.193
   portMininimum: 9001
   portMaxinimum: 10000

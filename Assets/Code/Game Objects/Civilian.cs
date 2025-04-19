@@ -135,7 +135,7 @@ public class Civilian : Actor
                     IsHero = false;
                     int EscapeCheck = UnityEngine.Random.Range(0,100);
                     Debug.Log("Attempt to Escape, rolled: " + Strength[CivType] * 10 + " / " + EscapeCheck);
-                    if(EscapeCheck < Strength[CivType] * 100)
+                    if(EscapeCheck < Strength[CivType])
                     {
                         IsDetained = false;
                         MyAnimator.SetBool("detain", false);
@@ -167,7 +167,7 @@ public class Civilian : Actor
         MyCore.NetDestroyObject(NetId);
     }
 
-    void OnTriggerEnter(Collider c)
+    private void Pursue(Collider c)
     {
         if(IsServer)
         {
@@ -228,6 +228,17 @@ public class Civilian : Actor
             }
         }
     }
+
+    void OnTriggerEnter(Collider c)
+    {
+        Pursue(c);
+    }
+
+    void OnTriggerStay(Collider c)
+    {
+        Pursue(c);
+    }
+
 
     void OnTriggerExit(Collider c)
     {
