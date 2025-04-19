@@ -26,12 +26,7 @@ public class Cop : Actor {
 
         while(true)
         {
-            if(GameManager._gameStart) //Change this to when timer hits 0
-            {
-                ChaseStart = true;
-            }
-
-            if(ChaseStart && IsServer)
+            if(IsServer)
             {
                 Debug.Log("Cop: Searching For Player");
                 FindClosestPlayer();
@@ -81,7 +76,7 @@ public class Cop : Actor {
     }
 
     private IEnumerator WaitFire() {
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSecondsRealtime(3.5f);
         CanFire = true;
     }
 }

@@ -27,24 +27,10 @@ public class Bullet : NetworkComponent
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    void OnCollisionEnter(Collision c)
-    {
-        if(c.gameObject.CompareTag("Player"))    
-        {
-            SendCommand("DAMAGE",c.gameObject.GetComponent<Player>()._myNpm.Owner.ToString());
-            MyCore.NetDestroyObject(this.NetId);
-        }
-        if(c.gameObject.CompareTag("Wall"))
-        {
-            MyCore.NetDestroyObject(this.NetId);
-        }
-    }
-
-
     void Start()
     {
         KillBullet = false;
-        myRig.linearVelocity = transform.forward * 4;
+        myRig.linearVelocity = new Vector3(transform.forward.x*5,0,0);
         StartCoroutine(KillTime());
     }
 
@@ -56,7 +42,7 @@ public class Bullet : NetworkComponent
 
     private IEnumerator KillTime()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         KillBullet = true;
     }
 }
