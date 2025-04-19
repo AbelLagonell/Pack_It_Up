@@ -165,7 +165,7 @@ MonoBehaviour:
   MyId: {fileID: 0}
   IsDirty: 0
   money: 10
-  weight: 20
+  weight: 15
   destroy: 1
 --- !u!65 &3164928186170749403
 BoxCollider:

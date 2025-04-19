@@ -125,7 +125,7 @@ MonoBehaviour:
   MyCore: {fileID: 0}
   MyId: {fileID: 0}
   IsDirty: 0
-  money: 10
+  money: 100
   weight: 2
   destroy: 0
 --- !u!135 &8402343995436829478
