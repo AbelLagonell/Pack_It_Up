@@ -19,7 +19,7 @@ public class GameManager : NetworkComponent {
 
     public float TotalGameTime = 180;
     public GameEndCollider gameEndCollider;
-    public int minPlayers = 3;
+    public int minPlayers = 1;
 
     private bool _gameOver;
     private int _robberScore = 10;

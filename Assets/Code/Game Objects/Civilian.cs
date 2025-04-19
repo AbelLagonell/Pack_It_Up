@@ -27,6 +27,7 @@ public class Civilian : Actor
     private bool CanEscape, CanAttack;
     private List<GameObject> ClosePlayers;
     private GameObject ClosestPlayer;
+    private HitboxSpawner _hitboxSpawner;
     public override void HandleMessage(string flag, string value)
     {
         switch (flag) {
@@ -42,6 +43,10 @@ public class Civilian : Actor
                 }
                 if(IsServer)
                 {
+                    IsDetained = true;
+                    IsHero = false;
+                    CanEscape = true;
+                    MyAnimator.SetBool("detain", true);
                     SendUpdate(CivFlags.DETAIN,"1");
                 }
             break;
@@ -61,6 +66,14 @@ public class Civilian : Actor
                 }
                 if(IsServer)
                 {
+                    IsDetained = false;
+                    MyAnimator.SetBool("detain", false);
+                    if(CivType == 0 || CivType == 1)
+                    {
+                        IsHero = true;
+                    }
+                    CanEscape = false;
+                    CanAttack = true;
                     SendUpdate(CivFlags.NODETAIN,"1");
                 }
             break;
@@ -80,7 +93,7 @@ public class Civilian : Actor
                 {
                     Debug.Log("Civ attacked " + value);
                     MyAnimator.SetBool("attack", true);
-                    SendCommand(PlayerFlags.DAMAGE, value);
+                    _hitboxSpawner.SpawnAttack();
                     AM.PlaySFX("Civ_Attack");
                     CanAttack = false;
                     StartCoroutine(WaitAttack());
@@ -293,6 +306,7 @@ public class Civilian : Actor
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _hitboxSpawner = GetComponent<HitboxSpawner>();
         AM = FindFirstObjectByType<AudioManager>();
     }
 

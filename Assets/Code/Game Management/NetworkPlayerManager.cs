@@ -8,6 +8,7 @@ using Unity.Services.Relay.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 struct NetworkPlayerManagerFlags {
     public const string READY = "READY";
@@ -42,6 +43,7 @@ public class NetworkPlayerManager : NetworkComponent {
     [SerializeField] private TMP_Text informantScoreText;
     [SerializeField] private TMP_Text winnerText;
     [SerializeField] private TMP_Text timerText;
+    [SerializeField] private Toggle checkBox;
 
     //Voting
     public GameObject toggleGroup;
@@ -183,6 +185,7 @@ public class NetworkPlayerManager : NetworkComponent {
                 playerChar = int.Parse(value);
                 if (playerChar == 50) break;
                 GameManager.CharsTaken[int.Parse(value)] = true;
+                checkBox.interactable = true;
                 if (IsServer) {
                     SendUpdate(NetworkPlayerManagerFlags.CHAR, value);
                 }
@@ -233,6 +236,7 @@ public class NetworkPlayerManager : NetworkComponent {
 
         if (IsLocalPlayer) {
             AudioManager.Instance.PlayBGM("Lobby_Theme");
+            checkBox.interactable = false;
         }
     }
 

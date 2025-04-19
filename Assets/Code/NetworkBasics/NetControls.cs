@@ -45,6 +45,7 @@ public class NetControls : NetworkComponent {
     public Actor actor;
     private bool hasSomething = false;
     private bool lookingAt = false;
+    private bool HasBeenDetained = false;
     public float attackCooldown;
     [SerializeField] private float _currentCooldown;
 
@@ -70,7 +71,11 @@ public class NetControls : NetworkComponent {
                     SendUpdate(NetControlFlag.SECONDARY, ((int)_sAction).ToString());
                     IsDirty = false;
                 }
-
+            if(_player.IsDetained && !HasBeenDetained)
+            {
+                HandleMessage(NetControlFlag.ANIMATION, "detain");
+                HasBeenDetained = true;
+            }
             yield return new WaitForSeconds(MyCore.MasterTimer);
         }
 
@@ -82,6 +87,10 @@ public class NetControls : NetworkComponent {
             case NetControlFlag.ANIMATION:
                 if (IsServer) break;
                 MyAnimator.SetBool(value, !MyAnimator.GetBool(value));
+                if(value == "detain")
+                {
+                    HasBeenDetained = true;
+                }
 
                 break;
             case NetControlFlag.SOUND:
