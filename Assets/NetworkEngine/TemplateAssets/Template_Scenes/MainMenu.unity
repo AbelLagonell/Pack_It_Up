@@ -817,7 +817,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1055210943}
   m_Father: {fileID: 1869812244}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
@@ -1603,16 +1604,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 687905368}
-  m_LocalRotation: {x: -0, y: -0, z: 0.12238471, w: 0.9924828}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.1999999, y: 1.1999999, z: 1.2000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1869812244}
+  m_Father: {fileID: 1146574909}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -624.3038, y: -169.90746}
+  m_AnchoredPosition: {x: -0.00018310547, y: -169.99997}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &687905370
@@ -3333,11 +3334,11 @@ RectTransform:
   m_LocalScale: {x: 2, y: 4.2000003, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1869812244}
+  m_Father: {fileID: 377235706}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -3.743}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 744.0003, y: -49.00005}
+  m_AnchoredPosition: {x: 125.00037, y: -9.000046}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1055210944
@@ -3736,7 +3737,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 687905369}
   m_Father: {fileID: 1869812244}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 14.06}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -5434,10 +5436,8 @@ RectTransform:
   - {fileID: 190483117}
   - {fileID: 912054684}
   - {fileID: 1146574909}
-  - {fileID: 687905369}
   - {fileID: 1512404217}
   - {fileID: 377235706}
-  - {fileID: 1055210943}
   - {fileID: 420539676}
   - {fileID: 1958714693}
   m_Father: {fileID: 1683190125}

@@ -155,7 +155,6 @@ public class NetworkPlayerManager : NetworkComponent {
                 //Should only ever be run on clients
                 informantScore = int.Parse(value);
                 informantScoreText.text = "Score: " + informantScore;
-                Debug.Log("CHANGE");
                 break;
             case NetworkPlayerManagerFlags.WINNER:
                 //Should only ever be run on clients

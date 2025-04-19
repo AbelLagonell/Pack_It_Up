@@ -71,11 +71,12 @@ public class NetControls : NetworkComponent {
                     SendUpdate(NetControlFlag.SECONDARY, ((int)_sAction).ToString());
                     IsDirty = false;
                 }
-            if(_player.IsDetained && !HasBeenDetained)
-            {
+
+            if (_player.IsDetained && !HasBeenDetained) {
                 HandleMessage(NetControlFlag.ANIMATION, "detain");
                 HasBeenDetained = true;
             }
+
             yield return new WaitForSeconds(MyCore.MasterTimer);
         }
 
@@ -87,8 +88,7 @@ public class NetControls : NetworkComponent {
             case NetControlFlag.ANIMATION:
                 if (IsServer) break;
                 MyAnimator.SetBool(value, !MyAnimator.GetBool(value));
-                if(value == "detain")
-                {
+                if (value == "detain") {
                     HasBeenDetained = true;
                 }
 
@@ -140,8 +140,10 @@ public class NetControls : NetworkComponent {
                             if (!lookingAt) return;
                             switch (actor) {
                                 case Player player:
-                                    if (_player._myNpm.GetInformant())
-                                        player.SetDetained(true);
+                                    if (!_player._myNpm.GetInformant()) break;
+                                    if (_currentCooldown > 0) break;
+                                    _currentCooldown = 2 * attackCooldown;
+                                    player.SetDetained(true);
                                     break;
                                 case Civilian civilian:
                                     civilian.Detain();
@@ -257,15 +259,13 @@ public class NetControls : NetworkComponent {
         }
     }
 
-    public void Primary()
-    {
+    public void Primary() {
         if (IsServer) return;
         if (_player.GetDetained() || GameManager.GamePaused) return;
         SendCommand(NetControlFlag.PRIMARY, "");
     }
 
-    public void Secondary()
-    {
+    public void Secondary() {
         if (IsServer) return;
         if (_player.GetDetained() || GameManager.GamePaused) return;
         SendCommand(NetControlFlag.SECONDARY, "");
@@ -299,7 +299,6 @@ public class NetControls : NetworkComponent {
             float closestDistance = float.MaxValue;
 
             foreach (RaycastHit hit in hits) {
-                Debug.Log(hit.collider.gameObject.name);
                 if (hit.collider.isTrigger && hit.distance < closestDistance) {
                     closestDistance = hit.distance;
                     firstHit = hit;
@@ -329,6 +328,11 @@ public class NetControls : NetworkComponent {
                         _interactable = hit.collider.gameObject.GetComponent<Interactable>();
                         break;
                     case "Player":
+                        if (!_player._myNpm.GetInformant()) break;
+                        lookingAt = true;
+                        _pAction = PrimaryActions.Arrest;
+                        actor = hit.collider.gameObject.GetComponent<Actor>();
+                        break;
                     case "Civilian":
                         lookingAt = true;
                         _pAction = PrimaryActions.Arrest;
